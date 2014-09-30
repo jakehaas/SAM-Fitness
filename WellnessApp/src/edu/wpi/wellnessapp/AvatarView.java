@@ -26,8 +26,7 @@ import com.threed.jpct.World;
 import com.threed.jpct.util.BitmapHelper;
 import com.threed.jpct.util.MemoryHelper;
 
-public class AvatarView extends Activity
-{
+public class AvatarView extends Activity {
 	private static AvatarView master = null;
 
 	private GLSurfaceView mGLView;
@@ -47,26 +46,23 @@ public class AvatarView extends Activity
 
 	private Light sun = null;
 
-	protected void onCreate(Bundle savedInstanceState)
-	{
+	protected void onCreate(Bundle savedInstanceState) {
 
 		Logger.log("onCreate");
 
-		if (master != null)
-		{
+		if (master != null) {
 			copy(master);
 		}
 
 		super.onCreate(savedInstanceState);
 		mGLView = new GLSurfaceView(getApplication());
 
-		mGLView.setEGLConfigChooser(new GLSurfaceView.EGLConfigChooser()
-		{
-			public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display)
-			{
+		mGLView.setEGLConfigChooser(new GLSurfaceView.EGLConfigChooser() {
+			public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
 				// Ensure that we get a 16bit framebuffer. Otherwise, we'll fall
 				// back to Pixelflinger on some device (read: Samsung I7500)
-				int[] attributes = new int[] { EGL10.EGL_DEPTH_SIZE, 16, EGL10.EGL_NONE };
+				int[] attributes = new int[] { EGL10.EGL_DEPTH_SIZE, 16,
+						EGL10.EGL_NONE };
 				EGLConfig[] configs = new EGLConfig[1];
 				int[] result = new int[1];
 				egl.eglChooseConfig(display, attributes, configs, 1, result);
@@ -80,56 +76,45 @@ public class AvatarView extends Activity
 	}
 
 	@Override
-	protected void onPause()
-	{
+	protected void onPause() {
 		super.onPause();
 		mGLView.onPause();
 	}
 
 	@Override
-	protected void onResume()
-	{
+	protected void onResume() {
 		super.onResume();
 		mGLView.onResume();
 	}
 
 	@Override
-	protected void onStop()
-	{
+	protected void onStop() {
 		super.onStop();
 	}
 
-	private void copy(Object src)
-	{
-		try
-		{
+	private void copy(Object src) {
+		try {
 			Logger.log("Copying data from master Activity!");
 			Field[] fs = src.getClass().getDeclaredFields();
-			
-			for (Field f : fs)
-			{
+
+			for (Field f : fs) {
 				f.setAccessible(true);
 				f.set(this, f.get(src));
 			}
-			
-		}
-		catch (Exception e)
-		{
+
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public boolean onTouchEvent(MotionEvent me)
-	{
-		if (me.getAction() == MotionEvent.ACTION_DOWN)
-		{
+	public boolean onTouchEvent(MotionEvent me) {
+		if (me.getAction() == MotionEvent.ACTION_DOWN) {
 			xpos = me.getX();
 			ypos = me.getY();
 			return true;
 		}
 
-		if (me.getAction() == MotionEvent.ACTION_UP)
-		{
+		if (me.getAction() == MotionEvent.ACTION_UP) {
 			xpos = -1;
 			ypos = -1;
 			touchTurn = 0;
@@ -137,8 +122,7 @@ public class AvatarView extends Activity
 			return true;
 		}
 
-		if (me.getAction() == MotionEvent.ACTION_MOVE)
-		{
+		if (me.getAction() == MotionEvent.ACTION_MOVE) {
 			float xd = me.getX() - xpos;
 			float yd = me.getY() - ypos;
 
@@ -150,44 +134,35 @@ public class AvatarView extends Activity
 			return true;
 		}
 
-		try
-		{
+		try {
 			Thread.sleep(15);
-		} 
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			// No need for this...
 		}
 
 		return super.onTouchEvent(me);
 	}
 
-	protected boolean isFullscreenOpaque()
-	{
+	protected boolean isFullscreenOpaque() {
 		return true;
 	}
 
-	class MyRenderer implements GLSurfaceView.Renderer
-	{
+	class MyRenderer implements GLSurfaceView.Renderer {
 
 		private long time = System.currentTimeMillis();
 
-		public MyRenderer()
-		{
-			
+		public MyRenderer() {
+
 		}
 
-		public void onSurfaceChanged(GL10 gl, int w, int h)
-		{
-			if (fb != null)
-			{
+		public void onSurfaceChanged(GL10 gl, int w, int h) {
+			if (fb != null) {
 				fb.dispose();
 			}
-			
+
 			fb = new FrameBuffer(gl, w, h);
 
-			if (master == null)
-			{
+			if (master == null) {
 				world = new World();
 				world.setAmbientLight(20, 20, 20);
 
@@ -195,13 +170,11 @@ public class AvatarView extends Activity
 				sun.setIntensity(250, 250, 250);
 
 				// Create a texture out of the icon...:-)
-				Texture texture = new Texture(
-						BitmapHelper.rescale(
-								BitmapHelper.convert(
-										getResources().getDrawable(R.drawable.ic_launcher)), 64, 64));
-				
-				TextureManager.getInstance().addTexture("texture", texture);
+				Texture texture = new Texture(BitmapHelper.rescale(
+						BitmapHelper.convert(getResources().getDrawable(
+								R.drawable.ic_launcher)), 64, 64));
 
+				TextureManager.getInstance().addTexture("texture", texture);
 
 				cube = Primitives.getCube(10);
 				cube.calcTextureWrapSpherical();
@@ -222,30 +195,25 @@ public class AvatarView extends Activity
 				sun.setPosition(sv);
 				MemoryHelper.compact();
 
-				if (master == null)
-				{
+				if (master == null) {
 					Logger.log("Saving master Activity!");
 					master = AvatarView.this;
 				}
-				
+
 			}
 		}
 
-		public void onSurfaceCreated(GL10 gl, EGLConfig config)
-		{
-			
+		public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+
 		}
 
-		public void onDrawFrame(GL10 gl)
-		{
-			if (touchTurn != 0)
-			{
+		public void onDrawFrame(GL10 gl) {
+			if (touchTurn != 0) {
 				cube.rotateY(touchTurn);
 				touchTurn = 0;
 			}
 
-			if (touchTurnUp != 0)
-			{
+			if (touchTurnUp != 0) {
 				cube.rotateX(touchTurnUp);
 				touchTurnUp = 0;
 			}
@@ -255,13 +223,12 @@ public class AvatarView extends Activity
 			world.draw(fb);
 			fb.display();
 
-			if (System.currentTimeMillis() - time >= 1000)
-			{
+			if (System.currentTimeMillis() - time >= 1000) {
 				Logger.log(fps + "fps");
 				fps = 0;
 				time = System.currentTimeMillis();
 			}
-			
+
 			fps++;
 		}
 	}
