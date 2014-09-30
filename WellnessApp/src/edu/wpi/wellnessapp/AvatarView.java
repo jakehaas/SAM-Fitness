@@ -1,5 +1,9 @@
 package edu.wpi.wellnessapp;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 
 import javax.microedition.khronos.egl.EGL10;
@@ -15,6 +19,7 @@ import android.view.MotionEvent;
 import com.threed.jpct.Camera;
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.Light;
+import com.threed.jpct.Loader;
 import com.threed.jpct.Logger;
 import com.threed.jpct.Object3D;
 import com.threed.jpct.Primitives;
@@ -42,6 +47,8 @@ public class AvatarView extends Activity {
 	private float ypos = -1;
 
 	private Object3D cube = null;
+	private Object3D md2Model = null;
+
 	private int fps = 0;
 
 	private Light sun = null;
@@ -182,18 +189,31 @@ public class AvatarView extends Activity {
 				cube.strip();
 				cube.build();
 
-				world.addObject(cube);
+				try {
+					md2Model = Object3D.mergeAll(Loader.loadOBJ(getResources()
+							.getAssets().open("car.obj"), null, 0.1f));
+					md2Model.build();
 
-				Camera cam = world.getCamera();
-				cam.moveCamera(Camera.CAMERA_MOVEOUT, 50);
-				cam.lookAt(cube.getTransformedCenter());
+					world.addObject(md2Model);
+					Logger.log("Loaded 3D Model!");
 
-				SimpleVector sv = new SimpleVector();
-				sv.set(cube.getTransformedCenter());
-				sv.y -= 100;
-				sv.z -= 100;
-				sun.setPosition(sv);
-				MemoryHelper.compact();
+					// world.addObject(cube);
+
+					Camera cam = world.getCamera();
+					cam.moveCamera(Camera.CAMERA_MOVEOUT, 50);
+					cam.lookAt(md2Model.getTransformedCenter());
+
+					SimpleVector sv = new SimpleVector();
+					sv.set(md2Model.getTransformedCenter());
+					sv.y -= 100;
+					sv.z -= 100;
+					sun.setPosition(sv);
+					MemoryHelper.compact();
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				if (master == null) {
 					Logger.log("Saving master Activity!");
@@ -209,12 +229,12 @@ public class AvatarView extends Activity {
 
 		public void onDrawFrame(GL10 gl) {
 			if (touchTurn != 0) {
-				cube.rotateY(touchTurn);
+				md2Model.rotateY(touchTurn);
 				touchTurn = 0;
 			}
 
 			if (touchTurnUp != 0) {
-				cube.rotateX(touchTurnUp);
+				md2Model.rotateX(touchTurnUp);
 				touchTurnUp = 0;
 			}
 
