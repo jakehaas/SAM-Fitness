@@ -1,5 +1,6 @@
 package edu.wpi.wellnessapp;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 
 import javax.microedition.khronos.egl.EGL10;
@@ -7,8 +8,14 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.opengles.GL10;
 
+import raft.jpct.bones.Animated3D;
+import raft.jpct.bones.AnimatedGroup;
+import raft.jpct.bones.BonesIO;
+import raft.jpct.bones.SkinClip;
+
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.Resources.NotFoundException;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.opengl.GLSurfaceView;
@@ -25,19 +32,36 @@ import android.widget.LinearLayout;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.threed.jpct.Animation;
 import com.threed.jpct.Camera;
+import com.threed.jpct.Config;
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.Light;
 import com.threed.jpct.Logger;
+import com.threed.jpct.Mesh;
 import com.threed.jpct.Object3D;
 import com.threed.jpct.Primitives;
 import com.threed.jpct.RGBColor;
 import com.threed.jpct.SimpleVector;
+import com.threed.jpct.Texture;
+import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
 import com.threed.jpct.util.AAConfigChooser;
 import com.threed.jpct.util.MemoryHelper;
 
 public class StepFragment extends Fragment {
+	
+	private AnimatedGroup avatar;
+	private int animation = 1;
+	private float animateSeconds  = 0f;
+	
+	private long frameTime = System.currentTimeMillis();
+	private long aggregatedTime = 0;
+	private float speed = 1f;
+	
+	private static final int GRANULARITY = 25;
+	
+	//--
 
 	private static StepFragment master = null;
 
@@ -76,6 +100,97 @@ public class StepFragment extends Fragment {
 
 		return rootView;
 	}
+	
+	private void loadGLResources() {
+		Resources res = getResources();
+		TextureManager.getInstance().flush();
+		
+		Texture texture = new Texture(res.openRawResource(R.raw.ninja_texture));
+		texture.keepPixelData(true);
+		TextureManager.getInstance().addTexture("ninja", texture);
+		
+		try
+		{
+			avatar = BonesIO.loadGroup(res.openRawResource(R.raw.ninja));
+			
+			// After we load the resources, generate the animations
+			createMeshKeyFrames();
+		} catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		for (Animated3D a : avatar) {
+			a.setTexture("ninja");
+		}
+		
+	}
+	
+	private void createMeshKeyFrames() {
+		Config.maxAnimationSubSequences = avatar.getSkinClipSequence().getSize() + 1; // +1 for whole sequence
+		
+		int keyframeCount = 0;
+		final float deltaTime = 0.2f; // max time between frames
+		
+		for (SkinClip clip : avatar.getSkinClipSequence()) {
+			float clipTime = clip.getTime();
+			int frames = (int) Math.ceil(clipTime / deltaTime) + 1;
+			keyframeCount += frames;
+		}
+		
+		Animation[] animations = new Animation[avatar.getSize()];
+		for (int i = 0; i < avatar.getSize(); i++) {
+			animations[i] = new Animation(keyframeCount);
+			animations[i].setClampingMode(Animation.USE_CLAMPING);
+		}
+		
+		int count = 0;
+		
+		int sequence = 0;
+		for (SkinClip clip : avatar.getSkinClipSequence()) {
+			float clipTime = clip.getTime();
+			int frames = (int) Math.ceil(clipTime / deltaTime) + 1;
+			float dIndex = 1f / (frames - 1);
+			
+			for (int i = 0; i < avatar.getSize(); i++) {
+				animations[i].createSubSequence(clip.getName());
+			}
+			//System.out.println(sequence + ": " + clip.getName() + ", frames: " + frames);
+			for (int i = 0; i < frames; i++) {
+				avatar.animateSkin(dIndex * i, sequence + 1);
+				
+				for (int j = 0; j < avatar.getSize(); j++) {
+					Mesh keyframe = avatar.get(j).getMesh().cloneMesh(true);
+					keyframe.strip();
+					animations[j].addKeyFrame(keyframe);
+					count++;
+					//Logger.log("added " + (i + 1) + " of " + sequence + " to " + j + " total: " + count);
+				}
+			}
+			sequence++;
+		}
+		for (int i = 0; i < avatar.getSize(); i++) {
+			avatar.get(i).setAnimationSequence(animations[i]);
+		}
+		avatar.get(0).getSkeletonPose().setToBindPose();
+		avatar.get(0).getSkeletonPose().updateTransforms();
+		avatar.applySkeletonPose();
+		avatar.applyAnimation();
+		
+		Logger.log("created mesh keyframes, " + keyframeCount + "x" + avatar.getSize());
+	}
 
 	private void initGL(View rootView, Bundle savedInstanceState) {
 		
@@ -112,6 +227,8 @@ public class StepFragment extends Fragment {
 		LinearLayout layout = (LinearLayout) rootView.findViewById(R.id.mainAvatar);
 
 		layout.addView(mGLView);
+		
+		loadGLResources(); // SHOULD MOVE THE RESOURCE LOADING TO APP LAUNCH, NOT GL FRAGMENT
 	}
 	
 	private void copy(Object src) {
@@ -191,18 +308,29 @@ public class StepFragment extends Fragment {
 				cube.strip();
 				cube.build();
 				
-				Avatar a = Avatar.getInstance();
+				//Avatar a = Avatar.getInstance();
+				
+				avatar.addToWorld(world);
 
-				world.addObject(cube);
+				//world.addObject(cube);
+				
+				SimpleVector cv = new SimpleVector();
+				cv.x = 0;
+				cv.y = -100;
+				cv.z = 0;
 
 				Camera cam = world.getCamera();
-				cam.moveCamera(Camera.CAMERA_MOVEOUT, 50);
-				cam.lookAt(cube.getTransformedCenter());
+				cam.moveCamera(Camera.CAMERA_MOVEOUT, -400.0f);
+				cam.moveCamera(Camera.CAMERA_MOVEUP, 200.0f);
+				cam.rotateCameraY(90.0f);
+				cam.lookAt(cv);
+				
+				
 
 				SimpleVector sv = new SimpleVector();
 				sv.set(cube.getTransformedCenter());
 				sv.y -= 100;
-				sv.z -= 100;
+				sv.z += 100;
 				sun.setPosition(sv);
 
 				MemoryHelper.compact();
@@ -228,6 +356,52 @@ public class StepFragment extends Fragment {
 				cube.rotateX(touchTurnUp);
 				touchTurnUp = 0;
 			}
+			
+			
+			// ANIMATION!!!!
+			
+			long now = System.currentTimeMillis();
+			aggregatedTime += (now - frameTime); 
+			frameTime = now;
+			
+			if (aggregatedTime > 1000) {
+				aggregatedTime = 0;
+			}
+			
+			while (aggregatedTime > GRANULARITY) {
+				aggregatedTime -= GRANULARITY;
+				animateSeconds += GRANULARITY * 0.001f * speed;
+			//	cameraController.placeCamera();
+			}
+			
+			if (animation > 0 && avatar.getSkinClipSequence().getSize() >= animation) {
+				float clipTime = avatar.getSkinClipSequence().getClip(animation-1).getTime();
+				
+				if (animateSeconds > clipTime) {
+					animateSeconds = 0;
+				}
+				
+				float index = animateSeconds / clipTime;
+				//if (useMeshAnim) {
+					//for (AnimatedGroup group : ninjas) {
+
+						for (Animated3D a : avatar) {
+							//a.animate(index, animation);
+							
+							a.animateSkin(index, animation);
+							if (!a.isAutoApplyAnimation())
+								a.applyAnimation();
+						}
+					
+			
+			
+			
+			} else {
+					animateSeconds = 0f;
+				}
+			
+			
+			
 
 			fb.clear(back);
 			world.renderScene(fb);
