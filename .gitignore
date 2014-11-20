@@ -2,6 +2,7 @@
 .metadata
 .gradle
 .DS_Store
+Bones/
 bin/
 tmp/
 *.tmp
