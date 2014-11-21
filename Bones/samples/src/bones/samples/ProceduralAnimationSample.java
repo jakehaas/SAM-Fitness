@@ -148,6 +148,7 @@ public class ProceduralAnimationSample extends AbstractSample {
 	}
 	
 	
+	@SuppressWarnings("unused")
 	private void stretchNeck() {
 		currentPose.setToBindPose();
 

@@ -61,6 +61,7 @@ public class LoadBonesFormatSample extends AbstractSkinSample {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private AnimatedGroup loadSeymour() throws Exception {
 		FileInputStream fis = new FileInputStream("./samples/data/seymour/seymour.group.bones");
 		try {
