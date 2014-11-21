@@ -16,6 +16,7 @@ import com.threed.jpct.World;
  * <p>This class is adapted from <a href="http://www.ardor3d.com">Ardor3D.</a></p>
  */
 public class SkeletonDebugger {
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 	
 	/** Minimum length of a bone. Sometimes joints may overlap,

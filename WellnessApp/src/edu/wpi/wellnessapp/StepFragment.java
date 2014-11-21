@@ -12,26 +12,23 @@ import raft.jpct.bones.Animated3D;
 import raft.jpct.bones.AnimatedGroup;
 import raft.jpct.bones.BonesIO;
 import raft.jpct.bones.SkinClip;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
-import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.threed.jpct.Animation;
 import com.threed.jpct.Camera;
 import com.threed.jpct.Config;
@@ -50,421 +47,429 @@ import com.threed.jpct.util.AAConfigChooser;
 import com.threed.jpct.util.MemoryHelper;
 
 public class StepFragment extends Fragment {
-	
-	private AnimatedGroup avatar;
-	private int animation = 1;
-	private float animateSeconds  = 0f;
-	
-	private long frameTime = System.currentTimeMillis();
-	private long aggregatedTime = 0;
-	private float speed = 1f;
-	
-	private static final int GRANULARITY = 25;
-	
-	//--
 
-	private static StepFragment master = null;
+    private AnimatedGroup avatar;
+    private int animation = 1;
+    private float animateSeconds = 0f;
 
-	private GLSurfaceView mGLView;
-	private Renderer renderer = null;
-	private FrameBuffer fb = null;
-	private World world = null;
-	private RGBColor back = new RGBColor(37, 37, 37);
+    private long frameTime = System.currentTimeMillis();
+    private long aggregatedTime = 0;
+    private float speed = 1f;
 
-	private float touchTurn = 0;
-	private float touchTurnUp = 0;
+    private static final int GRANULARITY = 25;
 
-	private float xpos = -1;
-	private float ypos = -1;
+    // --
 
-	private Object3D cube = null;
+    private static StepFragment master = null;
 
-	@SuppressWarnings("unused")
-	private int fps = 0;
+    private GLSurfaceView mGLView;
+    private Renderer renderer = null;
+    private FrameBuffer fb = null;
+    private World world = null;
+    private RGBColor back = new RGBColor(37, 37, 37);
 
-	private Light sun = null;
+    private float touchTurn = 0;
+    private float touchTurnUp = 0;
 
-	private long startTime;
+    private float xpos = -1;
+    private float ypos = -1;
 
-	private long endTime;
+    private Object3D cube = null;
 
-	private Context myContext;
+    @SuppressWarnings("unused")
+    private int fps = 0;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		myContext = getActivity().getApplicationContext();
-		View rootView = inflater.inflate(R.layout.fragment_a, container, false);
-		
-		populateGraphView(rootView);
-		initGL(rootView, savedInstanceState);
+    private Light sun = null;
 
-		return rootView;
-	}
-	
-	private void loadGLResources() {
-		Resources res = getResources();
-		TextureManager.getInstance().flush();
-		
-		Texture texture = new Texture(res.openRawResource(R.raw.ninja_texture));
-		texture.keepPixelData(true);
-		TextureManager.getInstance().addTexture("ninja", texture);
-		
-		try
-		{
-			avatar = BonesIO.loadGroup(res.openRawResource(R.raw.ninja));
-			
-			// After we load the resources, generate the animations
-			createMeshKeyFrames();
-		} catch (ClassNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		
-		
-		for (Animated3D a : avatar) {
-			a.setTexture("ninja");
-		}
-		
-	}
-	
-	private void createMeshKeyFrames() {
-		Config.maxAnimationSubSequences = avatar.getSkinClipSequence().getSize() + 1; // +1 for whole sequence
-		
-		int keyframeCount = 0;
-		final float deltaTime = 0.2f; // max time between frames
-		
-		for (SkinClip clip : avatar.getSkinClipSequence()) {
-			float clipTime = clip.getTime();
-			int frames = (int) Math.ceil(clipTime / deltaTime) + 1;
-			keyframeCount += frames;
-		}
-		
-		Animation[] animations = new Animation[avatar.getSize()];
-		for (int i = 0; i < avatar.getSize(); i++) {
-			animations[i] = new Animation(keyframeCount);
-			animations[i].setClampingMode(Animation.USE_CLAMPING);
-		}
-		
-		int count = 0;
-		
-		int sequence = 0;
-		for (SkinClip clip : avatar.getSkinClipSequence()) {
-			float clipTime = clip.getTime();
-			int frames = (int) Math.ceil(clipTime / deltaTime) + 1;
-			float dIndex = 1f / (frames - 1);
-			
-			for (int i = 0; i < avatar.getSize(); i++) {
-				animations[i].createSubSequence(clip.getName());
-			}
-			//System.out.println(sequence + ": " + clip.getName() + ", frames: " + frames);
-			for (int i = 0; i < frames; i++) {
-				avatar.animateSkin(dIndex * i, sequence + 1);
-				
-				for (int j = 0; j < avatar.getSize(); j++) {
-					Mesh keyframe = avatar.get(j).getMesh().cloneMesh(true);
-					keyframe.strip();
-					animations[j].addKeyFrame(keyframe);
-					count++;
-					//Logger.log("added " + (i + 1) + " of " + sequence + " to " + j + " total: " + count);
-				}
-			}
-			sequence++;
-		}
-		for (int i = 0; i < avatar.getSize(); i++) {
-			avatar.get(i).setAnimationSequence(animations[i]);
-		}
-		avatar.get(0).getSkeletonPose().setToBindPose();
-		avatar.get(0).getSkeletonPose().updateTransforms();
-		avatar.applySkeletonPose();
-		avatar.applyAnimation();
-		
-		Logger.log("created mesh keyframes, " + keyframeCount + "x" + avatar.getSize());
-	}
+//    private long startTime;
+//
+//    private long endTime;
 
-	private void initGL(View rootView, Bundle savedInstanceState) {
-		
-		if (master != null) {
-			copy(master);
-		}
-		
+    private Context myContext;
 
-		super.onCreate(savedInstanceState);
-		startTime = System.currentTimeMillis();
-		mGLView = new ClearGLSurfaceView(myContext);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	    Bundle savedInstanceState) {
+	myContext = getActivity().getApplicationContext();
+	View rootView = inflater.inflate(R.layout.fragment_a, container, false);
 
-		mGLView.setEGLConfigChooser(new GLSurfaceView.EGLConfigChooser() {
-			public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
-				int[] attributes = new int[] { EGL10.EGL_DEPTH_SIZE, 16,
-						EGL10.EGL_NONE };
-				EGLConfig[] configs = new EGLConfig[1];
-				int[] result = new int[1];
-				egl.eglChooseConfig(display, attributes, configs, 1, result);
-				return configs[0];
-			}
-		});
-		
-		mGLView.setEGLContextClientVersion(2);
-		mGLView.setEGLConfigChooser(new AAConfigChooser(mGLView));
+	populateGraphView(rootView);
+	initGL(rootView, savedInstanceState);
 
-		renderer = new Renderer(myContext);
-		mGLView.setRenderer(renderer);
-
-		endTime = System.currentTimeMillis();
-		Log.e("My App", "used time to load model: " + (endTime - startTime)
-				/ 1000 + " s (" + (endTime - startTime) + " ms)");
-
-		LinearLayout layout = (LinearLayout) rootView.findViewById(R.id.mainAvatar);
-
-		layout.addView(mGLView);
-		
-		loadGLResources(); // SHOULD MOVE THE RESOURCE LOADING TO APP LAUNCH, NOT GL FRAGMENT
-	}
-	
-	private void copy(Object src) {
-		try {
-			Logger.log("Copying data from master Activity!");
-			Field[] fs = src.getClass().getDeclaredFields();
-			for (Field f : fs) {
-				f.setAccessible(true);
-				f.set(this, f.get(src));
-			}
-		} catch (Exception e) {
-			// throw new RuntimeException(e);
-		}
-	}
-
-	protected boolean isFullscreenOpaque() {
-		return true;
-	}
-	
-	private void populateGraphView(View view) {
-        GraphViewSeries exampleSeries = new GraphViewSeries(new GraphViewData[] {
-                new GraphViewData(1, 2.0d)
-                , new GraphViewData(2, 1.5d)
-                , new GraphViewData(3, 2.5d)
-                , new GraphViewData(4, 1.0d)
-        });
- 
-        LineGraphView graphView = new LineGraphView(
-                getActivity() // context
-                , "Steps Taken\n" // heading
-        );
-        graphView.addSeries(exampleSeries); // data
-        graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.WHITE);
-        graphView.getGraphViewStyle().setVerticalLabelsColor(Color.WHITE);
-        graphView.setHorizontalLabels(new String[] {"9/10", "9/15", "9/20", "9/25"});
-        graphView.setVerticalLabels(new String[] {"10,000", "5,000", "0"});
-        graphView.getGraphViewStyle().setGridColor(Color.LTGRAY);
-        graphView.getGraphViewStyle().setTextSize(20);
-        
-        try {
-        	
-            LinearLayout layout = (LinearLayout) view.findViewById(R.id.graph1);
-            
-            layout.addView(graphView);
-        } catch (NullPointerException e) {
-            // something to handle the NPE.
-        }
+	return rootView;
     }
 
-	class Renderer implements GLSurfaceView.Renderer {
-		private long fpsTime = System.currentTimeMillis();
-		Resources res = myContext.getResources();
-		Context ctx;
+    private void loadGLResources() {
+	Resources res = getResources();
+	TextureManager.getInstance().flush();
 
-		public Renderer(Context context) {
-			ctx = context;
+	Texture texture = new Texture(res.openRawResource(R.raw.ninja_texture));
+	texture.keepPixelData(true);
+	TextureManager.getInstance().addTexture("ninja", texture);
+
+	try {
+	    avatar = BonesIO.loadGroup(res.openRawResource(R.raw.ninja));
+
+	    // After we load the resources, generate the animations
+	    createMeshKeyFrames();
+	} catch (ClassNotFoundException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (NotFoundException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+
+	for (Animated3D a : avatar) {
+	    a.setTexture("ninja");
+	}
+
+    }
+
+    private void createMeshKeyFrames() {
+	Config.maxAnimationSubSequences = avatar.getSkinClipSequence()
+		.getSize() + 1; // +1 for whole sequence
+
+	int keyframeCount = 0;
+	final float deltaTime = 0.2f; // max time between frames
+
+	for (SkinClip clip : avatar.getSkinClipSequence()) {
+	    float clipTime = clip.getTime();
+	    int frames = (int) Math.ceil(clipTime / deltaTime) + 1;
+	    keyframeCount += frames;
+	}
+
+	Animation[] animations = new Animation[avatar.getSize()];
+	for (int i = 0; i < avatar.getSize(); i++) {
+	    animations[i] = new Animation(keyframeCount);
+	    animations[i].setClampingMode(Animation.USE_CLAMPING);
+	}
+
+//	int count = 0;
+
+	int sequence = 0;
+	for (SkinClip clip : avatar.getSkinClipSequence()) {
+	    float clipTime = clip.getTime();
+	    int frames = (int) Math.ceil(clipTime / deltaTime) + 1;
+	    float dIndex = 1f / (frames - 1);
+
+	    for (int i = 0; i < avatar.getSize(); i++) {
+		animations[i].createSubSequence(clip.getName());
+	    }
+	    // System.out.println(sequence + ": " + clip.getName() +
+	    // ", frames: " + frames);
+	    for (int i = 0; i < frames; i++) {
+		avatar.animateSkin(dIndex * i, sequence + 1);
+
+		for (int j = 0; j < avatar.getSize(); j++) {
+		    Mesh keyframe = avatar.get(j).getMesh().cloneMesh(true);
+		    keyframe.strip();
+		    animations[j].addKeyFrame(keyframe);
+//		    count++;
+		    // Logger.log("added " + (i + 1) + " of " + sequence +
+		    // " to " + j + " total: " + count);
 		}
+	    }
+	    sequence++;
+	}
+	for (int i = 0; i < avatar.getSize(); i++) {
+	    avatar.get(i).setAnimationSequence(animations[i]);
+	}
+	avatar.get(0).getSkeletonPose().setToBindPose();
+	avatar.get(0).getSkeletonPose().updateTransforms();
+	avatar.applySkeletonPose();
+	avatar.applyAnimation();
 
-		public void onSurfaceChanged(GL10 gl, int w, int h) {
-			if (fb != null) {
-				fb.dispose();
-			}
+	Logger.log("created mesh keyframes, " + keyframeCount + "x"
+		+ avatar.getSize());
+    }
 
-			fb = new FrameBuffer(w, h);
+    private void initGL(View rootView, Bundle savedInstanceState) {
 
-			if (master == null) {
+	if (master != null) {
+	    copy(master);
+	}
 
-				world = new World();
-				world.setAmbientLight(30, 30, 30);
+	super.onCreate(savedInstanceState);
+//	startTime = System.currentTimeMillis();
+	mGLView = new ClearGLSurfaceView(myContext);
 
-				sun = new Light(world);
-				sun.setIntensity(250, 250, 250);
+	mGLView.setEGLConfigChooser(new GLSurfaceView.EGLConfigChooser() {
+	    public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
+		int[] attributes = new int[] { EGL10.EGL_DEPTH_SIZE, 16,
+			EGL10.EGL_NONE };
+		EGLConfig[] configs = new EGLConfig[1];
+		int[] result = new int[1];
+		egl.eglChooseConfig(display, attributes, configs, 1, result);
+		return configs[0];
+	    }
+	});
 
-				cube = Primitives.getCube(10);
-				cube.calcTextureWrapSpherical();
-				// cube.setTexture("texture");
-				cube.strip();
-				cube.build();
-				
-				//Avatar a = Avatar.getInstance();
-				
-				avatar.addToWorld(world);
+	mGLView.setEGLContextClientVersion(2);
+	mGLView.setEGLConfigChooser(new AAConfigChooser(mGLView));
 
-				//world.addObject(cube);
-				
-				SimpleVector cv = new SimpleVector();
-				cv.x = 0;
-				cv.y = -100;
-				cv.z = 0;
+	renderer = new Renderer(myContext);
+	mGLView.setRenderer(renderer);
 
-				Camera cam = world.getCamera();
-				cam.moveCamera(Camera.CAMERA_MOVEOUT, -400.0f);
-				cam.moveCamera(Camera.CAMERA_MOVEUP, 200.0f);
-				cam.rotateCameraY(90.0f);
-				cam.lookAt(cv);
-				
-				
+//	endTime = System.currentTimeMillis();
 
-				SimpleVector sv = new SimpleVector();
-				sv.set(cube.getTransformedCenter());
-				sv.y -= 100;
-				sv.z += 100;
-				sun.setPosition(sv);
+	LinearLayout layout = (LinearLayout) rootView
+		.findViewById(R.id.mainAvatar);
 
-				MemoryHelper.compact();
+	layout.addView(mGLView);
 
-				if (master == null) {
-					Logger.log("Saving master Activity!");
-					master = StepFragment.this;
-				}
-			}
+	loadGLResources(); // SHOULD MOVE THE RESOURCE LOADING TO APP LAUNCH,
+			   // NOT GL FRAGMENT
+    }
+
+    private void copy(Object src) {
+	try {
+	    Logger.log("Copying data from master Activity!");
+	    Field[] fs = src.getClass().getDeclaredFields();
+	    for (Field f : fs) {
+		f.setAccessible(true);
+		f.set(this, f.get(src));
+	    }
+	} catch (Exception e) {
+	    // throw new RuntimeException(e);
+	}
+    }
+
+    protected boolean isFullscreenOpaque() {
+	return true;
+    }
+
+    private void populateGraphView(View view) {
+	GraphViewSeries exampleSeries = new GraphViewSeries(
+		new GraphViewData[] { new GraphViewData(1, 2.0d),
+			new GraphViewData(2, 1.5d), new GraphViewData(3, 2.5d),
+			new GraphViewData(4, 1.0d) });
+
+	LineGraphView graphView = new LineGraphView(getActivity() // context
+		, "Steps Taken\n" // heading
+	);
+	graphView.addSeries(exampleSeries); // data
+	graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.WHITE);
+	graphView.getGraphViewStyle().setVerticalLabelsColor(Color.WHITE);
+	graphView.setHorizontalLabels(new String[] { "9/10", "9/15", "9/20",
+		"9/25" });
+	graphView.setVerticalLabels(new String[] { "10,000", "5,000", "0" });
+	graphView.getGraphViewStyle().setGridColor(Color.LTGRAY);
+	graphView.getGraphViewStyle().setTextSize(20);
+
+	try {
+
+	    LinearLayout layout = (LinearLayout) view.findViewById(R.id.graph1);
+
+	    layout.addView(graphView);
+	} catch (NullPointerException e) {
+	    // something to handle the NPE.
+	}
+    }
+
+    class Renderer implements GLSurfaceView.Renderer {
+	private long fpsTime = System.currentTimeMillis();
+	Resources res = myContext.getResources();
+	Context ctx;
+
+	public Renderer(Context context) {
+	    ctx = context;
+	}
+
+	public void onSurfaceChanged(GL10 gl, int w, int h) {
+	    if (fb != null) {
+		fb.dispose();
+	    }
+
+	    fb = new FrameBuffer(w, h);
+
+	    if (master == null) {
+
+		world = new World();
+		world.setAmbientLight(30, 30, 30);
+
+		sun = new Light(world);
+		sun.setIntensity(250, 250, 250);
+
+		cube = Primitives.getCube(10);
+		cube.calcTextureWrapSpherical();
+		// cube.setTexture("texture");
+		cube.strip();
+		cube.build();
+
+		// Avatar a = Avatar.getInstance();
+
+		avatar.addToWorld(world);
+
+		// world.addObject(cube);
+
+		SimpleVector cv = new SimpleVector();
+		cv.x = 0;
+		cv.y = -100;
+		cv.z = 0;
+
+		Camera cam = world.getCamera();
+		cam.moveCamera(Camera.CAMERA_MOVEOUT, -400.0f);
+		cam.moveCamera(Camera.CAMERA_MOVEUP, 200.0f);
+		cam.rotateCameraY(90.0f);
+		cam.lookAt(cv);
+
+		SimpleVector sv = new SimpleVector();
+		sv.set(cube.getTransformedCenter());
+		sv.y -= 100;
+		sv.z += 100;
+		sun.setPosition(sv);
+
+		MemoryHelper.compact();
+
+		if (master == null) {
+		    Logger.log("Saving master Activity!");
+		    master = StepFragment.this;
 		}
+	    }
+	}
 
-		public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-			
-		}
-
-		public void onDrawFrame(GL10 gl) {
-			if (touchTurn != 0) {
-				cube.rotateY(touchTurn);
-				touchTurn = 0;
-			}
-
-			if (touchTurnUp != 0) {
-				cube.rotateX(touchTurnUp);
-				touchTurnUp = 0;
-			}
-			
-			
-			// ANIMATION!!!!
-			
-			long now = System.currentTimeMillis();
-			aggregatedTime += (now - frameTime); 
-			frameTime = now;
-			
-			if (aggregatedTime > 1000) {
-				aggregatedTime = 0;
-			}
-			
-			while (aggregatedTime > GRANULARITY) {
-				aggregatedTime -= GRANULARITY;
-				animateSeconds += GRANULARITY * 0.001f * speed;
-			//	cameraController.placeCamera();
-			}
-			
-			if (animation > 0 && avatar.getSkinClipSequence().getSize() >= animation) {
-				float clipTime = avatar.getSkinClipSequence().getClip(animation-1).getTime();
-				
-				if (animateSeconds > clipTime) {
-					animateSeconds = 0;
-				}
-				
-				float index = animateSeconds / clipTime;
-				//if (useMeshAnim) {
-					//for (AnimatedGroup group : ninjas) {
-
-						for (Animated3D a : avatar) {
-							//a.animate(index, animation);
-							
-							a.animateSkin(index, animation);
-							if (!a.isAutoApplyAnimation())
-								a.applyAnimation();
-						}
-					
-			
-			
-			
-			} else {
-					animateSeconds = 0f;
-				}
-			
-			
-			
-
-			fb.clear(back);
-			world.renderScene(fb);
-			world.draw(fb);
-
-			fb.display();
-
-			if (System.currentTimeMillis() - fpsTime >= 1000) {
-				fps = 0;
-				fpsTime = System.currentTimeMillis();
-			}
-			fps++;
-		}
+	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 
 	}
 
-	public class ClearGLSurfaceView extends GLSurfaceView {
+	public void onDrawFrame(GL10 gl) {
+	    if (touchTurn != 0) {
+		//cube.rotateY(touchTurn);
+		avatar.getRoot().rotateY(touchTurn);
+		touchTurn = 0;
+	    }
 
-		public ClearGLSurfaceView(Context context) {
-			super(context);
+	    if (touchTurnUp != 0) {
+		//cube.rotateX(touchTurnUp);
+		avatar.getRoot().rotateX(touchTurnUp);
+		touchTurnUp = 0;
+	    }
+
+	    // ANIMATION!!!!
+
+	    long now = System.currentTimeMillis();
+	    aggregatedTime += (now - frameTime);
+	    frameTime = now;
+
+	    if (aggregatedTime > 1000) {
+		aggregatedTime = 0;
+	    }
+
+	    while (aggregatedTime > GRANULARITY) {
+		aggregatedTime -= GRANULARITY;
+		animateSeconds += GRANULARITY * 0.001f * speed;
+		// cameraController.placeCamera();
+	    }
+
+	    if (animation > 0
+		    && avatar.getSkinClipSequence().getSize() >= animation) {
+		float clipTime = avatar.getSkinClipSequence()
+			.getClip(animation - 1).getTime();
+
+		if (animateSeconds > clipTime) {
+		    animateSeconds = 0;
 		}
 
-		public ClearGLSurfaceView(Context context, AttributeSet attrs) {
-			super(context, attrs);
+		float index = animateSeconds / clipTime;
+		// if (useMeshAnim) {
+		// for (AnimatedGroup group : ninjas) {
+
+		for (Animated3D a : avatar) {
+		    // a.animate(index, animation);
+
+		    a.animateSkin(index, animation);
+		    if (!a.isAutoApplyAnimation())
+			a.applyAnimation();
 		}
 
-		@Override
-		public boolean onTouchEvent(MotionEvent me) {
+	    } else {
+		animateSeconds = 0f;
+	    }
 
-			if (me.getAction() == MotionEvent.ACTION_DOWN) {
-				xpos = me.getX();
-				ypos = me.getY();
-				return true;
-			}
+	    fb.clear(back);
+	    world.renderScene(fb);
+	    world.draw(fb);
 
-			if (me.getAction() == MotionEvent.ACTION_UP) {
-				xpos = -1;
-				ypos = -1;
-				touchTurn = 0;
-				touchTurnUp = 0;
-				return true;
-			}
+	    fb.display();
 
-			if (me.getAction() == MotionEvent.ACTION_MOVE) {
-				float xd = me.getX() - xpos;
-				float yd = me.getY() - ypos;
-
-				xpos = me.getX();
-				ypos = me.getY();
-
-				touchTurn = xd / 100f;
-				touchTurnUp = yd / 100f;
-				return true;
-			}
-
-			try {
-				Thread.sleep(15);
-			} catch (Exception e) {
-				// Doesn't matter here...
-			}
-
-			return super.onTouchEvent(me);
-		}
-		
+	    if (System.currentTimeMillis() - fpsTime >= 1000) {
+		fps = 0;
+		fpsTime = System.currentTimeMillis();
+	    }
+	    fps++;
 	}
+
+    }
+
+    public class ClearGLSurfaceView extends GLSurfaceView {
+
+	public ClearGLSurfaceView(Context context) {
+	    super(context);
+	}
+
+	public ClearGLSurfaceView(Context context, AttributeSet attrs) {
+	    super(context, attrs);
+	}
+	
+	@Override
+	 public boolean performClick() {
+	        super.performClick();
+	        return true;
+	 }
+
+	@Override
+	public boolean onTouchEvent(MotionEvent me) {
+
+	    if (me.getAction() == MotionEvent.ACTION_DOWN) {
+		xpos = me.getX();
+		ypos = me.getY();
+		return true;
+	    }
+
+	    if (me.getAction() == MotionEvent.ACTION_UP) {
+		xpos = -1;
+		ypos = -1;
+		touchTurn = 0;
+		touchTurnUp = 0;
+		return true;
+	    }
+
+	    if (me.getAction() == MotionEvent.ACTION_MOVE) {
+		float xd = me.getX() - xpos;
+		float yd = me.getY() - ypos;
+
+		xpos = me.getX();
+		ypos = me.getY();
+
+		touchTurn = xd / 100f;
+		touchTurnUp = yd / 100f;
+		return true;
+	    }
+	    
+	    switch (me.getAction()) {
+	    case MotionEvent.ACTION_DOWN:
+	        //some code....
+	        break;
+	    case MotionEvent.ACTION_UP:
+	        performClick();
+	        break;
+	    default:
+	        break;
+	    }
+
+	    try {
+		Thread.sleep(15);
+	    } catch (Exception e) {
+		// Doesn't matter here...
+	    }
+
+	    return super.onTouchEvent(me);
+	}
+	
+
+    }
 }

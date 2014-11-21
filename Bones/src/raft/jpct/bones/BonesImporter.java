@@ -666,6 +666,7 @@ public class BonesImporter {
     }
 	
 	/** creates an ardor Transform out of given jPCT matrix */
+    @SuppressWarnings("unused")
     private static Transform getTransform(Matrix m) {
 		Transform t = new Transform();
 		
@@ -689,6 +690,7 @@ public class BonesImporter {
     	return -1;
     }
 
+    @SuppressWarnings("unused")
     private static void saveMeshData(MeshData meshData, String file) throws IOException {
     	FileOutputStream fos = new FileOutputStream(file);
     	try {
