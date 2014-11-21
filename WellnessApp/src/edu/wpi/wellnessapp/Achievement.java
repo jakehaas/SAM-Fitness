@@ -25,6 +25,12 @@ public class Achievement {
     }
 
     private void displayDialog() {
+	if (ctx == null)
+	{
+	    // Show error ----- TODO
+	    return;
+	}
+	
 	AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
 
 	alert.setTitle("Achievement Unlocked!");
