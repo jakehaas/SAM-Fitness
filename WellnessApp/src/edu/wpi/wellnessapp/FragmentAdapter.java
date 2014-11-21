@@ -2,14 +2,14 @@ package edu.wpi.wellnessapp;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
-class FragmentAdapter extends FragmentPagerAdapter {
+class FragmentAdapter extends FragmentStatePagerAdapter {
 
-    MainFragment mainFragment;
-    StepsFragment stepFragment;
-    SleepFragment sleepFragment;
-    MoodFragment moodFragment;
+    static MainFragment mainFragment;
+    static StepsFragment stepFragment;
+    static SleepFragment sleepFragment;
+    static MoodFragment moodFragment;
 
     public FragmentAdapter(FragmentManager fm) {
 	super(fm);

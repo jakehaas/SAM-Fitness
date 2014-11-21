@@ -4,18 +4,7 @@ package edu.wpi.wellnessapp;
 
 //import java.io.File;
 
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-
-/*import android.app.ActionBar.LayoutParams;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-*/
-import android.app.Activity;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -26,9 +15,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.LineGraphView;
+/*import android.app.ActionBar.LayoutParams;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+*/
 
 
 public class StepsFragment extends Fragment{
@@ -100,7 +97,7 @@ public class StepsFragment extends Fragment{
 		//Cursor c = db.rawQuery("Select * from stepsTaken" , null);
 		//String collumn = c.getString(1);
 		System.out.println("hello\n");
-		MySQLiteHelper db = new MySQLiteHelper(getActivity());
+		DatabaseHandler db = new DatabaseHandler(getActivity());
 	    db.addStepsTaken(new StepsTaken("9-10-14", 3500));   
 	    db.addStepsTaken(new StepsTaken("9-10-15", 3530)); 
 	    db.addStepsTaken(new StepsTaken("9-10-16", 3670)); 
