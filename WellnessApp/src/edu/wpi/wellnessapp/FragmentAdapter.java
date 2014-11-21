@@ -6,17 +6,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 class FragmentAdapter extends FragmentPagerAdapter {
 
-    StepFragment mainFragment;
-    FragmentA stepFragment;
-    FragmentB sleepFragment;
-    FragmentC moodFragment;
+    MainFragment mainFragment;
+    StepsFragment stepFragment;
+    SleepFragment sleepFragment;
+    MoodFragment moodFragment;
 
     public FragmentAdapter(FragmentManager fm) {
 	super(fm);
-	mainFragment = new StepFragment();
-	stepFragment = new FragmentA();
-	sleepFragment = new FragmentB();
-	moodFragment = new FragmentC();
+	mainFragment = new MainFragment();
+	stepFragment = new StepsFragment();
+	sleepFragment = new SleepFragment();
+	moodFragment = new MoodFragment();
     }
 
     @Override
