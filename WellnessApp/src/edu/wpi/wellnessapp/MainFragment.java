@@ -95,9 +95,50 @@ public class MainFragment extends Fragment {
 
 	populateGraphView(rootView);
 	initGL(rootView, savedInstanceState);
+	
+	frameTime = System.currentTimeMillis();
+	aggregatedTime = 0;
 
 	return rootView;
     }
+    
+    
+    /*
+     * 
+     * NEED TO IMPLEMENT PAUSE/RESUME
+     * THIS OVERRIDES WILL BE NEEDED LATER
+     * THIS IS TO HOPEFULLY FIX THE GL VIEW BEING
+     * RE-CREATED SOMETIMES
+     * 
+     */
+    
+    /*
+    @Override
+    public void onPause() {
+		Logger.log("onPause");
+		super.onPause();
+//		mGLView.onPause();
+
+	}
+
+	@Override
+	public void onResume() {
+		Logger.log("onResume");
+		super.onResume();
+//		mGLView.onResume();
+		
+		frameTime = System.currentTimeMillis();
+		aggregatedTime = 0;
+
+	}
+
+	@Override
+	public void onStop() {
+		Logger.log("onStop");
+		super.onStop();
+	}
+	
+	*/
 
     private void loadGLResources() {
 	Resources res = getResources();

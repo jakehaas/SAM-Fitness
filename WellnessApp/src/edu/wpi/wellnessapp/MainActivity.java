@@ -20,10 +20,6 @@ public class MainActivity extends FragmentActivity implements TabListener {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.activity_main);
 
-	// Load Avatar
-	avatar = Avatar.getInstance();
-	Avatar.loadAvatar();
-
 	viewPager = (ViewPager) findViewById(R.id.pager);
 	viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager()));
 

@@ -2,9 +2,9 @@
 .metadata
 .gradle
 .DS_Store
-Bones/
 bin/
 tmp/
+Bones/
 *.tmp
 *.bak
 *.swp
