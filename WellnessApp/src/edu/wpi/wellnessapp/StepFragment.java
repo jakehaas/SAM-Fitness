@@ -81,9 +81,9 @@ public class StepFragment extends Fragment {
 
     private Light sun = null;
 
-//    private long startTime;
-//
-//    private long endTime;
+    // private long startTime;
+    //
+    // private long endTime;
 
     private Context myContext;
 
@@ -148,7 +148,7 @@ public class StepFragment extends Fragment {
 	    animations[i].setClampingMode(Animation.USE_CLAMPING);
 	}
 
-//	int count = 0;
+	// int count = 0;
 
 	int sequence = 0;
 	for (SkinClip clip : avatar.getSkinClipSequence()) {
@@ -168,7 +168,7 @@ public class StepFragment extends Fragment {
 		    Mesh keyframe = avatar.get(j).getMesh().cloneMesh(true);
 		    keyframe.strip();
 		    animations[j].addKeyFrame(keyframe);
-//		    count++;
+		    // count++;
 		    // Logger.log("added " + (i + 1) + " of " + sequence +
 		    // " to " + j + " total: " + count);
 		}
@@ -194,7 +194,7 @@ public class StepFragment extends Fragment {
 	}
 
 	super.onCreate(savedInstanceState);
-//	startTime = System.currentTimeMillis();
+	// startTime = System.currentTimeMillis();
 	mGLView = new ClearGLSurfaceView(myContext);
 
 	mGLView.setEGLConfigChooser(new GLSurfaceView.EGLConfigChooser() {
@@ -214,7 +214,7 @@ public class StepFragment extends Fragment {
 	renderer = new Renderer(myContext);
 	mGLView.setRenderer(renderer);
 
-//	endTime = System.currentTimeMillis();
+	// endTime = System.currentTimeMillis();
 
 	LinearLayout layout = (LinearLayout) rootView
 		.findViewById(R.id.mainAvatar);
@@ -338,13 +338,13 @@ public class StepFragment extends Fragment {
 
 	public void onDrawFrame(GL10 gl) {
 	    if (touchTurn != 0) {
-		//cube.rotateY(touchTurn);
+		// cube.rotateY(touchTurn);
 		avatar.getRoot().rotateY(touchTurn);
 		touchTurn = 0;
 	    }
 
 	    if (touchTurnUp != 0) {
-		//cube.rotateX(touchTurnUp);
+		// cube.rotateX(touchTurnUp);
 		avatar.getRoot().rotateX(touchTurnUp);
 		touchTurnUp = 0;
 	    }
@@ -414,12 +414,12 @@ public class StepFragment extends Fragment {
 	public ClearGLSurfaceView(Context context, AttributeSet attrs) {
 	    super(context, attrs);
 	}
-	
+
 	@Override
-	 public boolean performClick() {
-	        super.performClick();
-	        return true;
-	 }
+	public boolean performClick() {
+	    super.performClick();
+	    return true;
+	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent me) {
@@ -449,16 +449,16 @@ public class StepFragment extends Fragment {
 		touchTurnUp = yd / 100f;
 		return true;
 	    }
-	    
+
 	    switch (me.getAction()) {
 	    case MotionEvent.ACTION_DOWN:
-	        //some code....
-	        break;
+		// some code....
+		break;
 	    case MotionEvent.ACTION_UP:
-	        performClick();
-	        break;
+		performClick();
+		break;
 	    default:
-	        break;
+		break;
 	    }
 
 	    try {
@@ -469,7 +469,6 @@ public class StepFragment extends Fragment {
 
 	    return super.onTouchEvent(me);
 	}
-	
 
     }
 }
