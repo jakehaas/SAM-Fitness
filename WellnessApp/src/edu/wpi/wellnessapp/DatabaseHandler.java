@@ -43,10 +43,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	    						+ "date TEXT, "
 	    						+ "steps TEXT )";
 
+    /**
+     * DatabaseHandler Constructor
+     * DatabaseHandler(Context context)
+     * 
+     * @param context	The context
+     */
     public DatabaseHandler(Context context) {
 	super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * onCreate(SQLiteDatabase db)
+     * 
+     * Create the database
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -54,6 +65,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+     * 
+     * Upgrade the database
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 	Log.w(DatabaseHandler.class.getName(),
@@ -63,6 +79,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	onCreate(db);
     }
 
+    /**
+     * addStepsTaken(StepsTaken stepsTaken)
+     * 
+     * Update the database with the new number of steps taken
+     */
     public void addStepsTaken(StepsTaken stepsTaken) {
 	// for logging
 	Log.d("addStepsTaken", stepsTaken.toString());
@@ -85,6 +106,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	db.close();
     }
 
+    /**
+     * StepsTaken getStepsTaken(int id)
+     * 
+     * Get the ammount of steps taken out of the database
+     */
     public StepsTaken getStepsTaken(int id) {
 
 	// 1. get reference to readable DB
