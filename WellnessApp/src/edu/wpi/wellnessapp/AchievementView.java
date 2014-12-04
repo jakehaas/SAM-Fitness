@@ -21,6 +21,10 @@ package edu.wpi.wellnessapp;
 
 public class AchievementView {
 
+    /**
+     * AchievementView Constructor
+     * AchievementView()
+     */
     public AchievementView() {
 	// TODO Auto-generated constructor stub
     }
