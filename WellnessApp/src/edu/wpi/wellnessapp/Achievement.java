@@ -25,43 +25,66 @@ import android.content.DialogInterface;
 import android.view.View;
 
 public class Achievement {
-
+    // The context for the alert
     Context ctx = null;
+    
+    // Which achievement is this?
     int achievementID = -1;
 
+    /**
+     * Achievement Constructor
+     * Achievement(View v, int achievID)
+     * 
+     * @param v 	The view that the alert is added to
+     * @param achievID	Which achievement
+     */
     public Achievement(View v, int achievID) {
+	// Get the context from the view
 	ctx = v.getContext();
+	
+	// Assign achievement
 	achievementID = achievID;
 	
-	// Update the database with a record of this achiev
+	// Update the database with a record of this achievement
 	if (updateDatabase()) {
 	    // If the database update was successful, show the alert
 	    displayDialog();
 	} else {
-	    // Could not save record of achiev. Handle properly -- (maybe try again every 10 secs for 1 min, then fail?)
+	    // Could not save record of achievement. 
+	    // TODO Handle properly -- (maybe try again every 10 secs for 1 min, then fail?)
 	}
 	
     }
 
+    /**
+     * displayDialog()
+     * 
+     * Displays an alert informing the user that they
+     * earned a new achievement
+     */
     private void displayDialog() {
 	if (ctx == null)
 	{
-	    // Show error ----- TODO
+	    // TODO -- SHOW ERROR
 	    return;
 	}
 	
+	// Instantiate the AlertDialog Builder
 	AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
 
+	// Set the alert attributes
 	alert.setTitle("Achievement Unlocked!");
 	alert.setMessage("Congrats!");
 
+	// Define positive button response
 	alert.setPositiveButton(R.string.achiv_view,
 		new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int which) {
-			// Load achiev view
+			// TODO -- Load achievement view
 		    }
 		});
 
+	// Define negative button response
 	alert.setNegativeButton(R.string.achiv_close,
 		new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int which) {
@@ -69,12 +92,21 @@ public class Achievement {
 		    }
 		});
 
+	// Set the icon of the alert
 	alert.setIcon(android.R.drawable.ic_dialog_alert);
+	
+	// Show the alert to the user
 	alert.show();
     }
     
+    /**
+     * updateDatabase()
+     * 
+     * Update the achievement database
+     */
     private boolean updateDatabase() {
-	return true; // TMP FOR NOW UNTIL WE HAVE A REAL DATABASE HANDLER
+	return true;
+	// TODO -- IMPLEMENT DATABASE HANDLER
     }
 
 }
