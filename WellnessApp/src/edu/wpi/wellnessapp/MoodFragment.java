@@ -19,7 +19,6 @@
 
 package edu.wpi.wellnessapp;
 
-import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -32,8 +31,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RatingBar;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 public class MoodFragment extends Fragment {
@@ -78,18 +75,26 @@ public class MoodFragment extends Fragment {
 
 	final View popupView = mInflater.inflate(R.layout.mood_popup, null);
 
-	PopupWindow popupWindow = new PopupWindow(popupView, 400, 500);
+	final PopupWindow popupWindow = new PopupWindow(popupView, 400, 400);
 
 	// Example: If you have a TextView inside `popup_layout.xml`
 	final TextView tv = (TextView) popupView.findViewById(R.id.textView1);
 	tv.setText("Set your Mood!");
 
-	Button setMoodConfirmButton = (Button) popupView.findViewById(R.id.set_mood_button);
+	final Button setMoodConfirmButton = (Button) popupView.findViewById(R.id.set_mood_button);
 	setMoodConfirmButton.setOnClickListener(new OnClickListener() {
 	    @Override
 	    public void onClick(View v) {
 		RatingBar rb = (RatingBar) popupView.findViewById(R.id.ratingBar1);
 		tv.setText("Saved " + rb.getRating()  + " !");
+		
+		setMoodConfirmButton.setText("Close!");
+		setMoodConfirmButton.setOnClickListener(new OnClickListener() {
+		    @Override
+		    public void onClick(View v) {
+			popupWindow.dismiss();
+		    }
+		});
 	    }
 	});
 	
