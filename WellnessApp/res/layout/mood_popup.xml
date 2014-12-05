@@ -16,15 +16,21 @@
         android:text="Set your mood!"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    
     <Button
         android:id="@+id/set_mood_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="34dp"
+        android:layout_marginBottom="118dp"
         android:text="Set Mood" />
-    
+
+    <RatingBar
+        android:id="@+id/ratingBar1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/set_mood_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="83dp" />
 
 </RelativeLayout>

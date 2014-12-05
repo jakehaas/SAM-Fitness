@@ -31,6 +31,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
+import android.widget.RatingBar;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 public class MoodFragment extends Fragment {
@@ -68,15 +71,14 @@ public class MoodFragment extends Fragment {
     }
 
     public void showPopup(View anchorView) {
-
+	
 	LayoutInflater mInflater;
 	Context context = anchorView.getContext().getApplicationContext();
 	mInflater = LayoutInflater.from(context);
 
-	View popupView = mInflater.inflate(R.layout.mood_popup, null);
+	final View popupView = mInflater.inflate(R.layout.mood_popup, null);
 
-	PopupWindow popupWindow = new PopupWindow(popupView,
-		LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	PopupWindow popupWindow = new PopupWindow(popupView, 400, 500);
 
 	// Example: If you have a TextView inside `popup_layout.xml`
 	final TextView tv = (TextView) popupView.findViewById(R.id.textView1);
@@ -86,9 +88,12 @@ public class MoodFragment extends Fragment {
 	setMoodConfirmButton.setOnClickListener(new OnClickListener() {
 	    @Override
 	    public void onClick(View v) {
-		tv.setText("Saved!");
+		RatingBar rb = (RatingBar) popupView.findViewById(R.id.ratingBar1);
+		tv.setText("Saved " + rb.getRating()  + " !");
 	    }
 	});
+	
+
 
 	// If the PopupWindow should be focusable
 	popupWindow.setFocusable(true);
