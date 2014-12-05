@@ -34,31 +34,31 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 public class MoodFragment extends Fragment {
-    
- // The context for the alert
+
+    // The context for the alert
     Context ctx = null;
 
-    private Button closeButton;
+    private Button setMoodButton;
 
     View view;
-   // View popupView;
+    // View popupView;
     ViewGroup vg;
-    
+
     LayoutInflater li;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
 
 	view = inflater.inflate(R.layout.fragment_mood, container, false);
-	//popupView = inflater.inflate(R.layout.mood_popup, container, false);
+	// popupView = inflater.inflate(R.layout.mood_popup, container, false);
 	vg = container;
 	li = inflater;
 
-	this.closeButton = (Button) view.findViewById(R.id.button1);
-	this.closeButton.setOnClickListener(new OnClickListener() {
+	this.setMoodButton = (Button) view.findViewById(R.id.button1);
+	this.setMoodButton.setOnClickListener(new OnClickListener() {
 	    @Override
 	    public void onClick(View v) {
-		//new Achievement(v, 0);
+		// new Achievement(v, 0);
 		showPopup(v);
 	    }
 	});
@@ -67,39 +67,45 @@ public class MoodFragment extends Fragment {
 	return view;
     }
 
-
     public void showPopup(View anchorView) {
-	
-		LayoutInflater mInflater;
-		Context context = anchorView.getContext().getApplicationContext();
-		mInflater = LayoutInflater.from(context);
 
-	    View popupView = mInflater.inflate(R.layout.mood_popup, null);
+	LayoutInflater mInflater;
+	Context context = anchorView.getContext().getApplicationContext();
+	mInflater = LayoutInflater.from(context);
 
-	    PopupWindow popupWindow = new PopupWindow(popupView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	View popupView = mInflater.inflate(R.layout.mood_popup, null);
 
-	    // Example: If you have a TextView inside `popup_layout.xml`    
-	    TextView tv = (TextView) popupView.findViewById(R.id.textView1);
+	PopupWindow popupWindow = new PopupWindow(popupView,
+		LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
-	    tv.setText("Set your Mood!");
+	// Example: If you have a TextView inside `popup_layout.xml`
+	final TextView tv = (TextView) popupView.findViewById(R.id.textView1);
+	tv.setText("Set your Mood!");
 
+	Button setMoodConfirmButton = (Button) popupView.findViewById(R.id.set_mood_button);
+	setMoodConfirmButton.setOnClickListener(new OnClickListener() {
+	    @Override
+	    public void onClick(View v) {
+		tv.setText("Saved!");
+	    }
+	});
 
+	// If the PopupWindow should be focusable
+	popupWindow.setFocusable(true);
 
-	    // If the PopupWindow should be focusable
-	    popupWindow.setFocusable(true);
+	// If you need the PopupWindow to dismiss when when touched outside
+	popupWindow.setBackgroundDrawable(new ColorDrawable());
 
-	    // If you need the PopupWindow to dismiss when when touched outside 
-	    popupWindow.setBackgroundDrawable(new ColorDrawable());
+	int location[] = new int[2];
 
-	    int location[] = new int[2];
+	// Get the View's(the one that was clicked in the Fragment) location
+	anchorView.getLocationOnScreen(location);
 
-	    // Get the View's(the one that was clicked in the Fragment) location
-	    anchorView.getLocationOnScreen(location);
+	// Using location, the PopupWindow will be displayed right under
+	// anchorView
+	popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY, location[0],
+		location[1] + anchorView.getHeight());
 
-	    // Using location, the PopupWindow will be displayed right under anchorView
-	    popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY, 
-	                                     location[0], location[1] + anchorView.getHeight());
-
-	}
+    }
 
 }
