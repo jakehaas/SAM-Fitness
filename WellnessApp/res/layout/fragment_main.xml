@@ -7,7 +7,7 @@
         <LinearLayout
             android:id="@+id/graph1"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="290dp"
             android:layout_above="@+id/mainAvatar"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
@@ -33,5 +33,14 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp" >
         </LinearLayout>
+        
+        <Button
+        android:id="@+id/settings_button"
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="34dp"
+        android:text="Settings" />
 
 </RelativeLayout>
