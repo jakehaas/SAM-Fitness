@@ -146,9 +146,13 @@ public class StepsFragment extends Fragment {
 	    
 	    if (Utils.tryParseInt((String) textViewSteps.getText())) {
     	    	if (Integer.parseInt((String) textViewSteps.getText()) >= 10) {
-    	    	    new Achievement(view, 1);
+    	    	    if (!AchievementList.UNLOCKED_FIRST_STEPS) {
+    	    		new Achievement(view, 1);
+    	    		AchievementList.UNLOCKED_FIRST_STEPS = true;
+    	    	    }
     	    	}
 	    }
+	    
 	}
 
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
