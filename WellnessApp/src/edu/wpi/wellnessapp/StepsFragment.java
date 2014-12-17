@@ -63,13 +63,15 @@ public class StepsFragment extends Fragment {
     private int threshold;
 
     private TextView textViewSteps;
+    
+    View view;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
 
 	// StepsTaken stepsTaken = db.getStepsTaken(2);
 	// System.out.println(stepsTaken.toString());
-	View view = inflater.inflate(R.layout.fragment_step, container, false);
+	view = inflater.inflate(R.layout.fragment_step, container, false);
 	
 	previousX = 0;
 	currentX = 0;
@@ -141,6 +143,16 @@ public class StepsFragment extends Fragment {
 	    previousX = x;
 	    previousY = y;
 	    previousZ = z;
+	    
+	    if (Utils.tryParseInt((String) textViewSteps.getText())) {
+    	    	if (Integer.parseInt((String) textViewSteps.getText()) >= 10) {
+    	    	    if (!AchievementList.UNLOCKED_FIRST_STEPS) {
+    	    		new Achievement(view, 1);
+    	    		AchievementList.UNLOCKED_FIRST_STEPS = true;
+    	    	    }
+    	    	}
+	    }
+	    
 	}
 
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {

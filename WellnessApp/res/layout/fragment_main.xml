@@ -37,7 +37,7 @@
         android:gravity="center"
         android:shadowColor="@android:color/white"
         android:shadowRadius="10.0"
-        android:text="4"
+        android:text="89"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
@@ -51,7 +51,7 @@
         android:gravity="center"
         android:shadowColor="@android:color/white"
         android:shadowRadius="10.0"
-        android:text="4"
+        android:text="86.3"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
@@ -67,7 +67,7 @@
         android:gravity="center"
         android:shadowColor="@android:color/white"
         android:shadowRadius="10.0"
-        android:text="4"
+        android:text="96"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
@@ -82,7 +82,7 @@
         android:gravity="center"
         android:shadowColor="@android:color/white"
         android:shadowRadius="10.0"
-        android:text="4"
+        android:text="74"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
