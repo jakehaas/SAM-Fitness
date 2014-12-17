@@ -73,8 +73,8 @@ public class Achievement {
 	AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
 
 	// Set the alert attributes
-	alert.setTitle("Achievement Unlocked!");
-	alert.setMessage("Congrats!");
+	alert.setTitle("Achievement Unlocked -- " + getAchievmentAlertTitleText(achievementID));
+	alert.setMessage(getAchievmentAlertDescText(achievementID));
 
 	// Define positive button response
 	alert.setPositiveButton(R.string.achiv_view,
@@ -97,6 +97,24 @@ public class Achievement {
 	
 	// Show the alert to the user
 	alert.show();
+    }
+    
+    private String getAchievmentAlertDescText(int achievID) {
+	
+	if (achievID == 1) {
+	    return "Congrats! You have unlocked the achievment: " + getAchievmentAlertTitleText(achievID);
+	} else {
+	    return "Congrats!";
+	}
+    }
+    
+    private String getAchievmentAlertTitleText(int achievID) {
+	
+	if (achievID == 1) {
+	    return "First Steps!";
+	} else {
+	    return "Achievement Name!";
+	}
     }
     
     /**

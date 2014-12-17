@@ -77,7 +77,6 @@ public class MoodFragment extends Fragment {
 
 	final PopupWindow popupWindow = new PopupWindow(popupView, 400, 400);
 
-	// Example: If you have a TextView inside `popup_layout.xml`
 	final TextView tv = (TextView) popupView.findViewById(R.id.textView1);
 	tv.setText("Set your Mood!");
 
