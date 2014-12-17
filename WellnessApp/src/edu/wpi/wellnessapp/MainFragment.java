@@ -44,13 +44,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RatingBar;
-import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -110,6 +108,7 @@ public class MainFragment extends Fragment {
     private Context myContext;
     
     private boolean canShowSettingPopup = true;
+    PopupWindow popupWindow;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -121,7 +120,19 @@ public class MainFragment extends Fragment {
 	settingButton.setOnClickListener(new OnClickListener() {
 	    @Override
 	    public void onClick(View v) {
-		showSettingsPopup(v);
+		if (canShowSettingPopup) {
+		    showSettingsPopup(v);
+		    canShowSettingPopup = false;
+		}
+		else
+		{
+		    if (popupWindow != null)
+		    {
+			popupWindow.dismiss();
+			popupWindow = null;
+			canShowSettingPopup = true;
+		    }
+		}
 	    }
 	});
 
@@ -142,7 +153,7 @@ public class MainFragment extends Fragment {
    	mInflater = LayoutInflater.from(context);
 
    	final View popupView = mInflater.inflate(R.layout.settings_popup, null);
-   	final PopupWindow popupWindow = new PopupWindow(popupView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+   	popupWindow = new PopupWindow(popupView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
    	
    	popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
 
@@ -156,6 +167,8 @@ public class MainFragment extends Fragment {
 		    @Override
 		    public void onClick(View v) {
 			popupWindow.dismiss();
+			popupWindow = null;
+			canShowSettingPopup = true;
 		    }
 		});
 	    }
