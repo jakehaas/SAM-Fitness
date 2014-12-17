@@ -39,11 +39,18 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -100,17 +107,23 @@ public class MainFragment extends Fragment {
 
     private Light sun = null;
 
-    // private long startTime;
-    //
-    // private long endTime;
-
     private Context myContext;
+    
+    private boolean canShowSettingPopup = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
 	myContext = getActivity().getApplicationContext();
 	View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+	
+	Button settingButton = (Button) rootView.findViewById(R.id.settings_button);
+	settingButton.setOnClickListener(new OnClickListener() {
+	    @Override
+	    public void onClick(View v) {
+		showSettingsPopup(v);
+	    }
+	});
 
 	populateGraphView(rootView);
 	initGL(rootView, savedInstanceState);
@@ -119,6 +132,35 @@ public class MainFragment extends Fragment {
 	aggregatedTime = 0;
 
 	return rootView;
+    }
+    
+    
+    
+    public void showSettingsPopup(View anchorView) {
+   	LayoutInflater mInflater;
+   	Context context = anchorView.getContext().getApplicationContext();
+   	mInflater = LayoutInflater.from(context);
+
+   	final View popupView = mInflater.inflate(R.layout.settings_popup, null);
+   	final PopupWindow popupWindow = new PopupWindow(popupView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+   	
+   	popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+
+   	
+   	final Button setMoodConfirmButton = (Button) popupView.findViewById(R.id.set_mood_button);
+	setMoodConfirmButton.setOnClickListener(new OnClickListener() {
+	    @Override
+	    public void onClick(View v) {
+		setMoodConfirmButton.setText("Close!");
+		setMoodConfirmButton.setOnClickListener(new OnClickListener() {
+		    @Override
+		    public void onClick(View v) {
+			popupWindow.dismiss();
+		    }
+		});
+	    }
+	});
+	
     }
     
     
