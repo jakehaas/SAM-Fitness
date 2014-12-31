@@ -20,7 +20,6 @@
 package edu.wpi.wellnessapp;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -92,7 +91,7 @@ public class SleepFragment extends Fragment {
 	trackingStatus.setText("Tracking...");
 	
 	Vibrator vibrator = (Vibrator) ctx.getSystemService(Service.VIBRATOR_SERVICE);
-	vibrator.vibrate(new long[]{100,10,100,1000},-1);
+	vibrator.vibrate(new long[]{100, 10, 100, 1000}, -1);
     }
     
     public void stopSleepTracking(View view) {

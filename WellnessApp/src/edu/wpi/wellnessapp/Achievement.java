@@ -35,7 +35,7 @@ public class Achievement {
      * Achievement Constructor
      * Achievement(View v, int achievID)
      * 
-     * @param v 	The view that the alert is added to
+     * @param v 	The view that the achievement alert is added to
      * @param achievID	Which achievement
      */
     public Achievement(View v, int achievID) {
@@ -74,7 +74,7 @@ public class Achievement {
 
 	// Set the alert attributes
 	alert.setTitle("Achievement Unlocked -- " + getAchievmentAlertTitleText(achievementID));
-	alert.setMessage(getAchievmentAlertDescText(achievementID));
+	alert.setMessage(getAchievementAlertDescText(achievementID));
 
 	// Define positive button response
 	alert.setPositiveButton(R.string.achiv_view,
@@ -99,8 +99,15 @@ public class Achievement {
 	alert.show();
     }
     
-    private String getAchievmentAlertDescText(int achievID) {
-	
+    /**
+     * String getAchievementAlertDescText(int achievID)
+     * 
+     * Builds and returns the contents of the achievement
+     * alert as a string
+     * 
+     * @param achievID 		The ID of the achievement
+     */
+    private String getAchievementAlertDescText(int achievID) {
 	if (achievID == 1) {
 	    return "Congrats! You have unlocked the achievment: " + getAchievmentAlertTitleText(achievID);
 	} else {
@@ -108,8 +115,14 @@ public class Achievement {
 	}
     }
     
+    /**
+     * String getAchievmentAlertTitleText(int achievID)
+     * 
+     * Builds and returns the contents the alert title
+     * 
+     * @param achievID 		The ID of the achievement
+     */
     private String getAchievmentAlertTitleText(int achievID) {
-	
 	if (achievID == 1) {
 	    return "First Steps!";
 	} else {
@@ -118,9 +131,10 @@ public class Achievement {
     }
     
     /**
-     * updateDatabase()
+     * boolean updateDatabase()
      * 
-     * Update the achievement database
+     * Update the achievement database to make
+     * sure all earned achievements are saved
      */
     private boolean updateDatabase() {
 	return true;

@@ -30,6 +30,13 @@ class FragmentAdapter extends FragmentStatePagerAdapter {
     static SleepFragment sleepFragment;
     static MoodFragment moodFragment;
 
+    /**
+     * FragmentAdapter Constructor
+     * FragmentAdapter(FragmentManager fm)
+     * 
+     * @param fm 	The FragmentManager used to switch
+     * 			between fragments on the tabbed pane
+     */
     public FragmentAdapter(FragmentManager fm) {
 	super(fm);
 	mainFragment = new MainFragment();
@@ -38,28 +45,40 @@ class FragmentAdapter extends FragmentStatePagerAdapter {
 	moodFragment = new MoodFragment();
     }
 
+    /**
+     * Fragment getItem(int arg0)
+     * 
+     * Returns the currently selected tab fragment
+     * 
+     * @param arg0 	The currently selected tab
+     */
     @Override
     public Fragment getItem(int arg0) {
 	Fragment fragment = null;
 
 	switch (arg0) {
-	case 0:
-	    fragment = mainFragment;
-	    break;
-	case 1:
-	    fragment = stepFragment;
-	    break;
-	case 2:
-	    fragment = sleepFragment;
-	    break;
-	case 3:
-	    fragment = moodFragment;
-	    break;
+    	case 0:
+    	    fragment = mainFragment;
+    	    break;
+    	case 1:
+    	    fragment = stepFragment;
+    	    break;
+    	case 2:
+    	    fragment = sleepFragment;
+    	    break;
+    	case 3:
+    	    fragment = moodFragment;
+    	    break;
 	}
 
 	return fragment;
     }
 
+    /**
+     * int getCount()
+     * 
+     * Returns the total number of available tabs for the tabbed pane
+     */
     @Override
     public int getCount() {
 	// TODO Auto-generated method stub
