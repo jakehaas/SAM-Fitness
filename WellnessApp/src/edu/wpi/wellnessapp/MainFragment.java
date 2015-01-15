@@ -26,9 +26,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
+
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.GraphView;
 import com.threed.jpct.Animation;
 import com.threed.jpct.Camera;
 import com.threed.jpct.Config;
@@ -284,22 +286,23 @@ public class MainFragment extends Fragment {
     }
 
     private void populateGraphView(View view) {
-	GraphViewSeries exampleSeries = new GraphViewSeries(
-		new GraphViewData[] { new GraphViewData(1, 2.0d),
-			new GraphViewData(2, 1.5d), new GraphViewData(3, 2.5d),
-			new GraphViewData(4, 1.0d) });
+    	LineGraphSeries<DataPoint> exampleSeries = new LineGraphSeries<DataPoint>(
+    							new DataPoint[] 
+    									{ new DataPoint(1, 2.0d),
+    									  new DataPoint(2, 1.5d), 
+    									  new DataPoint(3, 2.5d),
+    									  new DataPoint(4, 1.0d) });
 
-	LineGraphView graphView = new LineGraphView(getActivity() // context
-		, "Steps Taken\n" // heading
-	);
+	GraphView graphView = new GraphView(getActivity());
 	graphView.addSeries(exampleSeries); // data
-	graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.WHITE);
-	graphView.getGraphViewStyle().setVerticalLabelsColor(Color.WHITE);
-	graphView.setHorizontalLabels(new String[] { "9/10", "9/15", "9/20",
+	graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+	graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+	StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphView);
+	staticLabelsFormatter.setHorizontalLabels(new String[] { "9/10", "9/15", "9/20",
 		"9/25" });
-	graphView.setVerticalLabels(new String[] { "10,000", "5,000", "0" });
-	graphView.getGraphViewStyle().setGridColor(Color.LTGRAY);
-	graphView.getGraphViewStyle().setTextSize(20);
+	staticLabelsFormatter.setVerticalLabels(new String[] { "10,000", "5,000", "0" });
+	graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
+	graphView.getGridLabelRenderer().setTextSize(20);
 
 	try {
 

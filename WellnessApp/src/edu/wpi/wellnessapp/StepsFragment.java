@@ -2,6 +2,10 @@ package edu.wpi.wellnessapp;
 
 //import java.io.File;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -10,21 +14,18 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
+//import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
-/*import android.app.ActionBar.LayoutParams;
- import android.content.Context;
- import android.database.Cursor;
- import android.database.sqlite.SQLiteDatabase;
- */
 
 public class StepsFragment extends Fragment {
 
@@ -39,43 +40,79 @@ public class StepsFragment extends Fragment {
     
     private float previousZ;
     private float currentZ;
-    
+    private int idCounter;
     private int numSteps;
     private int threshold;
-
+    private int tmpMinutes;
+    GraphView graphView;
+  //  private List<GraphViewData> dataArray = new ArrayList<GraphViewData>();
+    LineGraphSeries<DataPoint> exampleSeries;
+    
+    
     private TextView textViewSteps;
-
+    
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
 
-	// StepsTaken stepsTaken = db.getStepsTaken(2);
-	// System.out.println(stepsTaken.toString());
-	View view = inflater.inflate(R.layout.fragment_step, container, false);
-	
-	previousX = 0;
-	currentX = 0;
-	
-	previousY = 0;
-	currentY = 0;
-	
-	previousZ = 0;
-	currentZ = 0;
-	
-	numSteps = 0;
-	threshold = 10;
+    	View view = inflater.inflate(R.layout.fragment_step, container, false);
+    	DatabaseHandler db = new DatabaseHandler(getActivity());
+     
+        /*graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
+            public String formatLabel(double value, boolean isValueX) {
+                if (isValueX) {
+                	Calendar c = Calendar.getInstance(); 
+                	int minutes = c.get(Calendar.MINUTE);
+                	int hours = c.get(Calendar.HOUR);
+                	StringBuilder fullDate = new StringBuilder();
+                	tmpMinutes = minutes;
+                	fullDate.append(hours);
+                	fullDate.append("-");
+                	fullDate.append(tmpMinutes);
+                	return fullDate.toString();
+                }
+                return null; // let graphview generate Y-axis label for us
+            }
+        });
+        */
+    	Calendar c = Calendar.getInstance(); 
+    	tmpMinutes = c.get(Calendar.MINUTE);
 
-	textViewSteps = (TextView) view.findViewById(R.id.textSteps);
-	populateGraphView(view);
-	enableAccelerometerListening();
+    	previousX = 0;
+    	currentX = 0;
+	
+    	previousY = 0;
+    	currentY = 0;
+	
+    	previousZ = 0;
+    	currentZ = 0;
+	
+    	numSteps = 0;
+    	threshold = 7;
+    	idCounter = 1;
+    	textViewSteps = (TextView) view.findViewById(R.id.textSteps);
+    	
+        graphView = new GraphView(getActivity());
+    	graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+	    graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+	    graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
+	    graphView.getGridLabelRenderer().setTextSize(20);
+	//    graphView.setScrollable(true);
+	//    graphView.setScalable(true);
+    	
+	    
+	    
+	    
+    	//populateGraphView(view, 0);
+    	enableAccelerometerListening();
 
-	return view;
+    	return view;
     }
 
     private void enableAccelerometerListening() {
 	// Initialize the sensor manager
-	sensorManager = (SensorManager) getActivity().getSystemService(
-		Context.SENSOR_SERVICE);
-	sensorManager.registerListener(sensorEventListener,
+    	sensorManager = (SensorManager) getActivity().getSystemService(
+    												Context.SENSOR_SERVICE);
+    	sensorManager.registerListener(sensorEventListener,
 		sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 		SensorManager.SENSOR_DELAY_NORMAL);
     }
@@ -85,7 +122,8 @@ public class StepsFragment extends Fragment {
 	// Listens for change in acceleration, displays, and computes the steps
 	public void onSensorChanged(SensorEvent event) {
 	    // Gather the values from accelerometer
-	    float x = event.values[0];
+		
+		float x = event.values[0];
 	    float y = event.values[1];
 	    float z = event.values[2];
 
@@ -93,29 +131,76 @@ public class StepsFragment extends Fragment {
 	    currentY = y;
 	    currentZ = z;
 	    
+	    DatabaseHandler db = new DatabaseHandler(getActivity());
+    	Calendar c = Calendar.getInstance(); 
+    	int minutes = c.get(Calendar.MINUTE);
+    	int hours = c.get(Calendar.HOUR);
+    	StringBuilder fullDate = new StringBuilder();
+
+    	if (minutes != tmpMinutes) {
+    			
+    			if (idCounter == 1) {
+    		    	
+    		    	
+    		    /*	fullDate.append(hours);
+    		    	fullDate.append("-");
+    		    	fullDate.append(tmpMinutes);
+    		     	db.addStepsTaken(new StepsTaken(fullDate.toString(), numSteps));
+    		     	StepsTaken stepsTaken0 = db.getStepsTaken(idCounter);
+    		    	*/	
+    		     	
+    		    //	dataArray.add(new GraphViewData(tmpMinutes, stepsTaken0.steps));
+    		        exampleSeries = new LineGraphSeries<DataPoint>();
+    		        exampleSeries.appendData(new DataPoint(tmpMinutes, /*stepsTaken0.steps*/ numSteps), false, 5);
+    		        graphView.addSeries(exampleSeries); // data
+    		
+    		        try {
+
+    		        	RelativeLayout layout = (RelativeLayout) getView().findViewById(R.id.graph1);
+
+    		        	layout.addView(graphView);
+    		        } 
+    		        catch (NullPointerException e) {
+    		    	    // something to handle the NPE.
+    		        }
+    		        numSteps = 1;
+    		        tmpMinutes = minutes;
+    		        idCounter++;
+    		       
+    			}
+    			else{ 
+    				/*fullDate.append(hours);
+    				fullDate.append("-");
+    				fullDate.append(tmpMinutes);
+    				db.addStepsTaken(new StepsTaken(fullDate.toString(), numSteps));
+    				StepsTaken stepsTaken0 = db.getStepsTaken(idCounter);  
+    				*/  			
+    				//exampleSeries.resetData(dataArray.toArray(new GraphViewData[idCounter]));
+    				//graphView.setViewPort((tmpMinutes - 5), tmpMinutes);
+    				idCounter++;
+    			
+    				exampleSeries.appendData(new DataPoint(tmpMinutes, /*stepsTaken0.steps*/ numSteps), false, 5);
+    				//int viewPort = tmpMinutes - 5;
+    				//graphView.setViewPort(viewPort, tmpMinutes);
+    				//graphView.redrawAll();
+    
+    				numSteps = 1;
+    				tmpMinutes = minutes;
+    			}
+
+    	}
+	    
+	    
 	    if ( Math.sqrt( ((currentX * currentX) + (currentY * currentY) + (currentZ * currentZ)) - 
 		 ((previousX * previousX) + (previousY * previousY) + (previousZ * previousZ)) ) >  threshold) {
-		
-		numSteps++;
-		textViewSteps.setText(String.valueOf(numSteps));
+	    	
+
+	    		numSteps++; 		
+				//populateGraphView(getView(), numSteps, minutes);
+	    		textViewSteps.setText(String.valueOf(numSteps));
 	    }
 
-	    /*
-	    // Measure if a step is taken
-	    if (Math.abs(currentX - previousX) > threshold || 
-		Math.abs(currentY - previousY) > threshold || 
-		Math.abs(currentZ - previousZ) > threshold) {
-		
-		numSteps++;
-		textViewSteps.setText(String.valueOf(numSteps));
-	    }*/
-
-	    // // Measure if a step is taken
-	    // if(Math.abs(currentY - previousY) > threshold){
-	    // numSteps++;
-	    // textViewSteps.setText(String.valueOf(numSteps));
-	    // }
-
+	   
 	    // Display the values
 
 	    // Store the previous values
@@ -129,54 +214,18 @@ public class StepsFragment extends Fragment {
 	}
     }; // ends private inner class sensorEventListener
 
-    private void populateGraphView(View view) {
-
-	// Cursor c = db.rawQuery("Select * from stepsTaken" , null);
-	// String collumn = c.getString(1);
-	DatabaseHandler db = new DatabaseHandler(getActivity());
-	db.addStepsTaken(new StepsTaken("9-10-14", 3500));
-	db.addStepsTaken(new StepsTaken("9-10-15", 3530));
-	db.addStepsTaken(new StepsTaken("9-10-16", 3670));
-	db.addStepsTaken(new StepsTaken("9-10-17", 4300));
-	db.addStepsTaken(new StepsTaken("9-10-18", 2380));
-	db.addStepsTaken(new StepsTaken("9-10-19", 3150));
-
-	StepsTaken stepsTaken0 = db.getStepsTaken(1);
-	StepsTaken stepsTaken1 = db.getStepsTaken(2);
-	StepsTaken stepsTaken2 = db.getStepsTaken(3);
-	StepsTaken stepsTaken3 = db.getStepsTaken(4);
-	StepsTaken stepsTaken4 = db.getStepsTaken(5);
-	StepsTaken stepsTaken5 = db.getStepsTaken(6);
-	// System.out.println(stepsTaken.toString());
-	GraphViewSeries exampleSeries = new GraphViewSeries(
-		new GraphViewData[] { new GraphViewData(1, stepsTaken0.steps),
-            			new GraphViewData(2, stepsTaken1.steps),
-            			new GraphViewData(3, stepsTaken2.steps),
-            			new GraphViewData(4, stepsTaken3.steps),
-            			new GraphViewData(5, stepsTaken4.steps),
-            			new GraphViewData(6, stepsTaken5.steps) });
-
-	LineGraphView graphView = new LineGraphView(getActivity() // context
-		, "Steps Taken\n" // heading
-	);
-	graphView.addSeries(exampleSeries); // data
-	graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.WHITE);
-	graphView.getGraphViewStyle().setVerticalLabelsColor(Color.WHITE);
-	graphView.setHorizontalLabels(new String[] { stepsTaken0.date,
-		stepsTaken1.date, stepsTaken2.date, stepsTaken3.date,
-		stepsTaken4.date, stepsTaken5.date });
-
-	graphView.getGraphViewStyle().setGridColor(Color.LTGRAY);
-	graphView.getGraphViewStyle().setTextSize(20);
-	
-	try {
-
-	    RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.graph1);
-
-	    layout.addView(graphView);
-	} catch (NullPointerException e) {
-	    // something to handle the NPE.
-	}
+    private void populateGraphView(View view, int numSteps, int minutes) {
+    	DatabaseHandler db = new DatabaseHandler(getActivity());
+    	
+    	StepsTaken stepsTaken0 = db.getStepsTaken(idCounter);
+  
+    	System.out.println(stepsTaken0.steps);
+    	stepsTaken0.setSteps(stepsTaken0.steps + numSteps);
+    	System.out.println(stepsTaken0.steps);
+    	db.updateStepsTaken(stepsTaken0);
+    	
+    	//exampleSeries.resetData(new GraphViewData[] { new GraphViewData(minutes, stepsTaken0.steps)});
+    	
     }
 
 }

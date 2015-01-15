@@ -45,25 +45,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void addStepsTaken(StepsTaken stepsTaken) {
-	// for logging
-	Log.d("addStepsTaken", stepsTaken.toString());
+    	// for logging
+    	Log.d("addStepsTaken", stepsTaken.toString());
 
-	// 1. get reference to writable DB
-	SQLiteDatabase db = this.getWritableDatabase();
+    	// 1. get reference to writable DB
+    	SQLiteDatabase db = this.getWritableDatabase();
 
-	// 2. create ContentValues to add key "column"/value
-	ContentValues values = new ContentValues();
-	values.put("date", stepsTaken.getDate()); // get title
-	values.put("steps", stepsTaken.getSteps()); // get author
+    	// 2. create ContentValues to add key "column"/value
+    	ContentValues values = new ContentValues();
+    	values.put("date", stepsTaken.getDate()); // get title
+    	values.put("steps", stepsTaken.getSteps()); // get author
 
-	// 3. insert
-	db.insert(TABLE_STEPS_TAKEN, // table
-		null, // nullColumnHack
-		values); // key/value -> keys = column names/ values = column
+    	// 3. insert
+    	db.insert(TABLE_STEPS_TAKEN, // table
+    			null, // nullColumnHack
+    			values); // key/value -> keys = column names/ values = column
 			 // values
 
-	// 4. close
-	db.close();
+    	// 4. close
+    	db.close();
     }
 
     public StepsTaken getStepsTaken(int id) {
@@ -85,7 +85,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	if (cursor != null)
 	    cursor.moveToFirst();
 
-	// 4. build book object
+
 	StepsTaken stepsTaken = new StepsTaken();
 	stepsTaken.setId(Integer.parseInt(cursor.getString(0)));
 	stepsTaken.setDate(cursor.getString(1));
@@ -96,6 +96,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	// 5. return book
 	return stepsTaken;
+    }
+    
+    public int updateStepsTaken(StepsTaken stepsTaken) {
+    	 
+        // 1. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+     
+        // 2. create ContentValues to add key "column"/value
+        ContentValues values = new ContentValues();
+        values.put("date", stepsTaken.getDate()); // get title 
+        values.put("steps", stepsTaken.getSteps()); // get author
+     
+        // 3. updating row
+        int i = db.update(TABLE_STEPS_TAKEN, //table
+                values, // column/value
+                KEY_ID+" = ?", // selections
+                new String[] { String.valueOf(stepsTaken.getId()) }); //selection args
+        Log.d("updateStepsTaken", stepsTaken.toString());
+        // 4. close
+        db.close();
+     
+        return i;
+     
     }
 
 }
