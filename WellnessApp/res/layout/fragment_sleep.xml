@@ -12,16 +12,44 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="16dp"
         android:layout_marginTop="14dp"
-        android:text="This is Fragment B"
+        android:text="Sleep Monitor"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/testButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="34dp"
         android:text="Test Achiev!" />
+
+    <Button
+        android:id="@+id/startSleepButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="91dp"
+        android:text="Start Sleep Tracking" />
+    
+    <Button
+        android:id="@+id/stopSleepButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:text="Stop Sleep Tracking" />
+
+    <TextView
+        android:id="@+id/textViewTrackingStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="72dp"
+        android:text="Not Tracking..."
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

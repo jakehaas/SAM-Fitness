@@ -1,5 +1,5 @@
 /**
- * AchievementView.java
+ * Utils.java
  * Wellness-App-MQP
  * 
  * @version     1.0.0
@@ -19,14 +19,25 @@
 
 package edu.wpi.wellnessapp;
 
-public class AchievementView {
+public class Utils {
 
-    /**
-     * AchievementView Constructor
-     * AchievementView()
-     */
-    public AchievementView() {
+    public Utils() {
 	// TODO Auto-generated constructor stub
     }
 
+    /**
+     * tryParseInt(String value)
+     * 
+     * @param value 	The string to try and parse into an integer
+     */
+    public static boolean tryParseInt(String value) {
+	try {
+	    Integer.parseInt(value);
+	    return true;
+	} catch (NumberFormatException nfe) {
+	    return false;
+	}
+    }
+
 }
+	

@@ -1,5 +1,5 @@
 /**
- * AchievementView.java
+ * AchievementList.java
  * Wellness-App-MQP
  * 
  * @version     1.0.0
@@ -19,13 +19,11 @@
 
 package edu.wpi.wellnessapp;
 
-public class AchievementView {
+public class AchievementList {
+    
+    static boolean UNLOCKED_FIRST_STEPS = false;
 
-    /**
-     * AchievementView Constructor
-     * AchievementView()
-     */
-    public AchievementView() {
+    public AchievementList() {
 	// TODO Auto-generated constructor stub
     }
 

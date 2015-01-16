@@ -1,3 +1,22 @@
+/**
+ * StepsFragment.java
+ * Wellness-App-MQP
+ * 
+ * @version     1.0.0
+ * 
+ * @author      Jake Haas
+ * @author	Evan Safford
+ * @author	Nate Ford
+ * @author	Haley Andrews
+ * 
+ * Copyright (c) 2013, 2014. Wellness-App-MQP. All Right Reserved.
+ *
+ * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+ * KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+ * PARTICULAR PURPOSE.
+ */
+
 package edu.wpi.wellnessapp;
 
 //import java.io.File;
@@ -51,6 +70,7 @@ public class StepsFragment extends Fragment {
     
     private TextView textViewSteps;
     
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
 
@@ -79,7 +99,7 @@ public class StepsFragment extends Fragment {
 
     	previousX = 0;
     	currentX = 0;
-	
+
     	previousY = 0;
     	currentY = 0;
 	
@@ -207,6 +227,16 @@ public class StepsFragment extends Fragment {
 	    previousX = x;
 	    previousY = y;
 	    previousZ = z;
+	    
+	    if (Utils.tryParseInt((String) textViewSteps.getText())) {
+    	    	if (Integer.parseInt((String) textViewSteps.getText()) >= 10) {
+    	    	    if (!AchievementList.UNLOCKED_FIRST_STEPS) {
+    	    		new Achievement(getView(), 1);
+    	    		AchievementList.UNLOCKED_FIRST_STEPS = true;
+    	    	    }
+    	    	}
+	    }
+	    
 	}
 
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
