@@ -6,6 +6,5 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Bones"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="lib" path="/Users/Nate/Downloads/GraphView-4.0.0.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
