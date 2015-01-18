@@ -19,6 +19,9 @@
 
 package edu.wpi.wellnessapp;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Utils {
 
     public Utils() {
@@ -28,7 +31,8 @@ public class Utils {
     /**
      * tryParseInt(String value)
      * 
-     * @param value 	The string to try and parse into an integer
+     * @param value
+     *            The string to try and parse into an integer
      */
     public static boolean tryParseInt(String value) {
 	try {
@@ -39,5 +43,18 @@ public class Utils {
 	}
     }
 
+    public static String getTimeString() {
+	SimpleDateFormat formatter = new SimpleDateFormat("MM dd - HH:mm");
+	Date curDate = new Date(System.currentTimeMillis());
+	String timeString = formatter.format(curDate);
+	return timeString;
+    }
+
+    public static String getDateString() {
+	SimpleDateFormat formatter = new SimpleDateFormat("MM dd");
+	Date curDate = new Date(System.currentTimeMillis());
+	String timeString = formatter.format(curDate);
+	return timeString;
+    }
+
 }
-	
