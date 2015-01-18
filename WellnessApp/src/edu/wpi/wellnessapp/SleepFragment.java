@@ -32,6 +32,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -59,6 +60,8 @@ public class SleepFragment extends Fragment {
     private int f = 0;
     private float lightIntensity;
     
+    private AudioThread audioThread = null;
+    
     SensorManager sensorMgr = (SensorManager) ctx.getSystemService(ctx.SENSOR_SERVICE);
 	 
     Sensor lightSensor = sensorMgr.getDefaultSensor(Sensor.TYPE_LIGHT);
@@ -66,6 +69,9 @@ public class SleepFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	final View view = inflater.inflate(R.layout.fragment_sleep, container, false);
 	ctx = getActivity().getApplicationContext();
+	
+	mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+        mFileName += "/audiorecordtest.3gp";
 	
 	trackingStatus = (TextView) view.findViewById(R.id.textViewTrackingStatus);
 	
@@ -124,6 +130,9 @@ public class SleepFragment extends Fragment {
         }
         	
         mRecorder.start();  
+        
+        audioThread = new AudioThread();
+        audioThread.start();
     }
     
     public void stopSleepTracking(View view) {
