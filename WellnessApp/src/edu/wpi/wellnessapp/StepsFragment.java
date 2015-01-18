@@ -21,9 +21,7 @@ package edu.wpi.wellnessapp;
 
 //import java.io.File;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -33,17 +31,16 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-//import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+//import com.jjoe64.graphview.GraphView.GraphViewData;
 
 
 public class StepsFragment extends Fragment {

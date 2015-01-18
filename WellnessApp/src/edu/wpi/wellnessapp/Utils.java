@@ -43,14 +43,14 @@ public class Utils {
 	}
     }
 
-    public String getTimeString() {
+    public static String getTimeString() {
 	SimpleDateFormat formatter = new SimpleDateFormat("MM dd - HH:mm");
 	Date curDate = new Date(System.currentTimeMillis());
 	String timeString = formatter.format(curDate);
 	return timeString;
     }
 
-    public String getDateString() {
+    public static String getDateString() {
 	SimpleDateFormat formatter = new SimpleDateFormat("MM dd");
 	Date curDate = new Date(System.currentTimeMillis());
 	String timeString = formatter.format(curDate);

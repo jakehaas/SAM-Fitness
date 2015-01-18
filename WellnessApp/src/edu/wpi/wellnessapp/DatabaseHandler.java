@@ -23,9 +23,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-//import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+//import android.database.sqlite.SQLiteDatabase.CursorFactory;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String TABLE_STEPS_TAKEN = "StepsTaken";

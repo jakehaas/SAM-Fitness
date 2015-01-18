@@ -19,7 +19,6 @@
 
 package edu.wpi.wellnessapp;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
 
 import android.app.AlertDialog;
@@ -62,13 +61,15 @@ public class SleepFragment extends Fragment {
     
     private AudioThread audioThread = null;
     
-    SensorManager sensorMgr = (SensorManager) ctx.getSystemService(ctx.SENSOR_SERVICE);
-	 
-    Sensor lightSensor = sensorMgr.getDefaultSensor(Sensor.TYPE_LIGHT);
+    SensorManager sensorMgr = null;
+    Sensor lightSensor = null;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	final View view = inflater.inflate(R.layout.fragment_sleep, container, false);
 	ctx = getActivity().getApplicationContext();
+	
+	sensorMgr = (SensorManager) ctx.getSystemService(Context.SENSOR_SERVICE);
+	lightSensor = sensorMgr.getDefaultSensor(Sensor.TYPE_LIGHT);
 	
 	mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         mFileName += "/audiorecordtest.3gp";
@@ -181,19 +182,19 @@ public class SleepFragment extends Fragment {
     
   //light sensor
     SensorEventListener lightlsn = new SensorEventListener() {
-					
-  	  @Override
-  	  public void onSensorChanged(SensorEvent event) {
-		  lightIntensity = event.values[0];
-		  //light value
-		  }
 
-		  @Override
-		  public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		  // TODO Auto-generated method stub
-		  }
-				
-	  };
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+	    lightIntensity = event.values[0];
+	    // light value
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+	    // TODO Auto-generated method stub
+	}
+
+    };
 
     private class AudioThread extends Thread {
 
@@ -213,6 +214,12 @@ public class SleepFragment extends Fragment {
 		}
 	    }
 	    flag = true;
+	}
+    }
+    
+    public void checkSleepStartTime() {
+	if (lightIntensity < 11 || f < 30) {
+	    String timeString = Utils.getTimeString();
 	}
     }
 
