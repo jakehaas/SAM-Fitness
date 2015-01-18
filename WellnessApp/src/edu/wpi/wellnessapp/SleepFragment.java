@@ -19,10 +19,18 @@
 
 package edu.wpi.wellnessapp;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
+
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
@@ -44,6 +52,16 @@ public class SleepFragment extends Fragment {
     private boolean isTracking = false;
     
     private Context ctx;
+    
+    private MediaRecorder mRecorder;
+    private static String mFileName = null;
+    private boolean flag = true;
+    private int f = 0;
+    private float lightIntensity;
+    
+    SensorManager sensorMgr = (SensorManager) ctx.getSystemService(ctx.SENSOR_SERVICE);
+	 
+    Sensor lightSensor = sensorMgr.getDefaultSensor(Sensor.TYPE_LIGHT);
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	final View view = inflater.inflate(R.layout.fragment_sleep, container, false);
@@ -92,6 +110,20 @@ public class SleepFragment extends Fragment {
 	
 	Vibrator vibrator = (Vibrator) ctx.getSystemService(Service.VIBRATOR_SERVICE);
 	vibrator.vibrate(new long[]{100, 10, 100, 1000}, -1);
+	
+	mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);   
+        mRecorder.setOutputFile(mFileName);
+        
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+            
+        }
+        	
+        mRecorder.start();  
     }
     
     public void stopSleepTracking(View view) {
@@ -99,7 +131,11 @@ public class SleepFragment extends Fragment {
 	trackingStatus.setText("Not Tracking...");
 	
 	Vibrator vibrator = (Vibrator) ctx.getSystemService(Service.VIBRATOR_SERVICE);
-	vibrator.vibrate(new long[]{100,10,100,1000},-1);
+	vibrator.vibrate(new long[]{100, 10, 100, 1000}, -1);
+	
+	mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
     }
     
     /**
@@ -132,6 +168,43 @@ public class SleepFragment extends Fragment {
 	
 	// Show the alert to the user
 	alert.show();
+    }
+    
+  //light sensor
+    SensorEventListener lightlsn = new SensorEventListener() {
+					
+  	  @Override
+  	  public void onSensorChanged(SensorEvent event) {
+		  lightIntensity = event.values[0];
+		  //light value
+		  }
+
+		  @Override
+		  public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		  // TODO Auto-generated method stub
+		  }
+				
+	  };
+
+    private class AudioThread extends Thread {
+
+	AudioThread() {
+	}
+
+	public void exit() {
+	    flag = false;
+	    while (!flag);
+	}
+
+	public void run() {
+	    while (flag) {
+		int x = mRecorder.getMaxAmplitude();
+		if (x != 0) {
+		    f = (int) (10 * Math.log(x) / Math.log(10));
+		}
+	    }
+	    flag = true;
+	}
     }
 
 }
