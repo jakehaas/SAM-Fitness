@@ -209,7 +209,12 @@ public class SleepFragment extends Fragment {
 		@Override
 		public void onSensorChanged(SensorEvent event) {
 		    lightIntensity = event.values[0];
-		    lightSensorValue.setText("Light Sensor Value: " + Float.toString(lightIntensity));
+		    if(isTracking){
+		    	lightSensorValue.setText("Light Sensor Value: " + Float.toString(lightIntensity));
+		    }
+		    else{
+		    	lightSensorValue.setText("Light Sensor Value: ");
+		    }
 		    // displays light value in real time
 		}
 	
