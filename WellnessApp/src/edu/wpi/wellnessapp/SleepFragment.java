@@ -80,7 +80,6 @@ public class SleepFragment extends Fragment {
 	trackingStatus = (TextView) view.findViewById(R.id.textViewTrackingStatus);
 	lightSensorValue = (TextView) view.findViewById(R.id.textViewLightSensorValue);
 	
-	
 	//checks to see if the app was previously tracking sleep when opened
 	if (isTracking) {
 	    trackingStatus.setText("Tracking...");
@@ -114,7 +113,7 @@ public class SleepFragment extends Fragment {
 		stopSleepTracking(v);
 	    }
 	});
-
+	stopButton.setEnabled(false);
 	return view;
     }
     
@@ -125,6 +124,8 @@ public class SleepFragment extends Fragment {
     	//display
     	displayDialog();
 		isTracking = true;
+		startButton.setEnabled(false);
+		stopButton.setEnabled(true);
 		trackingStatus.setText("Tracking...");
 		
 		//light
@@ -155,6 +156,9 @@ public class SleepFragment extends Fragment {
     
     //stop sleep tracking
     public void stopSleepTracking(View view) {
+    	
+    	startButton.setEnabled(true);
+		stopButton.setEnabled(false);
     	
     	//display
 		isTracking = false;
