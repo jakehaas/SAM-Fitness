@@ -36,6 +36,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -51,6 +52,7 @@ public class SleepFragment extends Fragment {
     
     private TextView trackingStatus;  
     private TextView lightSensorValue;
+    private TextView audioValue;
     private boolean isTracking = false;
     
     private Context ctx;
@@ -61,10 +63,10 @@ public class SleepFragment extends Fragment {
     private int f = 0;
     private float lightIntensity;
     
-    private AudioThread audioThread = null;
-    
     SensorManager sensorMgr = null;
     Sensor lightSensor = null;
+    
+    boolean mStartRecording = true;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	final View view = inflater.inflate(R.layout.fragment_sleep, container, false);
@@ -79,6 +81,7 @@ public class SleepFragment extends Fragment {
 	
 	trackingStatus = (TextView) view.findViewById(R.id.textViewTrackingStatus);
 	lightSensorValue = (TextView) view.findViewById(R.id.textViewLightSensorValue);
+	audioValue = (TextView) view.findViewById(R.id.textViewAudioValue);
 	
 	//checks to see if the app was previously tracking sleep when opened
 	if (isTracking) {
@@ -117,9 +120,41 @@ public class SleepFragment extends Fragment {
 	return view;
     }
     
+    private void onRecord(boolean start) {
+        if (start) {
+            startAudioRecording();
+        } else {
+            stopAudioRecording();
+        }
+    }
+    
+    //starts audio recording
+    private void startAudioRecording() {
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFile(mFileName);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+            Log.e("FailedStart", "prepare() failed");
+        }
+
+        mRecorder.start();
+    }
+    //stops audio recording
+    private void stopAudioRecording() {
+        mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
+    }
+    
     //begins sleep tracking
     public void startSleepTracking(View view) {
     	Logger.log(mFileName);
+    	mStartRecording = true;
 
     	//display
     	displayDialog();
@@ -136,22 +171,8 @@ public class SleepFragment extends Fragment {
 		vibrator.vibrate(new long[]{100, 10, 100, 1000}, -1);
 		
 		//audio clip
-		mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);   
-        mRecorder.setOutputFile(mFileName);
-        
-        try {
-            mRecorder.prepare();
-        } catch (IOException e) {
-            
-        }
-        	
-        mRecorder.start();  
-        
-        //audioThread = new AudioThread();
-        //audioThread.start();
+		onRecord(mStartRecording);
+    	audioValue.setText("Audio Value: " + Integer.toString(mRecorder.getMaxAmplitude()));
     }
     
     //stop sleep tracking
@@ -164,16 +185,15 @@ public class SleepFragment extends Fragment {
 		isTracking = false;
 		trackingStatus.setText("Not Tracking...");
 		lightSensorValue.setText("Light Sensor Value: ");
+		audioValue.setText("Audio Value: ");
 		
 		//vibrate
 		Vibrator vibrator = (Vibrator) ctx.getSystemService(Service.VIBRATOR_SERVICE);
 		vibrator.vibrate(new long[]{100, 10, 100, 1000}, -1);
 	
 		//audio
-		mRecorder.stop();
-		mRecorder.reset();
-        mRecorder.release();
-        mRecorder = null;
+    	mStartRecording = false;
+    	onRecord(mStartRecording);
     }
     
     /**
@@ -215,9 +235,11 @@ public class SleepFragment extends Fragment {
 		    lightIntensity = event.values[0];
 		    if(isTracking){
 		    	lightSensorValue.setText("Light Sensor Value: " + Float.toString(lightIntensity));
+		    	audioValue.setText("Audio Value: " + Integer.toString(mRecorder.getMaxAmplitude()));
 		    }
 		    else{
 		    	lightSensorValue.setText("Light Sensor Value: ");
+		    	audioValue.setText("Audio Value: ");
 		    }
 		    // displays light value in real time
 		}
@@ -227,31 +249,24 @@ public class SleepFragment extends Fragment {
 		    // TODO Auto-generated method stub
 		}
     };
-
-    private class AudioThread extends Thread {
-
-		AudioThread() {
-		}
-	
-		public void exit() {
-		    flag = false;
-		    while (!flag);
-		}
-	
-		public void run() {
-		    while (flag) {
-		    	int x = mRecorder.getMaxAmplitude();
-		    	if (x != 0) {
-		    		f = (int) (10 * Math.log(x) / Math.log(10));
-		    	}
-		    }
-		    flag = true;
-		}
-    }
+    
     
     public void checkSleepStartTime() {
 		if (lightIntensity < 11 || f < 30) {
 		    String timeString = Utils.getTimeString();
 		}
+    }
+    
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mRecorder != null) {
+            mRecorder.release();
+            mRecorder = null;
+        }
     }
 }
