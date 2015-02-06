@@ -61,5 +61,15 @@
         android:layout_marginTop="310dp"
         android:text="Light Sensor Value: "
         android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <TextView
+        android:id="@+id/textViewAudioValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_below="@+id/button5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="410dp"
+        android:text="Audio Level: "
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>
