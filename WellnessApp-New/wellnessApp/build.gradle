@@ -1,0 +1,26 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 20
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "edu.wpi.wellnessapp"
+        minSdkVersion 11
+        targetSdkVersion 20
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:20.0.0'
+    compile files('libs/GraphView-4.0.0.jar')
+    compile files('libs/jpct_ae.jar')
+    compile files('libs/bones.jar')
+}

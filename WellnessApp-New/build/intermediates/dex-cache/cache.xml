@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/jakehaas/Desktop/WellnessApp-New/wellnessApp/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="8694693636ab36910c8100ce527c258ff3ebece0">
+        <dex dex="/Users/jakehaas/Desktop/WellnessApp-New/wellnessApp/build/intermediates/pre-dexed/debug/classes-86244257cdcf06095d4f9e57ed60721d606ce6a4.jar" />
+    </item>
+    <item
+        jar="/Users/jakehaas/Desktop/WellnessApp-New/wellnessApp/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d">
+        <dex dex="/Users/jakehaas/Desktop/WellnessApp-New/wellnessApp/build/intermediates/pre-dexed/debug/internal_impl-20.0.0-58ce9b353df19d5dbc8537621c072c0b8d4cb63b.jar" />
+    </item>
+    <item
+        jar="/Users/jakehaas/Desktop/WellnessApp-New/wellnessApp/build/intermediates/exploded-aar/com.android.support/appcompat-v7/20.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="f21927d22fe31889ecce94dd697a2e75b137e0ef">
+        <dex dex="/Users/jakehaas/Desktop/WellnessApp-New/wellnessApp/build/intermediates/pre-dexed/debug/classes-eb7f2c95c1d01ebea95f40566e21d92b14eeeb5c.jar" />
+    </item>
+    <item
+        jar="/Users/jakehaas/Desktop/WellnessApp-New/wellnessApp/libs/jpct_ae.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="d949b5a9556ce0bc3d6845306ba244e3bca12e74">
+        <dex dex="/Users/jakehaas/Desktop/WellnessApp-New/wellnessApp/build/intermediates/pre-dexed/debug/jpct_ae-6cce0b0e0adabf3252880fe95af05bf02e3b670c.jar" />
+    </item>
+    <item
+        jar="/Users/jakehaas/Desktop/WellnessApp-New/wellnessApp/libs/bones.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="8cda0ed9ff9f442bbbf46b47da4da3f46a63747c">
+        <dex dex="/Users/jakehaas/Desktop/WellnessApp-New/wellnessApp/build/intermediates/pre-dexed/debug/bones-8b5704ee2c1ddfead1c1b98a685c7b2a818a42c9.jar" />
+    </item>
+    <item
+        jar="/adt-bundle-mac-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/20.0.0/support-annotations-20.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa">
+        <dex dex="/Users/jakehaas/Desktop/WellnessApp-New/wellnessApp/build/intermediates/pre-dexed/debug/support-annotations-20.0.0-a709375e9d35b2f058decc6cb76b1c3cc2a0a13c.jar" />
+    </item>
+    <item
+        jar="/Users/jakehaas/Desktop/WellnessApp-New/wellnessApp/libs/GraphView-4.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="20768335ab718b2a912f9155f9d1893d5fc931ce">
+        <dex dex="/Users/jakehaas/Desktop/WellnessApp-New/wellnessApp/build/intermediates/pre-dexed/debug/GraphView-4.0.0-f9d09a99729faa5002c70b0bf824e58061c0beea.jar" />
+    </item>
+
+</items>
