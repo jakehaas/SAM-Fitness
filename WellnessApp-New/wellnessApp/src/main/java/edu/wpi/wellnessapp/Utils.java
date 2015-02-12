@@ -61,4 +61,15 @@ public class Utils {
         // TODO: Actually use the real numbers!
         return 70.0F;
     }
+
+    /**
+     * getStepScore()
+     *
+     * Get the total average score for the user
+     */
+    public static float getStepScore()
+    {
+        // TODO: Actually use the real numbers!
+        return 80.5F;
+    }
 }
