@@ -1,14 +1,14 @@
 /**
  * MainFragment.java
  * Wellness-App-MQP
- * 
+ *
  * @version     1.0.0
- * 
+ *
  * @author      Jake Haas
  * @author	Evan Safford
  * @author	Nate Ford
  * @author	Haley Andrews
- * 
+ *
  * Copyright (c) 2013, 2014. Wellness-App-MQP. All Right Reserved.
  *
  * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
@@ -101,13 +101,12 @@ public class MainFragment extends Fragment {
 
     private Object3D cube = null;
 
-    @SuppressWarnings("unused")
     private int fps = 0;
 
     private Light sun = null;
 
     private Context myContext;
-    
+
     private boolean canShowSettingPopup = true;
     PopupWindow popupWindow;
 
@@ -116,7 +115,7 @@ public class MainFragment extends Fragment {
 	    Bundle savedInstanceState) {
 	myContext = getActivity().getApplicationContext();
 	View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-	
+
 	Button settingButton = (Button) rootView.findViewById(R.id.settings_button);
 	settingButton.setOnClickListener(new OnClickListener() {
 	    @Override
@@ -139,15 +138,15 @@ public class MainFragment extends Fragment {
 
 	populateGraphView(rootView);
 	initGL(rootView, savedInstanceState);
-	
+
 	frameTime = System.currentTimeMillis();
 	aggregatedTime = 0;
 
 	return rootView;
     }
-    
-    
-    
+
+
+
     public void showSettingsPopup(View anchorView) {
    	LayoutInflater mInflater;
    	Context context = anchorView.getContext().getApplicationContext();
@@ -155,10 +154,10 @@ public class MainFragment extends Fragment {
 
    	final View popupView = mInflater.inflate(R.layout.settings_popup, null);
    	popupWindow = new PopupWindow(popupView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-   	
+
    	popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
 
-   	
+
    	final Button setMoodConfirmButton = (Button) popupView.findViewById(R.id.set_mood_button);
 	setMoodConfirmButton.setOnClickListener(new OnClickListener() {
 	    @Override
@@ -174,7 +173,7 @@ public class MainFragment extends Fragment {
 		});
 	    }
 	});
-	
+
     }
     
     
@@ -360,9 +359,9 @@ public class MainFragment extends Fragment {
 
     private void populateGraphView(View view) {
     	LineGraphSeries<DataPoint> exampleSeries = new LineGraphSeries<DataPoint>(
-    							new DataPoint[] 
+    							new DataPoint[]
     									{ new DataPoint(1, 2.0d),
-    									  new DataPoint(2, 1.5d), 
+    									  new DataPoint(2, 1.5d),
     									  new DataPoint(3, 2.5d),
     									  new DataPoint(4, 1.0d) });
 
