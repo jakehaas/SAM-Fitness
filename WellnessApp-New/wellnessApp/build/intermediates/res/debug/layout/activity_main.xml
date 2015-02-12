@@ -4,4 +4,4 @@
     android:id="@+id/pager"
     android:layout_width="match_parent">
 
-</android.support.v4.view.ViewPager><!-- From: file:/Users/jakehaas/Desktop/WellnessApp-New/wellnessApp/src/main/res/layout/activity_main.xml -->
+</android.support.v4.view.ViewPager><!-- From: file:/Users/jakehaas/Desktop/MQP/Wellness-App-MQP/WellnessApp-New/wellnessApp/src/main/res/layout/activity_main.xml -->
