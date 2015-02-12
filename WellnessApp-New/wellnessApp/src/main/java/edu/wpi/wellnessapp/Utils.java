@@ -1,14 +1,14 @@
 /**
  * Utils.java
  * Wellness-App-MQP
- * 
- * @version     1.0.0
- * 
- * @author      Jake Haas
- * @author	Evan Safford
- * @author	Nate Ford
- * @author	Haley Andrews
- * 
+ *
+ * @version 1.0.0
+ *
+ * @author Jake Haas
+ * @author Evan Safford
+ * @author Nate Ford
+ * @author Haley Andrews
+ *
  * Copyright (c) 2013, 2014. Wellness-App-MQP. All Right Reserved.
  *
  * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
@@ -26,42 +26,39 @@ import android.content.Context;
 
 public class Utils {
 
-    public Utils() {
-	// TODO Auto-generated constructor stub
+    /**
+     * tryParseInt(String value)
+     *
+     * @param value The string to try and parse into an integer
+     */
+    public static boolean tryParseInt(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
     }
 
     /**
-     * tryParseInt(String value)
-     * 
-     * @param value
-     *            The string to try and parse into an integer
+     * getFilePath(Context ctx)
+     *
+     * @param ctx A context to access the android filesystem
      */
-    public static boolean tryParseInt(String value) {
-	try {
-	    Integer.parseInt(value);
-	    return true;
-	} catch (NumberFormatException nfe) {
-	    return false;
-	}
-    }
-
-    public static String getTimeString() {
-	SimpleDateFormat formatter = new SimpleDateFormat("MM dd - HH:mm");
-	Date curDate = new Date(System.currentTimeMillis());
-	String timeString = formatter.format(curDate);
-	return timeString;
-    }
-
-    public static String getDateString() {
-	SimpleDateFormat formatter = new SimpleDateFormat("MM dd");
-	Date curDate = new Date(System.currentTimeMillis());
-	String timeString = formatter.format(curDate);
-	return timeString;
-    }
-
-    public static String getFilePath(Context ctx){
-    	String mFileName = ctx.getCacheDir().getAbsolutePath();
-        mFileName += "/audiorecordtest.3gp";
+    public static String getFilePath(Context ctx) {
+        String mFileName = ctx.getCacheDir().getAbsolutePath();
+        mFileName += "/sleep_audio.3gp";
         return mFileName;
+    }
+
+    /**
+     * getTotalScore()
+     *
+     * Get the total average score for the user
+     */
+    public static float getTotalScore()
+    {
+        // TODO: Actually use the real numbers!
+        return 70.0F;
     }
 }
