@@ -59,17 +59,39 @@ public class Utils {
     public static float getTotalScore()
     {
         // TODO: Actually use the real numbers!
-        return 70.0F;
+        return 74.0F;
     }
 
     /**
      * getStepScore()
      *
-     * Get the total average score for the user
+     * Get the step score for the user
      */
     public static float getStepScore()
     {
         // TODO: Actually use the real numbers!
-        return 80.5F;
+        return 83.5F;
+    }
+
+    /**
+     * getSleepScore()
+     *
+     * Get the sleep score for the user
+     */
+    public static float getSleepScore()
+    {
+        // TODO: Actually use the real numbers!
+        return 96.8F;
+    }
+
+    /**
+     * getMoodScore()
+     *
+     * Get the mood score for the user
+     */
+    public static float getMoodScore()
+    {
+        // TODO: Actually use the real numbers!
+        return 89.1F;
     }
 }
