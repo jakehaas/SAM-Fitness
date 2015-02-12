@@ -1,0 +1,180 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+From Bones:
+* .DS_Store
+* build.xml
+* build/
+* build/bones.jar
+* doc/
+* doc/api/
+* doc/api/allclasses-frame.html
+* doc/api/allclasses-noframe.html
+* doc/api/constant-values.html
+* doc/api/deprecated-list.html
+* doc/api/help-doc.html
+* doc/api/index-all.html
+* doc/api/index.html
+* doc/api/overview-frame.html
+* doc/api/overview-summary.html
+* doc/api/overview-tree.html
+* doc/api/package-list
+* doc/api/raft/
+* doc/api/raft/jpct/
+* doc/api/raft/jpct/bones/
+* doc/api/raft/jpct/bones/Animated3D.html
+* doc/api/raft/jpct/bones/AnimatedGroup.html
+* doc/api/raft/jpct/bones/BonesIO.html
+* doc/api/raft/jpct/bones/BonesImporter.html
+* doc/api/raft/jpct/bones/Joint.html
+* doc/api/raft/jpct/bones/JointChannel.html
+* doc/api/raft/jpct/bones/MeshChannel.html
+* doc/api/raft/jpct/bones/MeshData.html
+* doc/api/raft/jpct/bones/MeshPose.html
+* doc/api/raft/jpct/bones/PoseClip.html
+* doc/api/raft/jpct/bones/PoseClipSequence.html
+* doc/api/raft/jpct/bones/PoseFrame.html
+* doc/api/raft/jpct/bones/Quaternion.html
+* doc/api/raft/jpct/bones/Skeleton.html
+* doc/api/raft/jpct/bones/SkeletonDebugger.html
+* doc/api/raft/jpct/bones/SkeletonPose.html
+* doc/api/raft/jpct/bones/SkinClip.html
+* doc/api/raft/jpct/bones/SkinClipSequence.html
+* doc/api/raft/jpct/bones/SkinData.html
+* doc/api/raft/jpct/bones/package-frame.html
+* doc/api/raft/jpct/bones/package-summary.html
+* doc/api/raft/jpct/bones/package-tree.html
+* doc/api/raft/jpct/bones/util/
+* doc/api/raft/jpct/bones/util/ArdorColladaImporter.html
+* doc/api/raft/jpct/bones/util/ComLineArgs.html
+* doc/api/raft/jpct/bones/util/JMEOgreImporter.html
+* doc/api/raft/jpct/bones/util/package-frame.html
+* doc/api/raft/jpct/bones/util/package-summary.html
+* doc/api/raft/jpct/bones/util/package-tree.html
+* doc/api/resources/
+* doc/api/resources/inherit.gif
+* doc/api/serialized-form.html
+* doc/api/stylesheet.css
+* doc/history.html
+* doc/images/
+* doc/images/quake3_bones.jpg
+* doc/index.html
+* lib/
+* lib/javadoc-package-lists/
+* lib/javadoc-package-lists/j2se-1.5/
+* lib/javadoc-package-lists/j2se-1.5/package-list
+* lib/javadoc-package-lists/jpct/
+* lib/javadoc-package-lists/jpct/package-list
+* lib/src/
+* lib/src/ardor-animation-0.7-beta-src.jar
+* lib/src/ardor-collada-0.7-beta-src.jar
+* lib/src/ardor-core-0.7-beta-src.jar
+* lib/src/jme-2.1-src.jar
+* lib/src/jme-model-2.1-src.jar
+* lib/src/jme-ogrexml-2.1-src.jar
+* samples/
+* samples/data/
+* samples/data/blend/
+* samples/data/blend/cylinder.group.bones
+* samples/data/blend/cylinder.group.bones-out
+* samples/data/blend/cylinder.mesh.xml
+* samples/data/blend/cylinder.skeleton.xml
+* samples/data/blend/stone.jpg
+* samples/data/facial/
+* samples/data/facial/Dr_Bunsen_Head.jpg
+* samples/data/facial/facial.group.bones
+* samples/data/facial/facial.mesh.xml
+* samples/data/ninja/
+* samples/data/ninja/ninja.bones
+* samples/data/ninja/ninja.group.bones
+* samples/data/ninja/ninja.mesh.xml
+* samples/data/ninja/ninja.skeleton.xml
+* samples/data/ninja/nskingr.jpg
+* samples/data/ninja/readme.txt
+* samples/data/seymour/
+* samples/data/seymour/Seymour.dae
+* samples/data/seymour/SeymourCopyright.txt
+* samples/data/seymour/seymour.group.bones
+* samples/data/seymour/seymour.png
+* scripts/
+* scripts/ardorCollada2Bones.bat
+* scripts/ardorCollada2Bones.sh
+* scripts/jmeOgre2Bones.bat
+* scripts/jmeOgre2Bones.sh
+From WellnessApp:
+* .DS_Store
+* .idea/
+* .idea/.name
+* .idea/WellnessApp.iml
+* .idea/compiler.xml
+* .idea/copyright/
+* .idea/copyright/profiles_settings.xml
+* .idea/encodings.xml
+* .idea/misc.xml
+* .idea/modules.xml
+* .idea/scopes/
+* .idea/scopes/scope_settings.xml
+* .idea/vcs.xml
+* .idea/workspace.xml
+* ic_launcher-web.png
+* proguard-project.txt
+
+Replaced Libraries with Dependencies:
+-------------------------------------
+The importer recognized the following library projects as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the source files in your project were of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the library replacement in the import wizard and try
+again:
+
+appcompat-v7 => [com.android.support:appcompat-v7:20.0.0]
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+In Bones:
+* lib/ardor-animation-0.7-beta.jar => bones/lib/ardor-animation-0.7-beta.jar
+* lib/ardor-collada-0.7-beta.jar => bones/lib/ardor-collada-0.7-beta.jar
+* lib/ardor-core-0.7-beta.jar => bones/lib/ardor-core-0.7-beta.jar
+* lib/google-collect-1.0-rc1.jar => bones/lib/google-collect-1.0-rc1.jar
+* lib/jaxen.jar => bones/lib/jaxen.jar
+* lib/jdom.jar => bones/lib/jdom.jar
+* lib/jme-2.1.jar => bones/lib/jme-2.1.jar
+* lib/jme-model-2.1.jar => bones/lib/jme-model-2.1.jar
+* lib/jme-ogrexml-2.1.jar => bones/lib/jme-ogrexml-2.1.jar
+* lib/jpct-1.26.jar => bones/lib/jpct-1.26.jar
+* samples/src/ => bones/src/main/java/
+* src/ => bones/src/main/java/
+In WellnessApp:
+* AndroidManifest.xml => wellnessApp/src/main/AndroidManifest.xml
+* libs/GraphView-4.0.0.jar => wellnessApp/libs/GraphView-4.0.0.jar
+* libs/jpct_ae.jar => wellnessApp/libs/jpct_ae.jar
+* lint.xml => wellnessApp/lint.xml
+* res/ => wellnessApp/src/main/res/
+* src/ => wellnessApp/src/main/java/
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)
