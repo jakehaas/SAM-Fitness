@@ -1,5 +1,5 @@
 /**
- * Utils.java
+ * MainFragment.java
  * Wellness-App-MQP
  *
  * @version 1.0.0
@@ -9,7 +9,7 @@
  * @author Nate Ford
  * @author Haley Andrews
  *
- * Copyright (c) 2013, 2014. Wellness-App-MQP. All Right Reserved.
+ * Copyright (c) 2014, 2015. Wellness-App-MQP. All Rights Reserved.
  *
  * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
  * KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
@@ -18,9 +18,6 @@
  */
 
 package edu.wpi.wellnessapp;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import android.content.Context;
 
