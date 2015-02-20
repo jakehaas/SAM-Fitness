@@ -10,11 +10,19 @@ import android.util.Log;
 import java.util.Timer;
 import java.util.TimerTask;
 import android.widget.Toast;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+
 
 
 public class AudioService extends Service {
     private static final String TAG = "AudioService";
     MediaRecorder mRecorder;
+    SensorManager sensorMgr = null;
+    Sensor lightSensor = null;
+    float lightIntensity;
 
     Timer timer;
 
@@ -32,12 +40,29 @@ public class AudioService extends Service {
 
         String mFileName = Utils.getFilePath(this);
 
+        //Set up light sensor
+        sensorMgr = (SensorManager) this.getSystemService(SENSOR_SERVICE);
+        lightSensor = sensorMgr.getDefaultSensor(Sensor.TYPE_LIGHT);
+
+        //Set up media recorder
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mRecorder.setOutputFile(mFileName);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
     }
+
+    SensorEventListener lightlsn = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            lightIntensity = event.values[0];
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            // TODO Auto-generated method stub
+        }
+    };
 
     @Override
     public void onDestroy() {
@@ -60,6 +85,7 @@ public class AudioService extends Service {
         }
 
         mRecorder.start();
+        sensorMgr.registerListener(lightlsn, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         sampleAudio();
 
@@ -73,6 +99,7 @@ public class AudioService extends Service {
             public void run() {
                 Intent i = new Intent("NewMessage");
                 i.putExtra("maxAmplitude", Integer.toString(mRecorder.getMaxAmplitude()));
+                i.putExtra("lightIntensity", Float.toString(lightIntensity));
                 sendBroadcast(i);
             }
         }, 0, 1000);
