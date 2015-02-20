@@ -62,8 +62,6 @@ import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.Light;
 import com.threed.jpct.Logger;
 import com.threed.jpct.Mesh;
-import com.threed.jpct.Object3D;
-import com.threed.jpct.Primitives;
 import com.threed.jpct.RGBColor;
 import com.threed.jpct.SimpleVector;
 import com.threed.jpct.Texture;
@@ -73,6 +71,12 @@ import com.threed.jpct.util.AAConfigChooser;
 import com.threed.jpct.util.MemoryHelper;
 
 public class MainFragment extends Fragment {
+    private static MainFragment master = null;
+
+    private GLSurfaceView mGLView;
+    private Renderer renderer = null;
+    private FrameBuffer fb = null;
+    private World world = null;
 
     private AnimatedGroup avatar;
     private int animation = 1;
@@ -84,27 +88,16 @@ public class MainFragment extends Fragment {
 
     private static final int GRANULARITY = 25;
 
-    // --
 
-    private static MainFragment master = null;
-
-    private GLSurfaceView mGLView;
-    private Renderer renderer = null;
-    private FrameBuffer fb = null;
-    private World world = null;
     private RGBColor back = new RGBColor(37, 37, 37);
 
     private float touchTurn = 0;
     private float touchTurnUp = 0;
 
-    private float xpos = -1;
-    private float ypos = -1;
+    private float xPos = -1;
+    private float yPos = -1;
 
-    private Object3D cube = null;
-
-    private int fps = 0;
-
-    private Light sun = null;
+    private Light pointLight = null;
 
     private Context myContext;
 
@@ -260,8 +253,6 @@ public class MainFragment extends Fragment {
             animations[i].setClampingMode(Animation.USE_CLAMPING);
         }
 
-        // int count = 0;
-
         int sequence = 0;
         for (SkinClip clip : avatar.getSkinClipSequence()) {
             float clipTime = clip.getTime();
@@ -271,8 +262,7 @@ public class MainFragment extends Fragment {
             for (int i = 0; i < avatar.getSize(); i++) {
                 animations[i].createSubSequence(clip.getName());
             }
-            // System.out.println(sequence + ": " + clip.getName() +
-            // ", frames: " + frames);
+
             for (int i = 0; i < frames; i++) {
                 avatar.animateSkin(dIndex * i, sequence + 1);
 
@@ -280,16 +270,15 @@ public class MainFragment extends Fragment {
                     Mesh keyframe = avatar.get(j).getMesh().cloneMesh(true);
                     keyframe.strip();
                     animations[j].addKeyFrame(keyframe);
-                    // count++;
-                    // Logger.log("added " + (i + 1) + " of " + sequence +
-                    // " to " + j + " total: " + count);
                 }
             }
             sequence++;
         }
+
         for (int i = 0; i < avatar.getSize(); i++) {
             avatar.get(i).setAnimationSequence(animations[i]);
         }
+
         avatar.get(0).getSkeletonPose().setToBindPose();
         avatar.get(0).getSkeletonPose().updateTransforms();
         avatar.applySkeletonPose();
@@ -326,15 +315,12 @@ public class MainFragment extends Fragment {
         renderer = new Renderer(myContext);
         mGLView.setRenderer(renderer);
 
-        // endTime = System.currentTimeMillis();
-
         LinearLayout layout = (LinearLayout) rootView
                 .findViewById(R.id.mainAvatar);
 
         layout.addView(mGLView);
 
-        loadGLResources(); // SHOULD MOVE THE RESOURCE LOADING TO APP LAUNCH,
-        // NOT GL FRAGMENT
+        loadGLResources();
     }
 
     private void copy(Object src) {
@@ -346,12 +332,8 @@ public class MainFragment extends Fragment {
                 f.set(this, f.get(src));
             }
         } catch (Exception e) {
-            // throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
-    }
-
-    protected boolean isFullscreenOpaque() {
-        return true;
     }
 
     private void populateGraphView(View view) {
@@ -404,20 +386,10 @@ public class MainFragment extends Fragment {
                 world = new World();
                 world.setAmbientLight(30, 30, 30);
 
-                sun = new Light(world);
-                sun.setIntensity(250, 250, 250);
-
-                cube = Primitives.getCube(10);
-                cube.calcTextureWrapSpherical();
-                // cube.setTexture("texture");
-                cube.strip();
-                cube.build();
-
-                // Avatar a = Avatar.getInstance();
+                pointLight = new Light(world);
+                pointLight.setIntensity(250, 250, 250);
 
                 avatar.addToWorld(world);
-
-                // world.addObject(cube);
 
                 SimpleVector cv = new SimpleVector();
                 cv.x = 0;
@@ -430,11 +402,10 @@ public class MainFragment extends Fragment {
                 cam.rotateCameraY(90.0f);
                 cam.lookAt(cv);
 
-                SimpleVector sv = new SimpleVector();
-                sv.set(cube.getTransformedCenter());
-                sv.y -= 100;
-                sv.z += 100;
-                sun.setPosition(sv);
+                SimpleVector lightPos = new SimpleVector(0, 0, 0);
+                lightPos.y -= 100;
+                lightPos.z += 100;
+                pointLight.setPosition(lightPos);
 
                 MemoryHelper.compact();
 
@@ -450,16 +421,19 @@ public class MainFragment extends Fragment {
         }
 
         public void onDrawFrame(GL10 gl) {
-            if (touchTurn != 0) {
-                // cube.rotateY(touchTurn);
-                avatar.getRoot().rotateY(touchTurn);
-                touchTurn = 0;
-            }
 
-            if (touchTurnUp != 0) {
-                // cube.rotateX(touchTurnUp);
-                avatar.getRoot().rotateX(touchTurnUp);
-                touchTurnUp = 0;
+            // If we are not playing the intro animation, allow
+            // the user to rotate the avatar
+            if (animation > 1) {
+                if (touchTurn != 0) {
+                    avatar.getRoot().rotateY(touchTurn);
+                    touchTurn = 0;
+                }
+
+                if (touchTurnUp != 0) {
+                    avatar.getRoot().rotateX(touchTurnUp);
+                    touchTurnUp = 0;
+                }
             }
 
             // ANIMATION!!!!
@@ -489,15 +463,13 @@ public class MainFragment extends Fragment {
                 }
 
                 float index = animateSeconds / clipTime;
-                // if (useMeshAnim) {
-                // for (AnimatedGroup group : ninjas) {
 
                 for (Animated3D a : avatar) {
-                     //a.animate(index, animation);
-
                     a.animateSkin(index, animation);
-                    if (!a.isAutoApplyAnimation())
+
+                    if (!a.isAutoApplyAnimation()) {
                         a.applyAnimation();
+                    }
                 }
 
             } else {
@@ -509,12 +481,6 @@ public class MainFragment extends Fragment {
             world.draw(fb);
 
             fb.display();
-
-            if (System.currentTimeMillis() - fpsTime >= 1000) {
-                fps = 0;
-                fpsTime = System.currentTimeMillis();
-            }
-            fps++;
         }
 
     }
@@ -536,37 +502,39 @@ public class MainFragment extends Fragment {
         }
 
         @Override
-        public boolean onTouchEvent(MotionEvent me) {
+        public boolean onTouchEvent(MotionEvent motionEvent) {
 
-            if (me.getAction() == MotionEvent.ACTION_DOWN) {
-                xpos = me.getX();
-                ypos = me.getY();
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                xPos = motionEvent.getX();
+                yPos = motionEvent.getY();
+
                 return true;
             }
 
-            if (me.getAction() == MotionEvent.ACTION_UP) {
-                xpos = -1;
-                ypos = -1;
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                xPos = -1;
+                yPos = -1;
                 touchTurn = 0;
                 touchTurnUp = 0;
+
                 return true;
             }
 
-            if (me.getAction() == MotionEvent.ACTION_MOVE) {
-                float xd = me.getX() - xpos;
-                float yd = me.getY() - ypos;
+            if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                float xDelta = motionEvent.getX() - xPos;
+                float yDelta = motionEvent.getY() - yPos;
 
-                xpos = me.getX();
-                ypos = me.getY();
+                xPos = motionEvent.getX();
+                yPos = motionEvent.getY();
 
-                touchTurn = xd / 100f;
-                touchTurnUp = yd / 100f;
+                touchTurn = xDelta / 100f;
+                touchTurnUp = yDelta / 100f;
+
                 return true;
             }
 
-            switch (me.getAction()) {
+            switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    // some code....
                     break;
                 case MotionEvent.ACTION_UP:
                     performClick();
@@ -581,7 +549,7 @@ public class MainFragment extends Fragment {
                 // Doesn't matter here...
             }
 
-            return super.onTouchEvent(me);
+            return super.onTouchEvent(motionEvent);
         }
 
     }
