@@ -1,5 +1,5 @@
 /**
- * SleepFragment.java
+ * MainFragment.java
  * Wellness-App-MQP
  *
  * @version 1.0.0
@@ -9,7 +9,7 @@
  * @author Nate Ford
  * @author Haley Andrews
  *
- * Copyright (c) 2013, 2014. Wellness-App-MQP. All Right Reserved.
+ * Copyright (c) 2014, 2015. Wellness-App-MQP. All Rights Reserved.
  *
  * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
  * KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
@@ -19,35 +19,16 @@
 
 package edu.wpi.wellnessapp;
 
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import edu.wpi.wellnessapp.AudioService;
-
-import com.threed.jpct.Logger;
-
 import android.app.AlertDialog;
-import android.app.IntentService;
-import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.inputmethodservice.InputMethodService;
-import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Environment;
-import android.os.IBinder;
-import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,7 +37,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import java.util.Calendar;
 
 
 

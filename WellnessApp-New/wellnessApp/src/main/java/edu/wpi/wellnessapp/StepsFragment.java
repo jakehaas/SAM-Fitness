@@ -1,15 +1,15 @@
 /**
- * StepsFragment.java
+ * MainFragment.java
  * Wellness-App-MQP
- * 
- * @version     1.0.0
- * 
- * @author      Jake Haas
- * @author	Evan Safford
- * @author	Nate Ford
- * @author	Haley Andrews
- * 
- * Copyright (c) 2013, 2014. Wellness-App-MQP. All Right Reserved.
+ *
+ * @version 1.0.0
+ *
+ * @author Jake Haas
+ * @author Evan Safford
+ * @author Nate Ford
+ * @author Haley Andrews
+ *
+ * Copyright (c) 2014, 2015. Wellness-App-MQP. All Rights Reserved.
  *
  * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
  * KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
@@ -19,13 +19,6 @@
 
 package edu.wpi.wellnessapp;
 
-//import java.io.File;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -35,20 +28,20 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-//import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class StepsFragment extends Fragment {

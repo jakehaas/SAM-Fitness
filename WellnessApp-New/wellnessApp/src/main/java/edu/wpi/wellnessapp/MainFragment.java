@@ -9,7 +9,7 @@
  * @author Nate Ford
  * @author Haley Andrews
  *
- * Copyright (c) 2013, 2014. Wellness-App-MQP. All Right Reserved.
+ * Copyright (c) 2014, 2015. Wellness-App-MQP. All Rights Reserved.
  *
  * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
  * KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
@@ -484,6 +484,7 @@ public class MainFragment extends Fragment {
                         .getClip(animation - 1).getTime();
 
                 if (animateSeconds > clipTime) {
+                    animation = 2;
                     animateSeconds = 0;
                 }
 
@@ -492,7 +493,7 @@ public class MainFragment extends Fragment {
                 // for (AnimatedGroup group : ninjas) {
 
                 for (Animated3D a : avatar) {
-                    // a.animate(index, animation);
+                     //a.animate(index, animation);
 
                     a.animateSkin(index, animation);
                     if (!a.isAutoApplyAnimation())
