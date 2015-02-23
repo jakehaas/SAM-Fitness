@@ -39,9 +39,9 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 public class SleepFragment extends Fragment {
+    // UI Elements
     private Button startButton;
     private Button stopButton;
-
     private TextView trackingStatus;
     private TextView lightSensorValue;
     private TextView audioValue;
@@ -50,21 +50,28 @@ public class SleepFragment extends Fragment {
     private TextView calLight;
     private TextView calSound;
 
-    private int amplitude;
+    // Raw Sensor Data
+    private int audioAmplitude;
     private float lightIntensity;
+
+    // Calibrated Sensor Data
     private int calibratedLight;
     private int calibratedAmplitude;
-    private final int CALIBRATE_TIME = 10;
+
+    // Final Sleep Times
     private String fallAsleepTime;
     private String wakeUpTime;
 
-    CountDownTimer timer;
-    private boolean isAsleep = false;
+    // Calibration
+    private final int CALIBRATE_TIME = 10;
     private boolean isCalibrated = false;
+    private CountDownTimer calibrateTimer;
+
+    // Tracking Statuses
     private boolean isTracking = false;
+    private boolean isAsleep = false;
 
-    private final BroadcastReceiver recieveMessageFromService = new BroadcastReceiver() {
-
+    private final BroadcastReceiver recieveFromSleepService = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -78,7 +85,7 @@ public class SleepFragment extends Fragment {
                 audioValue.setText("Audio Value: " + maxAmplitudeIn);
                 lightSensorValue.setText("Light Sensor Value: " + lightIntensityIn);
 
-                amplitude = Integer.parseInt(maxAmplitudeIn);
+                audioAmplitude = Integer.parseInt(maxAmplitudeIn);
                 lightIntensity = Float.parseFloat(lightIntensityIn);
 
                 checkSleepStatus();
@@ -91,7 +98,7 @@ public class SleepFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_sleep, container, false);
 
         IntentFilter intentFilter = new IntentFilter("SensorData");
-        getActivity().getApplicationContext().registerReceiver(recieveMessageFromService, intentFilter);
+        getActivity().getApplicationContext().registerReceiver(recieveFromSleepService, intentFilter);
 
         // Initialize UI elements
         trackingStatus = (TextView) view.findViewById(R.id.textViewTrackingStatus);
@@ -205,10 +212,10 @@ public class SleepFragment extends Fragment {
         calibratedLight = 0;
         calibratedAmplitude = 0;
 
-        timer = new CountDownTimer((CALIBRATE_TIME * 1000), 1000) {
+        calibrateTimer = new CountDownTimer((CALIBRATE_TIME * 1000), 1000) {
             public void onTick(long millisUntilFinished) {
                 calibratedLight += lightIntensity;
-                calibratedAmplitude += amplitude;
+                calibratedAmplitude += audioAmplitude;
             }
 
             public void onFinish() {
@@ -218,7 +225,7 @@ public class SleepFragment extends Fragment {
                 calLight.setText("Calibrated Light: " + Integer.toString(calibratedLight));
                 calSound.setText("Calibrated Audio: " + Integer.toString(calibratedAmplitude));
                 Log.d("SleepMonitor", "Calibrated sensors");
-                timer.cancel();
+                calibrateTimer.cancel();
             }
         }.start();
     }
@@ -228,7 +235,7 @@ public class SleepFragment extends Fragment {
         if (isCalibrated) {
 
             // Check to see if user fell asleep
-            if (!isAsleep && (lightIntensity < calibratedLight && amplitude < calibratedAmplitude)) {
+            if (!isAsleep && (lightIntensity < calibratedLight && audioAmplitude < calibratedAmplitude)) {
                 Log.d("SleepMonitor", "Fell Asleep:" + fallAsleepTime);
 
                 isAsleep = true;
@@ -238,7 +245,7 @@ public class SleepFragment extends Fragment {
             }
 
             // Check to see if user woke up
-            if (isAsleep && (lightIntensity > calibratedLight || amplitude > calibratedAmplitude)) {
+            if (isAsleep && (lightIntensity > calibratedLight || audioAmplitude > calibratedAmplitude)) {
                 Log.d("SleepMonitor", "Woke Up:" + fallAsleepTime);
 
                 isAsleep = false;

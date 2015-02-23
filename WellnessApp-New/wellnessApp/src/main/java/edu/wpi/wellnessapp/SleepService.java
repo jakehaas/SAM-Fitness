@@ -56,7 +56,7 @@ public class SleepService extends Service {
     public void onCreate() {
         Log.d("SleepService", "onCreate");
 
-        // Create the timer
+        // Create the calibrateTimer
         timer = new Timer();
 
         // Set up light sensor
@@ -88,7 +88,7 @@ public class SleepService extends Service {
         // Alert the user
         Toast.makeText(this, "Sleep Tracking Stopped", Toast.LENGTH_LONG).show();
 
-        // Stop the timer
+        // Stop the calibrateTimer
         timer.cancel();
 
         // Stop the audio recorder
