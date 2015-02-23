@@ -19,23 +19,9 @@
 
 package edu.wpi.wellnessapp;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLDisplay;
-import javax.microedition.khronos.opengles.GL10;
-
-import raft.jpct.bones.Animated3D;
-import raft.jpct.bones.AnimatedGroup;
-import raft.jpct.bones.BonesIO;
-import raft.jpct.bones.SkinClip;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
-import android.graphics.Color;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -51,10 +37,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.helper.StaticLabelsFormatter;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 import com.threed.jpct.Animation;
 import com.threed.jpct.Camera;
 import com.threed.jpct.Config;
@@ -69,6 +51,19 @@ import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
 import com.threed.jpct.util.AAConfigChooser;
 import com.threed.jpct.util.MemoryHelper;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+
+import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.egl.EGLDisplay;
+import javax.microedition.khronos.opengles.GL10;
+
+import raft.jpct.bones.Animated3D;
+import raft.jpct.bones.AnimatedGroup;
+import raft.jpct.bones.BonesIO;
+import raft.jpct.bones.SkinClip;
 
 public class MainFragment extends Fragment {
     private static MainFragment master = null;
@@ -88,7 +83,6 @@ public class MainFragment extends Fragment {
 
     private static final int GRANULARITY = 25;
 
-
     private RGBColor back = new RGBColor(37, 37, 37);
 
     private float touchTurn = 0;
@@ -99,15 +93,12 @@ public class MainFragment extends Fragment {
 
     private Light pointLight = null;
 
-    private Context myContext;
-
     private boolean canShowSettingPopup = true;
     PopupWindow popupWindow;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        myContext = getActivity().getApplicationContext();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         Button settingButton = (Button) rootView.findViewById(R.id.settings_button);
@@ -127,7 +118,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-        populateGraphView(rootView);
         initGL(rootView, savedInstanceState);
 
         frameTime = System.currentTimeMillis();
@@ -296,7 +286,7 @@ public class MainFragment extends Fragment {
 
         super.onCreate(savedInstanceState);
         // startTime = System.currentTimeMillis();
-        mGLView = new ClearGLSurfaceView(myContext);
+        mGLView = new ClearGLSurfaceView(getActivity().getApplicationContext());
 
         mGLView.setEGLConfigChooser(new GLSurfaceView.EGLConfigChooser() {
             public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
@@ -312,7 +302,7 @@ public class MainFragment extends Fragment {
         mGLView.setEGLContextClientVersion(2);
         mGLView.setEGLConfigChooser(new AAConfigChooser(mGLView));
 
-        renderer = new Renderer(myContext);
+        renderer = new Renderer(getActivity().getApplicationContext());
         mGLView.setRenderer(renderer);
 
         LinearLayout layout = (LinearLayout) rootView
@@ -336,38 +326,7 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void populateGraphView(View view) {
-        LineGraphSeries<DataPoint> exampleSeries = new LineGraphSeries<DataPoint>(
-                new DataPoint[]
-                        {new DataPoint(1, 2.0d),
-                                new DataPoint(2, 1.5d),
-                                new DataPoint(3, 2.5d),
-                                new DataPoint(4, 1.0d)});
-
-        GraphView graphView = new GraphView(getActivity());
-        graphView.addSeries(exampleSeries); // data
-        graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
-        graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
-        StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphView);
-        staticLabelsFormatter.setHorizontalLabels(new String[]{"9/10", "9/15", "9/20",
-                "9/25"});
-        staticLabelsFormatter.setVerticalLabels(new String[]{"10,000", "5,000", "0"});
-        graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
-        graphView.getGridLabelRenderer().setTextSize(20);
-
-        try {
-
-            LinearLayout layout = (LinearLayout) view.findViewById(R.id.graph1);
-
-            layout.addView(graphView);
-        } catch (NullPointerException e) {
-            // something to handle the NPE.
-        }
-    }
-
     class Renderer implements GLSurfaceView.Renderer {
-        private long fpsTime = System.currentTimeMillis();
-        Resources res = myContext.getResources();
         Context ctx;
 
         public Renderer(Context context) {
@@ -449,7 +408,6 @@ public class MainFragment extends Fragment {
             while (aggregatedTime > GRANULARITY) {
                 aggregatedTime -= GRANULARITY;
                 animateSeconds += GRANULARITY * 0.001f * speed;
-                // cameraController.placeCamera();
             }
 
             if (animation > 0
@@ -475,6 +433,8 @@ public class MainFragment extends Fragment {
             } else {
                 animateSeconds = 0f;
             }
+
+            avatar.getRoot().translate(1,0,0);
 
             fb.clear(back);
             world.renderScene(fb);
