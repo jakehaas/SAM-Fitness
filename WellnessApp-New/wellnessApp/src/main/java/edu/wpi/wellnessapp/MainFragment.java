@@ -93,6 +93,10 @@ public class MainFragment extends Fragment {
 
     private Light pointLight = null;
 
+    private int avatarStatus = 0;
+    private boolean animationDone = false;
+    private int animationLoopCount = 0;
+
     private boolean canShowSettingPopup = true;
     PopupWindow popupWindow;
 
@@ -203,7 +207,7 @@ public class MainFragment extends Fragment {
         TextureManager.getInstance().addTexture("ninja", texture);
 
         try {
-            avatar = BonesIO.loadGroup(res.openRawResource(R.raw.ninja));
+            avatar = BonesIO.loadGroup(res.openRawResource(R.raw.animation_test));
 
             // After we load the resources, generate the animations
             createMeshKeyFrames();
@@ -285,7 +289,6 @@ public class MainFragment extends Fragment {
         }
 
         super.onCreate(savedInstanceState);
-        // startTime = System.currentTimeMillis();
         mGLView = new ClearGLSurfaceView(getActivity().getApplicationContext());
 
         mGLView.setEGLConfigChooser(new GLSurfaceView.EGLConfigChooser() {
@@ -348,6 +351,9 @@ public class MainFragment extends Fragment {
                 pointLight = new Light(world);
                 pointLight.setIntensity(250, 250, 250);
 
+                avatar.getRoot().rotateY(180);
+                avatar.getRoot().translate(300, 0, 0);
+
                 avatar.addToWorld(world);
 
                 SimpleVector cv = new SimpleVector();
@@ -395,52 +401,140 @@ public class MainFragment extends Fragment {
                 }
             }
 
-            // ANIMATION!!!!
-
-            long now = System.currentTimeMillis();
-            aggregatedTime += (now - frameTime);
-            frameTime = now;
-
-            if (aggregatedTime > 1000) {
-                aggregatedTime = 0;
-            }
-
-            while (aggregatedTime > GRANULARITY) {
-                aggregatedTime -= GRANULARITY;
-                animateSeconds += GRANULARITY * 0.001f * speed;
-            }
-
-            if (animation > 0
-                    && avatar.getSkinClipSequence().getSize() >= animation) {
-                float clipTime = avatar.getSkinClipSequence()
-                        .getClip(animation - 1).getTime();
-
-                if (animateSeconds > clipTime) {
-                    animation = 2;
-                    animateSeconds = 0;
-                }
-
-                float index = animateSeconds / clipTime;
-
-                for (Animated3D a : avatar) {
-                    a.animateSkin(index, animation);
-
-                    if (!a.isAutoApplyAnimation()) {
-                        a.applyAnimation();
-                    }
-                }
-
-            } else {
-                animateSeconds = 0f;
-            }
-
-            avatar.getRoot().translate(1,0,0);
+            animateAvatar();
 
             fb.clear(back);
             world.renderScene(fb);
             world.draw(fb);
 
             fb.display();
+        }
+
+        private void animateAvatar()
+        {
+            switch (avatarStatus)
+            {
+                case 0:
+                    if (Utils.getTotalScore() > 60) {
+                        if (animationDone) {
+                            avatarStatus = 1;
+                            animationDone = false;
+                        }
+                        else {
+                            playAvatarAnimationLooped(3, 5);
+                            avatar.getRoot().translate(-10, 0, 0);
+                        }
+
+                    }
+                    break;
+
+                case 1:
+                    if (Utils.getTotalScore() > 60) {
+                        if (animationDone) {
+                            avatarStatus = 2;
+                            animationDone = false;
+                        } else {
+                            playAvatarAnimationSingle(1);
+                        }
+                    }
+                    break;
+
+                case 2:
+                    if (Utils.getTotalScore() > 60) {
+                        if (animationDone) {
+                            avatarStatus = 3;
+                            animationDone = false;
+                        } else {
+                            playAvatarAnimationSingle(2);
+                        }
+                    }
+                    break;
+
+                case 3:
+                    if (Utils.getTotalScore() > 60) {
+                        if (animationDone) {
+                            avatarStatus = 3;
+                            animationDone = false;
+                        } else {
+                            playAvatarAnimationSingle(4);
+                        }
+                    }
+                    break;
+            }
+
+        }
+
+        private void playAvatarAnimationSingle (int animationIndex)
+        {
+            doAvatarAnimation(animationIndex, false, 1);
+        }
+
+        private void playAvatarAnimationLooped (int animationIndex, int loopCount)
+        {
+            doAvatarAnimation(animationIndex, true, loopCount);
+        }
+
+        private void playAvatarAnimationRepeatForever (int animationIndex)
+        {
+            doAvatarAnimation(animationIndex, true, -1);
+        }
+
+        private void doAvatarAnimation(int animationIndex, boolean loop, int loopCount) {
+            if (!animationDone) {
+                animation = animationIndex;
+
+                long now = System.currentTimeMillis();
+                aggregatedTime += (now - frameTime);
+                frameTime = now;
+
+                if (aggregatedTime > 1000) {
+                    aggregatedTime = 0;
+                }
+
+                while (aggregatedTime > GRANULARITY) {
+                    aggregatedTime -= GRANULARITY;
+                    animateSeconds += GRANULARITY * 0.001f * speed;
+                }
+
+                if (animation > 0
+                        && avatar.getSkinClipSequence().getSize() >= animation) {
+                    float clipTime = avatar.getSkinClipSequence()
+                            .getClip(animation - 1).getTime();
+
+                    if (animateSeconds > clipTime) {
+                        animateSeconds = 0;
+
+                        if (!loop) {
+                            animationDone = true;
+                        }
+                        else
+                        {
+                            if (loopCount != -1) {
+                                if (animationLoopCount >= loopCount) {
+                                    animationDone = true;
+                                } else {
+                                    animationLoopCount++;
+                                }
+                            }
+                        }
+                    }
+
+                    float index = animateSeconds / clipTime;
+
+                    for (Animated3D a : avatar) {
+                        a.animateSkin(index, animation);
+
+                        if (!a.isAutoApplyAnimation()) {
+                            a.applyAnimation();
+                        }
+                    }
+
+                } else {
+                    animateSeconds = 0f;
+                }
+
+
+            }
         }
 
     }
