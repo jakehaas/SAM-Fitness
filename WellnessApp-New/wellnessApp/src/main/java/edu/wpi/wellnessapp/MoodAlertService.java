@@ -19,6 +19,7 @@
 
 package edu.wpi.wellnessapp;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -34,7 +35,7 @@ import java.util.TimerTask;
 
 
 public class MoodAlertService extends Service {
-    private static final int NOTIFY_RATE = 60000;
+    private static final int NOTIFY_RATE = 60000; // 1 Minute
     Timer timer;
 
     @Override
@@ -67,21 +68,27 @@ public class MoodAlertService extends Service {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.main_circle)
+                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.mood_circle)
                         .setContentTitle("Mood Service")
                         .setContentText("Don't forget to set your mood!");
 
                 Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
 
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
                 stackBuilder.addParentStack(MainActivity.class);
                 stackBuilder.addNextIntent(resultIntent);
+
                 PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                mBuilder.setContentIntent(resultPendingIntent);
-                NotificationManager mNotificationManager =
-                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotificationManager.notify(1234, mBuilder.build());
+
+                notificationBuilder.setContentIntent(resultPendingIntent);
+
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                Notification notification = notificationBuilder.build();
+                notification.flags = Notification.FLAG_AUTO_CANCEL;
+
+                notificationManager.notify(1, notification);
             }
         }, 0, NOTIFY_RATE);
     }

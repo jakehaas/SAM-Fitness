@@ -419,7 +419,7 @@ public class MainFragment extends Fragment {
                             animationDone = false;
                         }
                         else {
-                            playAvatarAnimationLooped(3, 5);
+                            playAvatarAnimationLooped(3, 2);
                             avatar.getRoot().translate(-10, 0, 0);
                         }
 
