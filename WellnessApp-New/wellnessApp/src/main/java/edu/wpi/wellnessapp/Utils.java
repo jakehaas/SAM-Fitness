@@ -1,5 +1,5 @@
 /**
- * MainFragment.java
+ * Utils.java
  * Wellness-App-MQP
  *
  * @version 1.0.0
@@ -38,11 +38,11 @@ public class Utils {
     }
 
     /**
-     * getFilePath(Context ctx)
+     * getAudioSampleFilePath(Context ctx)
      *
      * @param ctx A context to access the android filesystem
      */
-    public static String getFilePath(Context ctx) {
+    public static String getAudioSampleFilePath(Context ctx) {
         String mFileName = ctx.getCacheDir().getAbsolutePath();
         mFileName += "/sleep_audio.3gp";
         return mFileName;

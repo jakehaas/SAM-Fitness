@@ -1,5 +1,5 @@
 /**
- * MainFragment.java
+ * DatabaseHandler.java
  * Wellness-App-MQP
  *
  * @version 1.0.0
