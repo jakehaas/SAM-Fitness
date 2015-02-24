@@ -20,6 +20,7 @@
 package edu.wpi.wellnessapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,86 +35,85 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 public class MoodFragment extends Fragment {
-
-    // The context for the alert
-    Context ctx = null;
-
+    private Button startMoodButton;
+    private Button stopMoodButton;
     private Button setMoodButton;
 
-    View view;
-    // View popupView;
-    ViewGroup vg;
-
-    LayoutInflater li;
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	    Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
 
-	view = inflater.inflate(R.layout.fragment_mood, container, false);
-	// popupView = inflater.inflate(R.layout.mood_popup, container, false);
-	vg = container;
-	li = inflater;
+       View view = inflater.inflate(R.layout.fragment_mood, container, false);
 
-	this.setMoodButton = (Button) view.findViewById(R.id.button1);
-	this.setMoodButton.setOnClickListener(new OnClickListener() {
-	    @Override
-	    public void onClick(View v) {
-		// new Achievement(v, 0);
-		showPopup(v);
-	    }
-	});
+        this.startMoodButton = (Button) view.findViewById(R.id.startMoodButton);
+        this.startMoodButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().startService(new Intent(getActivity(), MoodAlertService.class));
+            }
+        });
 
-	ctx = view.getContext();
-	return view;
+        this.stopMoodButton = (Button) view.findViewById(R.id.stopMoodButton);
+        this.stopMoodButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().stopService(new Intent(getActivity(), MoodAlertService.class));
+            }
+        });
+
+        this.setMoodButton = (Button) view.findViewById(R.id.setMoodButton);
+        this.setMoodButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopup(v);
+            }
+        });
+
+        return view;
     }
 
     public void showPopup(View anchorView) {
-	
-	LayoutInflater mInflater;
-	Context context = anchorView.getContext().getApplicationContext();
-	mInflater = LayoutInflater.from(context);
+        LayoutInflater mInflater = LayoutInflater.from(anchorView.getContext().getApplicationContext());
 
-	final View popupView = mInflater.inflate(R.layout.mood_popup, null);
+        final View popupView = mInflater.inflate(R.layout.mood_popup, null);
 
-	final PopupWindow popupWindow = new PopupWindow(popupView, 400, 400);
+        final PopupWindow popupWindow = new PopupWindow(popupView, 400, 400);
 
-	final TextView tv = (TextView) popupView.findViewById(R.id.textView1);
-	tv.setText("Set your Mood!");
+        final TextView tv = (TextView) popupView.findViewById(R.id.textView1);
+        tv.setText("Set your Mood!");
 
-	final Button setMoodConfirmButton = (Button) popupView.findViewById(R.id.set_mood_button);
-	setMoodConfirmButton.setOnClickListener(new OnClickListener() {
-	    @Override
-	    public void onClick(View v) {
-		RatingBar rb = (RatingBar) popupView.findViewById(R.id.ratingBar1);
-		tv.setText("Saved " + rb.getRating()  + " !");
-		
-		setMoodConfirmButton.setText("Close!");
-		setMoodConfirmButton.setOnClickListener(new OnClickListener() {
-		    @Override
-		    public void onClick(View v) {
-			popupWindow.dismiss();
-		    }
-		});
-	    }
-	});
-	
+        final Button setMoodConfirmButton = (Button) popupView.findViewById(R.id.set_mood_button);
+        setMoodConfirmButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RatingBar rb = (RatingBar) popupView.findViewById(R.id.ratingBar1);
+                tv.setText("Saved " + rb.getRating() + " !");
+
+                setMoodConfirmButton.setText("Close!");
+                setMoodConfirmButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popupWindow.dismiss();
+                    }
+                });
+            }
+        });
 
 
-	// If the PopupWindow should be focusable
-	popupWindow.setFocusable(true);
+        // If the PopupWindow should be focusable
+        popupWindow.setFocusable(true);
 
-	// If you need the PopupWindow to dismiss when when touched outside
-	popupWindow.setBackgroundDrawable(new ColorDrawable());
+        // If you need the PopupWindow to dismiss when when touched outside
+        popupWindow.setBackgroundDrawable(new ColorDrawable());
 
-	int location[] = new int[2];
+        int location[] = new int[2];
 
-	// Get the View's(the one that was clicked in the Fragment) location
-	anchorView.getLocationOnScreen(location);
+        // Get the View's(the one that was clicked in the Fragment) location
+        anchorView.getLocationOnScreen(location);
 
-	// Using location, the PopupWindow will be displayed right under
-	// anchorView
-	popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY, location[0],
-		location[1] + anchorView.getHeight());
+        // Using location, the PopupWindow will be displayed right under
+        // anchorView
+        popupWindow.showAtLocation(anchorView, Gravity.CENTER, location[0],
+                location[1] + anchorView.getHeight());
 
     }
 
