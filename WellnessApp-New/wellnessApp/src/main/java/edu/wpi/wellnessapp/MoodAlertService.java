@@ -19,29 +19,22 @@
 
 package edu.wpi.wellnessapp;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.media.MediaRecorder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
 public class MoodAlertService extends Service {
+    private static final int NOTIFY_RATE = 60000;
     Timer timer;
 
     @Override
@@ -70,31 +63,26 @@ public class MoodAlertService extends Service {
         return START_NOT_STICKY;
     }
 
-    private void startMoodAlertService()
-    {
+    private void startMoodAlertService() {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext())
-                    .setSmallIcon(R.drawable.main_circle)
-                    .setContentTitle("Mood Service")
-                    .setContentText("Don't forget to set your mood!");
+                        .setSmallIcon(R.drawable.main_circle)
+                        .setContentTitle("Mood Service")
+                        .setContentText("Don't forget to set your mood!");
 
                 Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
 
                 stackBuilder.addParentStack(MainActivity.class);
                 stackBuilder.addNextIntent(resultIntent);
-                PendingIntent resultPendingIntent =
-                        stackBuilder.getPendingIntent(
-                                0,
-                                PendingIntent.FLAG_UPDATE_CURRENT
-                        );
+                PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                 mBuilder.setContentIntent(resultPendingIntent);
                 NotificationManager mNotificationManager =
                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 mNotificationManager.notify(1234, mBuilder.build());
             }
-        }, 0, 1000);
+        }, 0, NOTIFY_RATE);
     }
 }
