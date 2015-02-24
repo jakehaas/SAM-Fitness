@@ -1,5 +1,5 @@
 /**
- * MainFragment.java
+ * SleepFragment.java
  * Wellness-App-MQP
  *
  * @version 1.0.0
@@ -116,21 +116,21 @@ public class SleepFragment extends Fragment {
             trackingStatus.setText("Not Tracking...");
         }
 
-        //Start Button
+        // Start Button
         this.startButton = (Button) view.findViewById(R.id.startSleepButton);
         this.startButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startSleepTracking(v);
+                startSleepTracking();
             }
         });
 
-        //Stop Button
+        // Stop Button
         this.stopButton = (Button) view.findViewById(R.id.stopSleepButton);
         this.stopButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopSleepTracking(v);
+                stopSleepTracking();
             }
         });
         stopButton.setEnabled(false);
@@ -138,7 +138,9 @@ public class SleepFragment extends Fragment {
         return view;
     }
 
-    public void startSleepTracking(View view) {
+    public void startSleepTracking() {
+        // Start service
+        getActivity().startService(new Intent(getActivity(), SleepService.class));
         Log.d("SleepFragment", "Starting sleep service");
 
         isCalibrated = false;
@@ -155,13 +157,12 @@ public class SleepFragment extends Fragment {
         calLight.setText("Calibrated Light: ");
         calSound.setText("Calibrated Audio: ");
 
-        // Start service
-        getActivity().startService(new Intent(getActivity(), SleepService.class));
+
 
         calibrateSensors();
     }
 
-    public void stopSleepTracking(View view) {
+    public void stopSleepTracking() {
         getActivity().stopService(new Intent(getActivity(), SleepService.class));
         Log.d("SleepFragment", "Stopping sleep service");
 

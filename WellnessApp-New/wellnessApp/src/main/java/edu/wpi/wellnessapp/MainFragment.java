@@ -75,7 +75,7 @@ public class MainFragment extends Fragment {
 
     private AnimatedGroup avatar;
     private int animation = 1;
-    private float animateSeconds = 0f;
+    private float animateSeconds = 0.0f;
 
     private long frameTime = System.currentTimeMillis();
     private long aggregatedTime = 0;
@@ -330,10 +330,8 @@ public class MainFragment extends Fragment {
     }
 
     class Renderer implements GLSurfaceView.Renderer {
-        Context ctx;
 
         public Renderer(Context context) {
-            ctx = context;
         }
 
         public void onSurfaceChanged(GL10 gl, int w, int h) {
@@ -356,16 +354,16 @@ public class MainFragment extends Fragment {
 
                 avatar.addToWorld(world);
 
-                SimpleVector cv = new SimpleVector();
-                cv.x = 0;
-                cv.y = -100;
-                cv.z = 0;
+                SimpleVector cameraLookAtVector = new SimpleVector();
+                cameraLookAtVector.x = 0;
+                cameraLookAtVector.y = -100;
+                cameraLookAtVector.z = 0;
 
                 Camera cam = world.getCamera();
                 cam.moveCamera(Camera.CAMERA_MOVEOUT, -400.0f);
                 cam.moveCamera(Camera.CAMERA_MOVEUP, 200.0f);
                 cam.rotateCameraY(90.0f);
-                cam.lookAt(cv);
+                cam.lookAt(cameraLookAtVector);
 
                 SimpleVector lightPos = new SimpleVector(0, 0, 0);
                 lightPos.y -= 100;
@@ -530,7 +528,7 @@ public class MainFragment extends Fragment {
                     }
 
                 } else {
-                    animateSeconds = 0f;
+                    animateSeconds = 0.0f;
                 }
 
 
@@ -545,8 +543,8 @@ public class MainFragment extends Fragment {
             super(context);
         }
 
-        public ClearGLSurfaceView(Context context, AttributeSet attrs) {
-            super(context, attrs);
+        public ClearGLSurfaceView(Context context, AttributeSet attributeSet) {
+            super(context, attributeSet);
         }
 
         @Override

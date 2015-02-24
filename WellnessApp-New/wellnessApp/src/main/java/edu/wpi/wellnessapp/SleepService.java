@@ -1,5 +1,5 @@
 /**
- * MainFragment.java
+ * SleepService.java
  * Wellness-App-MQP
  *
  * @version 1.0.0
@@ -54,6 +54,7 @@ public class SleepService extends Service {
 
     @Override
     public void onCreate() {
+        super.onCreate();
         Log.d("SleepService", "onCreate");
 
         // Create the calibrateTimer
@@ -67,7 +68,7 @@ public class SleepService extends Service {
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFile(Utils.getFilePath(this));
+        mRecorder.setOutputFile(Utils.getAudioSampleFilePath(this));
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
     }
 
