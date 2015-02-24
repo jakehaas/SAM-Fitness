@@ -34,8 +34,6 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
-
 public class SleepService extends Service {
     private static final int SAMPLE_RATE = 1000;
 
@@ -72,7 +70,7 @@ public class SleepService extends Service {
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
     }
 
-    SensorEventListener lightlsn = new SensorEventListener() {
+    SensorEventListener sensorListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
             lightIntensity = event.values[0];
@@ -115,7 +113,7 @@ public class SleepService extends Service {
         mRecorder.start();
 
         // Start the light sensor
-        sensorMgr.registerListener(lightlsn, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorMgr.registerListener(sensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         // Start sampling the sensors
         sampleSensors();
