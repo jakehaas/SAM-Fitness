@@ -447,8 +447,6 @@ public class StepsFragment extends Fragment {
         //checkSteps.execute();
         //new InsertAndVerifyDataTask().execute();
         //Log.i(sLogTag, "Populated graph view at onViewStateRestored");
-
-
     }
 
     @Override

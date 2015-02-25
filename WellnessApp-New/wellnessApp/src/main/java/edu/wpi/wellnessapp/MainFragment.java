@@ -26,6 +26,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -160,30 +161,22 @@ public class MainFragment extends Fragment {
 
     }
     
-    
-    /*
-     * 
-     * NEED TO IMPLEMENT PAUSE/RESUME
-     * THIS OVERRIDES WILL BE NEEDED LATER
-     * THIS IS TO HOPEFULLY FIX THE GL VIEW BEING
-     * RE-CREATED SOMETIMES
-     * 
-     */
-    
-    /*
+
     @Override
     public void onPause() {
 		Logger.log("onPause");
 		super.onPause();
-//		mGLView.onPause();
-
+        mGLView.onPause();
 	}
 
 	@Override
 	public void onResume() {
 		Logger.log("onResume");
 		super.onResume();
-//		mGLView.onResume();
+		mGLView.onResume();
+
+        animateSeconds = 0;
+        animationDone = false;
 		
 		frameTime = System.currentTimeMillis();
 		aggregatedTime = 0;
@@ -196,7 +189,7 @@ public class MainFragment extends Fragment {
 		super.onStop();
 	}
 	
-	*/
+
 
     private void loadGLResources() {
         Resources res = getResources();
@@ -204,10 +197,10 @@ public class MainFragment extends Fragment {
 
         Texture texture = new Texture(res.openRawResource(R.raw.ninja_texture));
         texture.keepPixelData(true);
-        TextureManager.getInstance().addTexture("ninja", texture);
+        TextureManager.getInstance().addTexture("avatar", texture);
 
         try {
-            avatar = BonesIO.loadGroup(res.openRawResource(R.raw.animation_test));
+            avatar = BonesIO.loadGroup(res.openRawResource(R.raw.avatar));
 
             // After we load the resources, generate the animations
             createMeshKeyFrames();
@@ -223,7 +216,7 @@ public class MainFragment extends Fragment {
         }
 
         for (Animated3D a : avatar) {
-            a.setTexture("ninja");
+            a.setTexture("avatar");
         }
 
     }
@@ -344,13 +337,13 @@ public class MainFragment extends Fragment {
             if (master == null) {
 
                 world = new World();
-                world.setAmbientLight(30, 30, 30);
+                world.setAmbientLight(150, 150, 150);
 
                 pointLight = new Light(world);
-                pointLight.setIntensity(250, 250, 250);
+                pointLight.setIntensity(400, 400, 400);
 
-                avatar.getRoot().rotateY(180);
-                avatar.getRoot().translate(300, 0, 0);
+                avatar.getRoot().rotateY(90);
+                avatar.getRoot().translate(274, 0, 0);
 
                 avatar.addToWorld(world);
 
@@ -366,8 +359,10 @@ public class MainFragment extends Fragment {
                 cam.lookAt(cameraLookAtVector);
 
                 SimpleVector lightPos = new SimpleVector(0, 0, 0);
-                lightPos.y -= 100;
-                lightPos.z += 100;
+                lightPos.x -= 320;
+                lightPos.y -= 170;
+                lightPos.z += 250;
+                //lightPos.rotateX(180);
                 pointLight.setPosition(lightPos);
 
                 MemoryHelper.compact();
@@ -415,12 +410,13 @@ public class MainFragment extends Fragment {
                 case 0:
                     if (Utils.getTotalScore() > 60) {
                         if (animationDone) {
-                            avatarStatus = 1;
-                            animationDone = false;
+                           // avatarStatus = 1;
+                            animationDone = true;
                         }
                         else {
-                            playAvatarAnimationLooped(3, 2);
-                            avatar.getRoot().translate(-10, 0, 0);
+                            //playAvatarAnimationLooped(1, 5);
+                            //avatar.getRoot().translate(-1, 0, 0);
+                            playAvatarAnimationSingle(1);
                         }
 
                     }
@@ -500,13 +496,16 @@ public class MainFragment extends Fragment {
                             .getClip(animation - 1).getTime();
 
                     if (animateSeconds > clipTime) {
-                        animateSeconds = 0;
+                        //animateSeconds = 0;
 
                         if (!loop) {
+                            animateSeconds = clipTime;
                             animationDone = true;
                         }
                         else
                         {
+                            animateSeconds = 0;
+
                             if (loopCount != -1) {
                                 if (animationLoopCount >= loopCount) {
                                     animationDone = true;

@@ -1,0 +1,13 @@
+material lambert3
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.725 0.4524 0.4524 1
+		}
+
+	}
+
+}

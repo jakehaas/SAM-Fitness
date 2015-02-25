@@ -28,62 +28,57 @@
         android:text="Settings" />
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_below="@+id/textView3"
-        android:background="@drawable/mood_circle"
-        android:gravity="center"
-        android:shadowColor="@android:color/white"
-        android:shadowRadius="10.0"
-        android:text="89"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/textView1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/main_circle"
         android:gravity="center"
-        android:shadowColor="@android:color/white"
-        android:shadowRadius="10.0"
         android:text="86.3"
         android:textColor="@android:color/black"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignBaseline="@+id/textView4"
-        android:layout_alignBottom="@+id/textView4"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="56dp"
-        android:background="@drawable/sleep_circle"
-        android:gravity="center"
-        android:shadowColor="@android:color/white"
-        android:shadowRadius="10.0"
-        android:text="96"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        android:textSize="35sp" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_below="@+id/textView3"
-        android:layout_marginLeft="42dp"
-        android:layout_toRightOf="@+id/textView1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:background="@drawable/mood_circle"
+        android:gravity="center"
+        android:text="89"
+        android:textColor="@android:color/black"
+        android:textSize="35sp" />
+
+
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/textView1"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/textView2"
+        android:background="@drawable/sleep_circle"
+        android:gravity="center"
+        android:text="96"
+        android:textColor="@android:color/black"
+        android:textSize="35sp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/textView1"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/textView2"
         android:background="@drawable/activity_circle"
         android:gravity="center"
-        android:shadowColor="@android:color/white"
-        android:shadowRadius="10.0"
         android:text="74"
         android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        android:textSize="35sp" />
 
 </RelativeLayout>
