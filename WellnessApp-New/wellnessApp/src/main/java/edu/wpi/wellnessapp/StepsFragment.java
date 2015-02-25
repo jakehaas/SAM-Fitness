@@ -61,15 +61,18 @@ import com.google.android.gms.fitness.request.SensorRequest;
 import com.google.android.gms.fitness.result.DataReadResult;
 import com.google.android.gms.fitness.result.DataSourcesResult;
 import com.google.android.gms.fitness.result.ListSubscriptionsResult;
+import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class StepsFragment extends Fragment {
@@ -89,6 +92,9 @@ public class StepsFragment extends Fragment {
      *  a known auth error is being resolved, such as showing the account chooser or presenting a
      *  consent dialog. This avoids common duplications as might happen on screen rotations, etc.
      */
+
+
+
     private static final String AUTH_PENDING = "auth_state_pending";
     public static final String TAG = "BasicSensorsApi";
     private boolean authInProgress = false;
@@ -110,26 +116,35 @@ public class StepsFragment extends Fragment {
     private int tmpMinutes;
     GraphView graphView;
     private OnDataPointListener mListener;
+
+
     //  private List<GraphViewData> dataArray = new ArrayList<GraphViewData>();
     LineGraphSeries<DataPoint> exampleSeries;
 
 
     private TextView textViewSteps;
 
-
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Put application specific code here.
-        View view = inflater.inflate(R.layout.fragment_step, container, false);
+        exampleSeries = new LineGraphSeries<DataPoint>();
 
         if (savedInstanceState != null) {
             authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
         }
         buildFitnessClient();
 
-        Log.d("Create View", "Create View Called");
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        super.onCreateView(inflater, container, savedInstanceState);
+        // Put application specific code here.
+        View view = inflater.inflate(R.layout.fragment_step, container, false);
+
+        Log.d("onCreate View", "Create View Called");
         DatabaseHandler db = new DatabaseHandler(getActivity());
 
         //final java.text.DateFormat dateTimeFormatter = DateFormat.getTimeFormat(getActivity());
@@ -150,60 +165,41 @@ public class StepsFragment extends Fragment {
         idCounter = 1;
         textViewSteps = (TextView) view.findViewById(R.id.textSteps);
 
-        graphView = new GraphView(getActivity());
+        graphView = (GraphView) view.findViewById(R.id.graph);
+
+
+        //graphView.removeAllSeries();
+
+        //if (graphView.)
+
+        graphView.addSeries(exampleSeries); // data
+
         graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
         graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
         graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
         graphView.getGridLabelRenderer().setTextSize(20);
-        graphView.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
-        graphView.getGridLabelRenderer().setNumHorizontalLabels(5); // only 4 because of the space
+        //graphView.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
 
+        //graphView.getGridLabelRenderer().setNumHorizontalLabels(5); // only 4 because of the space
 
+        graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+            @Override
+            public String formatLabel(double value, boolean isValueX) {
+                if (isValueX) {
+                    SimpleDateFormat hoursDateFormat = new SimpleDateFormat("MMM dd");
+                    return hoursDateFormat.format(value);
+                } else {
+                    // show currency for y values
+                    return super.formatLabel(value, isValueX);
+                }
+            }
+        });
 
-        Calendar cal = Calendar.getInstance();
         Date now = new Date();
-        cal.setTime(now);
-        long endTime = cal.getTimeInMillis();
-        graphView.getViewport().setXAxisBoundsManual(true);
-        //graphView.getViewport().setMinX(startTime);
-        graphView.getViewport().setMaxX(endTime);
+        //graphView.getViewport().setXAxisBoundsManual(true);
+       // graphView.getViewport().setMinX(now.getTime() - 5*24*60*60*1000);
+       // graphView.getViewport().setMaxX(now.getTime());
 
-/*
-	    graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
-	        @Override
-	        public String formatLabel(double value, boolean isValueX) {
-	        if (isValueX) {
-	        	SimpleDateFormat hoursDateFormat = new SimpleDateFormat("MMM dd");
-            	Double val = value;
-                //Log.d("X Value", val.toString());
-
-                return hoursDateFormat.format(value);
-
-	        	//return dateTimeFormatter.format(new Date((long) value*1000));
-	        } else {
-	            // show currency for y values
-	            return super.formatLabel(value, isValueX);
-	        }
-	        }
-	    });
-*/
-
-        exampleSeries = new LineGraphSeries<DataPoint>();
-        graphView.addSeries(exampleSeries); // data
-
-        try {
-
-            RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.graph1);
-
-            layout.addView(graphView);
-        }
-        catch (NullPointerException e) {
-            // something to handle the NPE.
-        }
-
-
-        //populateGraphView(view, 0);
-        //enableAccelerometerListening();
 
         return view;
     }
@@ -373,20 +369,59 @@ public class StepsFragment extends Fragment {
         // [END register_data_listener]
     }
 
-    private void updateTextViewWithStepCounter(final int numberOfSteps, final long timeStep) {
+    private void updateTextViewWithStepCounter(final ArrayList<DataPoint> values) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 //Toast.makeText(getBaseContext(), "On Datapoint!", Toast.LENGTH_SHORT);
-                textViewSteps.setText(String.valueOf(numberOfSteps));
+                //textViewSteps.setText(String.valueOf(numberOfSteps));
 
-                Long ts = timeStep;
-                Log.d("X Value", ts.toString());
-                exampleSeries.appendData(new DataPoint(timeStep, numberOfSteps), true, 7);
+                //Long ts = timeStep;
+                //Log.d("X Value", ts.toString());
+                for (DataPoint value : values) {
+                    Double ts = value.getX();
+                    Double steps = value.getY();
+                    Log.d("Value: Time", ts.toString());
+                    Log.d("Value: NumSteps", steps.toString());
+                }
+                DataPoint[] getTimeStamps = values.toArray(new DataPoint[values.size()]);
+
+                textViewSteps.setText("Today's Steps: " + String.valueOf(getTimeStamps[values.size()-1].getY()));
+                graphView.getGridLabelRenderer().setNumHorizontalLabels(values.size());
+                graphView.getViewport().setXAxisBoundsManual(true);
+                graphView.getViewport().setMinX(getTimeStamps[0].getX());
+                graphView.getViewport().setMaxX(getTimeStamps[values.size()-1].getX());
+
+                exampleSeries.resetData(values.toArray(new DataPoint[values.size()]));
 
             }
         });
     }
+
+
+    private DataPoint[] generateData() {
+        int count = 2;
+
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date();
+        cal.setTime(now);
+        long endTime = cal.getTimeInMillis();
+
+
+        DataPoint[] values = new DataPoint[count];
+        for (int i=0; i<count; i++) {
+            cal.add(Calendar.DAY_OF_YEAR, i);
+            long startTime = cal.getTimeInMillis();
+            double x = startTime;
+            double f = mRand.nextDouble()*0.15+0.3;
+            double y = Math.sin(i*f+2) + mRand.nextDouble()*0.3;
+            DataPoint v = new DataPoint(x, y);
+            values[i] = v;
+        }
+        return values;
+    }
+
+    Random mRand = new Random();
 
 
     @Override
@@ -420,7 +455,8 @@ public class StepsFragment extends Fragment {
     public void onPause() {
         super.onPause();
         Log.d("On Pause", "On Pause Called");
-        exampleSeries = new LineGraphSeries<DataPoint>();
+        //graphView.removeAllSeries();
+        //exampleSeries = new LineGraphSeries<DataPoint>();
     }
 
     @Override
@@ -602,28 +638,37 @@ public class StepsFragment extends Fragment {
         // [START parse_read_data_result]
         // If the DataReadRequest object specified aggregated data, dataReadResult will be returned
         // as buckets containing DataSets, instead of just DataSets.
+        ArrayList<DataPoint> values = new ArrayList<DataPoint>();
+
+
         if (dataReadResult.getBuckets().size() > 0) {
             Log.i(TAG, "Number of returned buckets of DataSets is: "
                     + dataReadResult.getBuckets().size());
             for (Bucket bucket : dataReadResult.getBuckets()) {
                 List<DataSet> dataSets = bucket.getDataSets();
                 for (DataSet dataSet : dataSets) {
-                    dumpDataSet(dataSet);
+                    dumpDataSet(dataSet, values);
                 }
             }
-        } else if (dataReadResult.getDataSets().size() > 0) {
+            updateTextViewWithStepCounter(values);
+        }
+        else if (dataReadResult.getDataSets().size() > 0) {
             Log.i(TAG, "Number of returned DataSets is: "
                     + dataReadResult.getDataSets().size());
             for (DataSet dataSet : dataReadResult.getDataSets()) {
-                dumpDataSet(dataSet);
+                dumpDataSet(dataSet,values);
+
             }
+            updateTextViewWithStepCounter(values);
         }
         // [END parse_read_data_result]
     }
 
     // [START parse_dataset]
-    private void dumpDataSet(DataSet dataSet) {
+    private void dumpDataSet(DataSet dataSet,  ArrayList<DataPoint> values) {
         //Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
+
+
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
         for (com.google.android.gms.fitness.data.DataPoint dp : dataSet.getDataPoints()) {
@@ -631,16 +676,24 @@ public class StepsFragment extends Fragment {
             Log.i(TAG, "\tType: " + dp.getDataType().getName());
             Log.i(TAG, "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
             Log.i(TAG, "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
-            long time;
+            double time;
             time = dp.getEndTime(TimeUnit.MILLISECONDS);
 
             for(Field field : dp.getDataType().getFields()) {
                 Log.i(TAG, "\tField: " + field.getName() +
                         " Value: " + dp.getValue(field));
-                updateTextViewWithStepCounter(dp.getValue(field).asInt(), time);
+                if (field.getName().equals("steps")) {
+                    Log.d("Steps Field", "Field is Steps");
+                    values.add(new DataPoint(time, dp.getValue(field).asInt()));
+
+                }
+
 
             }
         }
+        Integer size = values.size();
+        Log.d("Size of values array", size.toString());
+
     }
 
     private void deleteData() {

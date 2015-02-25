@@ -5,8 +5,7 @@
     android:orientation="vertical"
      >
 
-    <RelativeLayout 
-        
+    <com.jjoe64.graphview.GraphView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
@@ -16,19 +15,20 @@
         android:layout_marginLeft="20dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:id="@+id/graph1"
         android:background="#252525"
+        android:id="@+id/graph"
         />
+
 
     <TextView
         android:id="@+id/textSteps"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="140dp"
+        android:layout_marginLeft="20dp"
         android:layout_span="4"
         android:layout_weight="1"
         android:gravity="center_vertical|center_horizontal"
-        android:text="---"
-        android:textSize="40sp" />
+        android:text="Today's Steps: "
+        android:textSize="30sp" />
 
 </LinearLayout>
