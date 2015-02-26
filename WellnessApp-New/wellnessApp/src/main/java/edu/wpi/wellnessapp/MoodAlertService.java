@@ -36,7 +36,7 @@ import java.util.TimerTask;
 
 
 public class MoodAlertService extends Service {
-    private static final int NOTIFY_RATE = 60000; // 1 Minute
+    private static final int NOTIFY_RATE = 60000 * 60 * 4; // 1 Minute
     Timer timer;
 
     @Override

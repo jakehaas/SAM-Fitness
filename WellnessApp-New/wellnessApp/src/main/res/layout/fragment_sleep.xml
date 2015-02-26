@@ -16,21 +16,12 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
-        android:id="@+id/testButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="34dp"
-        android:text="Test Achiev!" />
-
-    <Button
         android:id="@+id/startSleepButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="91dp"
+        android:layout_marginTop="50dp"
         android:text="Start Sleep Tracking" />
     
     <Button
@@ -39,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="100dp"
         android:text="Stop Sleep Tracking" />
 
     <TextView
@@ -58,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button5"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="205dp"
         android:text="Calibrated Audio: "
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -68,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button5"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="280dp"
+        android:layout_marginTop="225dp"
         android:text="Calibrated Light: "
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -78,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button4"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="245dp"
         android:text="Light Sensor Value: "
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -88,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button5"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="320dp"
+        android:layout_marginTop="265dp"
         android:text="Audio Level: "
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -98,7 +89,7 @@
         android:layout_height="wrap_content"
 		android:layout_below="@+id/button6"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="390dp"
+        android:layout_marginTop="350dp"
         android:text="Fell Asleep: "
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -108,8 +99,19 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button7"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="440dp"
+        android:layout_marginTop="380dp"
         android:text="Woke Up: "
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textViewDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button7"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="410dp"
+        android:text="Duration: "
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
 
 </RelativeLayout>
