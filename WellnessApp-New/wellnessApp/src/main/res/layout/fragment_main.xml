@@ -1,84 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="right" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="top|center"
+    android:background="#252525"
+    >
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.75"
+        >
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/main_circle"
+            android:gravity="center"
+            android:text="86"
+            android:textColor="@android:color/black"
+            android:textSize="35sp" />
 
-    <LinearLayout
-        android:id="@+id/mainAvatar"
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="#252525"
-        android:gravity="center_horizontal"
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignLeft="@+id/textView1"
+            android:layout_below="@+id/textView1"
+            android:background="@drawable/mood_circle"
+            android:gravity="center"
+            android:text="89"
+            android:textColor="@android:color/black"
+            android:textSize="35sp" />
+
+
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/textView1"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@+id/textView2"
+            android:background="@drawable/sleep_circle"
+            android:gravity="center"
+            android:text="96"
+            android:textColor="@android:color/black"
+            android:textSize="35sp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/textView1"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/textView2"
+            android:background="@drawable/activity_circle"
+            android:gravity="center"
+            android:text="74"
+            android:textColor="@android:color/black"
+            android:textSize="35sp" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.55"
         android:orientation="vertical"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp" >
+        >
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/mainAvatar"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="#252525"
+            android:gravity="fill"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
 
-    <Button
-        android:id="@+id/settings_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="Settings" />
+        <Button
+            android:id="@+id/settings_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text="Settings" />
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/main_circle"
-        android:gravity="center"
-        android:text="86.3"
-        android:textColor="@android:color/black"
-        android:textSize="35sp" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:background="@drawable/mood_circle"
-        android:gravity="center"
-        android:text="89"
-        android:textColor="@android:color/black"
-        android:textSize="35sp" />
+    </RelativeLayout>
 
 
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_below="@+id/textView1"
-        android:layout_marginRight="15dp"
-        android:layout_toLeftOf="@+id/textView2"
-        android:background="@drawable/sleep_circle"
-        android:gravity="center"
-        android:text="96"
-        android:textColor="@android:color/black"
-        android:textSize="35sp" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_below="@+id/textView1"
-        android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/textView2"
-        android:background="@drawable/activity_circle"
-        android:gravity="center"
-        android:text="74"
-        android:textColor="@android:color/black"
-        android:textSize="35sp" />
 
-</RelativeLayout>
+
+</LinearLayout>
