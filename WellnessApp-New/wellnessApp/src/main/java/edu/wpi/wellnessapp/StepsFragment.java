@@ -386,12 +386,13 @@ public class StepsFragment extends Fragment {
                 }
                 DataPoint[] getTimeStamps = values.toArray(new DataPoint[values.size()]);
 
-                textViewSteps.setText("Today's Steps: " + String.valueOf(getTimeStamps[values.size()-1].getY()));
-                graphView.getGridLabelRenderer().setNumHorizontalLabels(values.size());
-                graphView.getViewport().setXAxisBoundsManual(true);
-                graphView.getViewport().setMinX(getTimeStamps[0].getX());
-                graphView.getViewport().setMaxX(getTimeStamps[values.size()-1].getX());
-
+                if (values.size() >= 1) {
+                    textViewSteps.setText("Today's Steps: " + String.valueOf(getTimeStamps[values.size() - 1].getY()));
+                    graphView.getGridLabelRenderer().setNumHorizontalLabels(values.size());
+                    graphView.getViewport().setXAxisBoundsManual(true);
+                    graphView.getViewport().setMinX(getTimeStamps[0].getX());
+                    graphView.getViewport().setMaxX(getTimeStamps[values.size() - 1].getX());
+                }
                 exampleSeries.resetData(values.toArray(new DataPoint[values.size()]));
 
             }
