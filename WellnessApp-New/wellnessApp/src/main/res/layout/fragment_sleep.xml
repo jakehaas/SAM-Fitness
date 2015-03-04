@@ -16,13 +16,13 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
-        android:id="@+id/startSleepButton"
+        android:id="@+id/calibrateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:text="Start Sleep Tracking" />
+        android:text="Calibrate Sensors" />
     
     <Button
         android:id="@+id/stopSleepButton"
@@ -33,6 +33,14 @@
         android:layout_marginTop="100dp"
         android:text="Stop Sleep Tracking" />
 
+    <Button
+        android:id="@+id/moreSleepSessionInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|left"
+        android:text = "+"
+        />
+
     <TextView
         android:id="@+id/textViewTrackingStatus"
         android:layout_width="wrap_content"
@@ -41,26 +49,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="72dp"
         android:text="Not Tracking..."
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/textViewCalAudio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button5"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="205dp"
-        android:text="Calibrated Audio: "
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/textViewCalLight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button5"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="225dp"
-        android:text="Calibrated Light: "
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -111,6 +99,15 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="410dp"
         android:text="Duration: "
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <TextView
+        android:id="@+id/textViewEfficiency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="440dp"
+        android:text="Efficiency: "
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 
