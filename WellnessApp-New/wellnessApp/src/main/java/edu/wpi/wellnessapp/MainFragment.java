@@ -22,6 +22,8 @@ package edu.wpi.wellnessapp;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,7 +38,9 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.PopupWindow;
+import android.widget.VideoView;
 
 
 import java.io.IOException;
@@ -44,7 +48,7 @@ import java.lang.reflect.Field;
 
 
 public class MainFragment extends Fragment {
-    private static MainFragment master = null;
+    private VideoView videoView;
 
     //private RGBColor back = new RGBColor(37, 37, 37);
 
@@ -54,6 +58,8 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        videoView = (VideoView) rootView.findViewById( R.id.mainAvatar );
 
         Button settingButton = (Button) rootView.findViewById(R.id.settings_button);
         settingButton.setOnClickListener(new OnClickListener() {
@@ -72,8 +78,18 @@ public class MainFragment extends Fragment {
             }
         });
 
+
+        String videoUrl = "android.resource://" + getActivity().getApplicationContext().getPackageName() + "/" + R.raw.avatar_walk_in;
+
+        videoView.setMediaController(new MediaController(rootView.getContext().getApplicationContext()));
+        videoView.setVideoURI(Uri.parse(videoUrl));
+        videoView.requestFocus();
+        videoView.start();
+
         return rootView;
     }
+
+
 
 
     public void showSettingsPopup(View anchorView) {

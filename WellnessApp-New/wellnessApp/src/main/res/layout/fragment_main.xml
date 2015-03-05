@@ -72,7 +72,7 @@
         android:orientation="vertical"
         >
 
-        <LinearLayout
+        <VideoView
             android:id="@+id/mainAvatar"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -80,7 +80,6 @@
             android:layout_alignParentLeft="false"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:background="#252525"
             android:gravity="fill"
             android:orientation="vertical"
             android:paddingLeft="10dp"
