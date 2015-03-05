@@ -13,10 +13,8 @@
         android:minSdkVersion="11"
         android:targetSdkVersion="20" />
 
-    <uses-feature android:glEsVersion="0x00010000" />
-
-
     <application
+        android:hardwareAccelerated="true"
         android:allowBackup="true"
         android:debuggable="true"
         android:icon="@drawable/ic_launcher"

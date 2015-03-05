@@ -25,7 +25,7 @@
         android:text="Calibrate Sensors" />
     
     <Button
-        android:id="@+id/stopSleepButton"
+        android:id="@+id/stopStartSleepButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
