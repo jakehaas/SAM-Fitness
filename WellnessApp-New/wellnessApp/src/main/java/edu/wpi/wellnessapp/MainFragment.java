@@ -20,10 +20,12 @@
 package edu.wpi.wellnessapp;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -40,11 +42,14 @@ import android.widget.VideoView;
 
 
 public class MainFragment extends Fragment {
+    private String ANIMATION_VIDEO_PATH;
+
     private VideoView videoView;
 
     private TextView activityCircle;
     private TextView sleepCircle;
     private TextView moodCircle;
+    private TextView mainCircle;
 
     private boolean canShowSettingPopup = true;
     private PopupWindow popupWindow;
@@ -53,11 +58,13 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        ANIMATION_VIDEO_PATH = "android.resource://" + getActivity().getApplicationContext().getPackageName() + "/" + R.raw.avatar_anims;
         videoView = (VideoView) rootView.findViewById(R.id.mainAvatar);
 
         activityCircle = (TextView) rootView.findViewById(R.id.activityCircle);
         sleepCircle = (TextView) rootView.findViewById(R.id.sleepCircle);
         moodCircle = (TextView) rootView.findViewById(R.id.moodCircle);
+        mainCircle = (TextView) rootView.findViewById(R.id.mainCircle);
 
         activityCircle.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -89,6 +96,8 @@ public class MainFragment extends Fragment {
             }
         });
 
+        updateCircles();
+
         Button settingButton = (Button) rootView.findViewById(R.id.settings_button);
         settingButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -107,8 +116,6 @@ public class MainFragment extends Fragment {
         });
 
 
-        String videoUrl = "android.resource://" + getActivity().getApplicationContext().getPackageName() + "/" + R.raw.avatar_walk_in;
-
         videoView.setMediaController(new MediaController(rootView.getContext().getApplicationContext()));
 
         videoView.setOnTouchListener(new View.OnTouchListener() {
@@ -118,8 +125,7 @@ public class MainFragment extends Fragment {
             }
         });
 
-        videoView.setVideoURI(Uri.parse(videoUrl));
-        videoView.requestFocus();
+        animateAvatar();
 
         return rootView;
     }
@@ -153,8 +159,26 @@ public class MainFragment extends Fragment {
 
     }
 
-    public void playAvatarAnimation(int animationID) {
+    private void animateAvatar() {
+        videoView.stopPlayback();
+        videoView.setVideoURI(Uri.parse(ANIMATION_VIDEO_PATH));
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+
+                videoView.seekTo(150);
+                videoView.start();
+            }
+        });
+        videoView.requestFocus();
         videoView.start();
+    }
+
+    private void updateCircles() {
+       activityCircle.setText(Html.fromHtml("<b>" + Utils.getStepScore() + "</b><br />Steps"));
+        moodCircle.setText(Html.fromHtml("<b>" + Utils.getMoodScore() + "</b><br />Happiness"));
+        sleepCircle.setText(Html.fromHtml("<b>" + Utils.getSleepScore() + "</b><br />Hours"));
+        mainCircle.setText(Html.fromHtml("<b>" + Utils.getTotalScore() + "</b><br />Total Score"));
     }
 
 
@@ -175,7 +199,7 @@ public class MainFragment extends Fragment {
         super.onResume();
         Log.d("On Resume", "On Resume Called");
 
-        playAvatarAnimation(1);
+        //playAvatarAnimation(INTRO_ANIMATION);
     }
 
     @Override

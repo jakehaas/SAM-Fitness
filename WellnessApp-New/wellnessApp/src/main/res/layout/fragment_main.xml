@@ -20,9 +20,8 @@
             android:layout_marginTop="4dp"
             android:background="@drawable/main_circle"
             android:gravity="center"
-            android:text="86"
-            android:textColor="@android:color/black"
-            android:textSize="35sp" />
+            android:text=""
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/sleepCircle"
@@ -32,9 +31,8 @@
             android:layout_below="@+id/mainCircle"
             android:background="@drawable/sleep_circle"
             android:gravity="center"
-            android:text="89"
-            android:textColor="@android:color/black"
-            android:textSize="35sp" />
+            android:text=""
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/activityCircle"
@@ -45,9 +43,8 @@
             android:layout_toLeftOf="@+id/sleepCircle"
             android:background="@drawable/activity_circle"
             android:gravity="center"
-            android:text="96"
-            android:textColor="@android:color/black"
-            android:textSize="35sp" />
+            android:text=""
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/moodCircle"
@@ -58,9 +55,8 @@
             android:layout_toRightOf="@+id/sleepCircle"
             android:background="@drawable/mood_circle"
             android:gravity="center"
-            android:text="74"
-            android:textColor="@android:color/black"
-            android:textSize="35sp" />
+            android:text=""
+            android:textColor="@android:color/black" />
 
     </RelativeLayout>
 
