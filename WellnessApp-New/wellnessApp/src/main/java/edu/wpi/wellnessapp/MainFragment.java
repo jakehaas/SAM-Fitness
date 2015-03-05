@@ -23,6 +23,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,11 +35,16 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 
 public class MainFragment extends Fragment {
     private VideoView videoView;
+
+    private TextView activityCircle;
+    private TextView sleepCircle;
+    private TextView moodCircle;
 
     private boolean canShowSettingPopup = true;
     private PopupWindow popupWindow;
@@ -48,6 +54,40 @@ public class MainFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         videoView = (VideoView) rootView.findViewById(R.id.mainAvatar);
+
+        activityCircle = (TextView) rootView.findViewById(R.id.activityCircle);
+        sleepCircle = (TextView) rootView.findViewById(R.id.sleepCircle);
+        moodCircle = (TextView) rootView.findViewById(R.id.moodCircle);
+
+        activityCircle.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent) {
+                ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.pager);
+                viewPager.setCurrentItem(1);
+
+                return true;
+            }
+        });
+
+        sleepCircle.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent) {
+                ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.pager);
+                viewPager.setCurrentItem(2);
+
+                return true;
+            }
+        });
+
+        moodCircle.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent) {
+                ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.pager);
+                viewPager.setCurrentItem(3);
+
+                return true;
+            }
+        });
 
         Button settingButton = (Button) rootView.findViewById(R.id.settings_button);
         settingButton.setOnClickListener(new OnClickListener() {
@@ -80,7 +120,6 @@ public class MainFragment extends Fragment {
 
         videoView.setVideoURI(Uri.parse(videoUrl));
         videoView.requestFocus();
-
 
         return rootView;
     }

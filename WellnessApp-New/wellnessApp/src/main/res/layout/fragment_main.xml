@@ -2,17 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:gravity="top|center"
     android:background="#252525"
-    >
+    android:gravity="top|center"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="0.75"
-        >
+        android:layout_weight="0.75">
+
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/mainCircle"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerHorizontal="true"
@@ -25,52 +25,50 @@
             android:textSize="35sp" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/sleepCircle"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_alignLeft="@+id/textView1"
-            android:layout_below="@+id/textView1"
-            android:background="@drawable/mood_circle"
+            android:layout_alignLeft="@+id/mainCircle"
+            android:layout_below="@+id/mainCircle"
+            android:background="@drawable/sleep_circle"
             android:gravity="center"
             android:text="89"
             android:textColor="@android:color/black"
             android:textSize="35sp" />
 
-
-
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/activityCircle"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_below="@+id/textView1"
+            android:layout_below="@+id/mainCircle"
             android:layout_marginRight="15dp"
-            android:layout_toLeftOf="@+id/textView2"
-            android:background="@drawable/sleep_circle"
+            android:layout_toLeftOf="@+id/sleepCircle"
+            android:background="@drawable/activity_circle"
             android:gravity="center"
             android:text="96"
             android:textColor="@android:color/black"
             android:textSize="35sp" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/moodCircle"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_below="@+id/textView1"
+            android:layout_below="@+id/mainCircle"
             android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@+id/textView2"
-            android:background="@drawable/activity_circle"
+            android:layout_toRightOf="@+id/sleepCircle"
+            android:background="@drawable/mood_circle"
             android:gravity="center"
             android:text="74"
             android:textColor="@android:color/black"
             android:textSize="35sp" />
 
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="0.55"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <VideoView
             android:id="@+id/mainAvatar"
@@ -83,7 +81,7 @@
             android:gravity="fill"
             android:orientation="vertical"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"/>
+            android:paddingRight="10dp" />
 
         <Button
             android:id="@+id/settings_button"
@@ -94,10 +92,6 @@
             android:text="Settings" />
 
     </RelativeLayout>
-
-
-
-
 
 
 </LinearLayout>
