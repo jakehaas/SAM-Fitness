@@ -361,7 +361,12 @@ public class SleepFragment extends Fragment {
         int hour = c.get(Calendar.HOUR);
         String amPm = getAmPm();
 
-        if ((hour >= calibratedSleepHour && amPm.equals("PM")) || (hour <= calibratedSleepHour && amPm.equals("AM"))) {
+        if(hour == 0){
+            hour = 12;
+            amPm = "AM";
+        }
+
+        if ((hour >= calibratedSleepHour && amPm.equals("PM")) || (hour <= calibratedWakeHour && amPm.equals("AM"))) {
             return true;
         }
         return false;
