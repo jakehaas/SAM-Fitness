@@ -385,6 +385,7 @@ public class StepsFragment extends Fragment {
                 DataPoint[] getTimeStamps = values.toArray(new DataPoint[values.size()]);
 
                 if (values.size() >= 1) {
+                    Utils.todaysSteps = getTimeStamps[values.size() - 1].getY();
                     textViewSteps.setText("Today's Steps: " + String.valueOf(getTimeStamps[values.size() - 1].getY()));
                     graphView.getGridLabelRenderer().setNumHorizontalLabels(values.size());
                     graphView.getViewport().setXAxisBoundsManual(true);

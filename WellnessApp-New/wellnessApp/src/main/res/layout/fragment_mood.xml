@@ -28,15 +28,6 @@
         android:layout_marginTop="70dp" />
 
     <Button
-        android:id="@+id/stopMoodButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="Stop Mood Tracking"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp" />
-
-    <Button
         android:id="@+id/setMoodButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -209,29 +209,4 @@ public class MainFragment extends Fragment {
 
         videoView.pause();
     }
-
-
-    /*
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("onActivityResult", "onActivityResult Called");
-
-        videoView.start();
-    }
-
-
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        //Appearance.setup(getActivity());
-        Log.d("OnViewStateRestored", "Function called");
-        //Log.d(sLogTag, "Populating graph view at onViewStateRestored");
-        //TODO: Populate graph function
-        //checkSteps = new InsertAndVerifyDataTask();
-        //checkSteps.execute();
-        //new InsertAndVerifyDataTask().execute();
-        //Log.i(sLogTag, "Populated graph view at onViewStateRestored");
-
-        videoView.start();
-    }
-    */
 }

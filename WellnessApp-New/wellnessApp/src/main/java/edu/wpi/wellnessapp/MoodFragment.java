@@ -34,43 +34,66 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 public class MoodFragment extends Fragment {
-    private Button startMoodButton;
-    private Button stopMoodButton;
+    private Button startStopMoodButton;
     private Button setMoodButton;
+
+    private boolean isTracking = true;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
        View view = inflater.inflate(R.layout.fragment_mood, container, false);
 
-        this.startMoodButton = (Button) view.findViewById(R.id.startMoodButton);
-        this.startMoodButton.setOnClickListener(new OnClickListener() {
+        isTracking = Utils.isServiceRunning(getActivity(), MoodAlertService.class);
+
+        startStopMoodButton = (Button) view.findViewById(R.id.startMoodButton);
+        setMoodButton = (Button) view.findViewById(R.id.setMoodButton);
+
+        if (isTracking) {
+            startStopMoodButton.setText("Stop Mood Tracking");
+            setMoodButton.setEnabled(true);
+        }
+        else {
+            startStopMoodButton.setText("Start Mood Tracking");
+            setMoodButton.setEnabled(false);
+        }
+
+        startStopMoodButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().startService(new Intent(getActivity(), MoodAlertService.class));
+                if (isTracking) {
+                    stopMoodTracking();
+                    startStopMoodButton.setText("Start Mood Tracking");
+                } else {
+                    startMoodTracking();
+                    startStopMoodButton.setText("Stop Mood Tracking");
+                }
             }
         });
 
-        this.stopMoodButton = (Button) view.findViewById(R.id.stopMoodButton);
-        this.stopMoodButton.setOnClickListener(new OnClickListener() {
+        setMoodButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().stopService(new Intent(getActivity(), MoodAlertService.class));
-            }
-        });
-
-        this.setMoodButton = (Button) view.findViewById(R.id.setMoodButton);
-        this.setMoodButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopup(v);
+                showMoodPopup(v);
             }
         });
 
         return view;
     }
 
-    public void showPopup(View anchorView) {
+    private void startMoodTracking() {
+        getActivity().startService(new Intent(getActivity(), MoodAlertService.class));
+        isTracking = true;
+        setMoodButton.setEnabled(true);
+    }
+
+    private void stopMoodTracking() {
+        getActivity().stopService(new Intent(getActivity(), MoodAlertService.class));
+        isTracking = false;
+        setMoodButton.setEnabled(false);
+    }
+
+    public void showMoodPopup(View anchorView) {
         LayoutInflater mInflater = LayoutInflater.from(anchorView.getContext().getApplicationContext());
 
         final View popupView = mInflater.inflate(R.layout.mood_popup, null);
@@ -104,16 +127,8 @@ public class MoodFragment extends Fragment {
         // If you need the PopupWindow to dismiss when when touched outside
         popupWindow.setBackgroundDrawable(new ColorDrawable());
 
-        int location[] = new int[2];
-
-        // Get the View's(the one that was clicked in the Fragment) location
-        anchorView.getLocationOnScreen(location);
-
-        // Using location, the PopupWindow will be displayed right under
-        // anchorView
-        popupWindow.showAtLocation(anchorView, Gravity.CENTER, location[0],
-                location[1] + anchorView.getHeight());
-
+        popupWindow.showAtLocation(anchorView, Gravity.CENTER_HORIZONTAL, anchorView.getWidth(),
+                anchorView.getHeight());
     }
 
 }
