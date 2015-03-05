@@ -20,6 +20,7 @@
 package edu.wpi.wellnessapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.media.MediaPlayer;
@@ -59,7 +60,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        videoView = (VideoView) rootView.findViewById( R.id.mainAvatar );
+        videoView = (VideoView) rootView.findViewById(R.id.mainAvatar);
 
         Button settingButton = (Button) rootView.findViewById(R.id.settings_button);
         settingButton.setOnClickListener(new OnClickListener() {
@@ -119,5 +120,54 @@ public class MainFragment extends Fragment {
             }
         });
 
+    }
+
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.d("On Resume", "On Resume Called");
+
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("On Pause", "On Pause Called");
+
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("onActivityResult", "onActivityResult Called");
+    }
+
+
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        //Appearance.setup(getActivity());
+        Log.d("OnViewStateRestored", "Function called");
+        //Log.d(sLogTag, "Populating graph view at onViewStateRestored");
+        //TODO: Populate graph function
+        //checkSteps = new InsertAndVerifyDataTask();
+        //checkSteps.execute();
+        //new InsertAndVerifyDataTask().execute();
+        //Log.i(sLogTag, "Populated graph view at onViewStateRestored");
     }
 }
