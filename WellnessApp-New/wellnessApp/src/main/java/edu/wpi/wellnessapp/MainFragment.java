@@ -20,15 +20,9 @@
 package edu.wpi.wellnessapp;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.Resources.NotFoundException;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -38,20 +32,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.PopupWindow;
 import android.widget.VideoView;
 
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-
-
 public class MainFragment extends Fragment {
     private VideoView videoView;
-
-    //private RGBColor back = new RGBColor(37, 37, 37);
 
     private boolean canShowSettingPopup = true;
     private PopupWindow popupWindow;
@@ -83,15 +70,20 @@ public class MainFragment extends Fragment {
         String videoUrl = "android.resource://" + getActivity().getApplicationContext().getPackageName() + "/" + R.raw.avatar_walk_in;
 
         videoView.setMediaController(new MediaController(rootView.getContext().getApplicationContext()));
+
+        videoView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent) {
+                return true;
+            }
+        });
+
         videoView.setVideoURI(Uri.parse(videoUrl));
         videoView.requestFocus();
-        videoView.start();
+
 
         return rootView;
     }
-
-
-
 
     public void showSettingsPopup(View anchorView) {
         LayoutInflater mInflater;
@@ -122,6 +114,9 @@ public class MainFragment extends Fragment {
 
     }
 
+    public void playAvatarAnimation(int animationID) {
+        videoView.start();
+    }
 
 
     @Override
@@ -139,10 +134,9 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         Log.d("On Resume", "On Resume Called");
 
-
+        playAvatarAnimation(1);
     }
 
     @Override
@@ -150,12 +144,16 @@ public class MainFragment extends Fragment {
         super.onPause();
         Log.d("On Pause", "On Pause Called");
 
+        videoView.pause();
     }
 
 
+    /*
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("onActivityResult", "onActivityResult Called");
+
+        videoView.start();
     }
 
 
@@ -169,5 +167,8 @@ public class MainFragment extends Fragment {
         //checkSteps.execute();
         //new InsertAndVerifyDataTask().execute();
         //Log.i(sLogTag, "Populated graph view at onViewStateRestored");
+
+        videoView.start();
     }
+    */
 }

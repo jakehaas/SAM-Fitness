@@ -19,10 +19,8 @@
 
 package edu.wpi.wellnessapp;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -41,7 +39,7 @@ import java.util.Calendar;
 public class SleepFragment extends Fragment {
     // UI Elements
     private Button calibrateButton;
-    private Button stopButton;
+    private Button stopStartButton;
     private Button moreSessionInfo;
     private TextView trackingStatus;
     private TextView lightSensorValue;
@@ -83,7 +81,7 @@ public class SleepFragment extends Fragment {
     private float avgBy = 0;
 
     // Tracking Statuses
-    private boolean isTracking = false;
+    private boolean isTracking = true;
     private boolean isAsleep = false;
     private int numWakeups = 0;
     private int efficiency;
@@ -117,6 +115,8 @@ public class SleepFragment extends Fragment {
         IntentFilter intentFilter = new IntentFilter("SensorData");
         getActivity().getApplicationContext().registerReceiver(recieveFromSleepService, intentFilter);
 
+        isTracking = Utils.isServiceRunning(getActivity(), SleepService.class);
+
         // Initialize UI elements
         trackingStatus = (TextView) view.findViewById(R.id.textViewTrackingStatus);
         lightSensorValue = (TextView) view.findViewById(R.id.textViewLightSensorValue);
@@ -131,16 +131,38 @@ public class SleepFragment extends Fragment {
         this.calibrateButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                calibrateSensors();
+                if (!isTracking) {
+                    Utils.displayDialog(getActivity(), "Cannot Calibrate...", "You must have sleep tracking enabled to calibrate the sensors.",
+                            null, "OK", Utils.emptyRunnable(), null);
+                } else {
+                    calibrateSensors();
+                }
             }
         });
 
         // Stop Button
-        this.stopButton = (Button) view.findViewById(R.id.stopSleepButton);
-        this.stopButton.setOnClickListener(new OnClickListener() {
+        this.stopStartButton = (Button) view.findViewById(R.id.stopStartSleepButton);
+
+        if (isTracking) {
+            trackingStatus.setText("Tracking...");
+            stopStartButton.setText("Stop Sleep Tracking");
+            calibrateButton.setEnabled(true);
+        } else {
+            trackingStatus.setText("Not Tracking...");
+            stopStartButton.setText("Start Sleep Tracking");
+            calibrateButton.setEnabled(false);
+        }
+
+        this.stopStartButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                displayDialog(2);
+                if (isTracking) {
+                    Utils.displayDialog(getActivity(), "Stop Sleep Tracking?", "Are you SURE you want to stop sleep tracking?",
+                            "Cancel", "OK", stopSleepRunnable(), Utils.emptyRunnable());
+                } else {
+                    startSleepTracking();
+                    stopStartButton.setText("Stop Sleep Tracking");
+                }
             }
         });
 
@@ -148,156 +170,71 @@ public class SleepFragment extends Fragment {
         this.moreSessionInfo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                displayDialog(4);
+                Utils.displayDialog(getActivity(), "More Sleep Session Info: During your previous session...",
+                        "Calibrated Audio Level: " + Integer.toString(calibratedAmplitude)
+                                + "\nCalibrated Light Level: " + Float.toString(calibratedLight)
+                                + "\nTotal Time Asleep: " + Integer.toString(durationHours) + ":" + Integer.toString(durationMins) + ":" + Integer.toString(durationSec)
+                                + "\nNumber of Wake Ups: " + Integer.toString(numWakeups)
+                                + "\nEfficiency: " + Integer.toString(getEfficiency()),
+                        null, "OK", Utils.emptyRunnable(), null);
             }
         });
-
-
-        // Check time of day to see if sleep should be tracked
-        if(SleepHourCheck()){
-            isTracking = true;
-        } else{
-            isTracking = false;
-        }
-
-        // Set the current tracking status
-        if (isTracking) {
-            trackingStatus.setText("Tracking...");
-            startSleepTracking();
-        } else {
-            trackingStatus.setText("Not Tracking...");
-            stopSleepTracking();
-        }
 
         return view;
     }
 
-    public void startSleepTracking() {
+
+    private Runnable stopSleepRunnable() {
+        return new Runnable() {
+            public void run() {
+                stopSleepTracking();
+                stopStartButton.setText("Start Sleep Tracking");
+            }
+        };
+    }
+
+    private void startSleepTracking() {
         // Start service
         getActivity().startService(new Intent(getActivity(), SleepService.class));
+
+        isTracking = true;
+
         Log.d("SleepFragment", "Starting sleep service");
 
-        displayDialog(1);
+        Utils.displayDialog(getActivity(), "Sleep Tracking Started!", "This app uses the light sensor and microphone to track your sleeping " +
+                        "patterns. Be sure to keep your device close to you while you sleep for best results.",
+                null, "OK", Utils.emptyRunnable(), null);
 
         trackingStatus.setText("Tracking...");
+        calibrateButton.setEnabled(true);
         sleepTime.setText("Fell Asleep: ");
         wakeTime.setText("Woke Up: ");
 
         isCalibrated = false;
 
-        stopButton.setEnabled(true);
-
-        if(!isTracking){
-            isTracking = true;
+        if (isTracking) {
             calibrateSensors();
-        }else {
+        } else {
             checkSleepStatus();
         }
     }
 
-    public void stopSleepTracking() {
+    private void stopSleepTracking() {
         getActivity().stopService(new Intent(getActivity(), SleepService.class));
         Log.d("SleepFragment", "Stopping sleep service");
 
-        //display
-        stopButton.setEnabled(false);
-
         isTracking = false;
+
         trackingStatus.setText("Not Tracking...");
+        calibrateButton.setEnabled(false);
         lightSensorValue.setText("Light Sensor Value: ");
         audioValue.setText("Audio Value: ");
 
         sleepEfficiency.setText("Efficiency: " + Integer.toString(getEfficiency()));
     }
 
-    /**
-     * displayDialog()
-     *
-     * Displays an alert informing the user
-     * how sleep tracking works
-     */
-    private void displayDialog(int alertNumber) {
-        String title = "";
-        String message = "";
-
-        // Instantiate the AlertDialog Builder
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-
-        // Display alert that sleep tracking has begun
-        if(alertNumber == 1){
-            title = "Sleep Tracking Started!";
-            message = "This app uses the light sensor and microphone to track your sleeping " +
-                    "patterns. Make sure sure not to keep your device too far away from while you sleep for best results.";
-
-            // Define positive button response
-            alert.setPositiveButton(R.string.sleep_track_alert_button,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Just close the dialog
-                        }
-                    });
-
-        // Display alert to ensure user wants to stop sleep tracking
-        }else if(alertNumber == 2){
-            title = "Stop Sleep Tracking?";
-            message = "Are you SURE you want to stop sleep tracking? Note: This cannot be undone without recalibrating sensors.";
-
-            alert.setPositiveButton("Yes",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            stopSleepTracking();
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            // Just close this dialog
-                        }
-                    });
-        }else if(alertNumber == 3){
-            title = "Calibrate?";
-            message = "You have not calibrated your sound and light sensors to suit your sleep environment.  Would you like to do so now?";
-
-            alert.setPositiveButton("Yes",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            calibrateSensors();
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            isCalibrated = true;
-                            // Just close this dialog
-                        }
-                    });
-        }else if(alertNumber ==4){
-            title = "More Sleep Session Info: During your previous session...";
-            message = "Calibrated Audio Level: " + Integer.toString(calibratedAmplitude)
-                    + "\nCalibrated Light Level: " + Float.toString(calibratedLight)
-                    + "\nTotal Time Asleep: " + Integer.toString(durationHours) + ":" + Integer.toString(durationMins) + ":" + Integer.toString(durationSec)
-                    + "\nNumber of Wake Ups: " + Integer.toString(numWakeups)
-                    + "\nEfficiency: " + Integer.toString(getEfficiency());
-        }
-
-        // Set the alert attributes
-        alert.setTitle(title);
-        alert.setMessage(message);
-
-        // Set the icon of the alert
-        alert.setIcon(android.R.drawable.ic_dialog_alert);
-
-        // Show the alert to the user
-        alert.show();
-    }
-
     //calibrate the light/sound levels by getting avgs (get values every 1sec for 10sec period)
     private void calibrateSensors() {
-        if(!isTracking) {
-            startSleepTracking();
-        }
 
         trackingStatus.setText("Calibrating...");
         calibratedLight = 0;
@@ -324,7 +261,17 @@ public class SleepFragment extends Fragment {
                 Log.d("SleepMonitor", "Calibrated sensors");
                 isCalibrated = true;
                 checkSleepStatus();
-                trackingStatus.setText("Tracking...");
+
+                if (isTracking) {
+                    trackingStatus.setText("Tracking...");
+                    stopStartButton.setText("Stop Sleep Tracking");
+                    calibrateButton.setEnabled(true);
+                } else {
+                    trackingStatus.setText("Not Tracking...");
+                    stopStartButton.setText("Start Sleep Tracking");
+                    calibrateButton.setEnabled(false);
+                }
+
                 calibrateTimer.cancel();
             }
         }.start();
@@ -359,7 +306,7 @@ public class SleepFragment extends Fragment {
     }
 
     //get the time in HH:MM:SS format, takes in a char if the sleep/wake variables need to be reset
-    private String getTime(char set){
+    private String getTime(char set) {
         Log.d("getTime", "Getting current time");
         Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR);
@@ -367,14 +314,14 @@ public class SleepFragment extends Fragment {
         int seconds = c.get(Calendar.SECOND);
 
         //12:00 AM is treated as hour 0
-        if(hour == 0){
+        if (hour == 0) {
             hour = 12;
         }
 
         Log.d("CurrentTime", Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(seconds) + getAmPm());
 
         //if the new sleep time is gotten, set it globally
-        if(set == 'S') {
+        if (set == 'S') {
             sleepHour = hour;
             sleepMin = minute;
             sleepSec = seconds;
@@ -383,7 +330,7 @@ public class SleepFragment extends Fragment {
         }
 
         //if the new wake time is gotten, set it globally
-        if(set == 'W'){
+        if (set == 'W') {
             wakeHour = hour;
             wakeMin = minute;
             wakeSec = seconds;
@@ -395,12 +342,12 @@ public class SleepFragment extends Fragment {
     }
 
     //Check to see if time of day AM or PM
-    private String getAmPm(){
+    private String getAmPm() {
         Calendar c = Calendar.getInstance();
         int am_pm = c.get(Calendar.AM_PM);
         String amPm;
 
-        if(am_pm == 0)
+        if (am_pm == 0)
             amPm = "AM";
         else
             amPm = "PM";
@@ -409,28 +356,28 @@ public class SleepFragment extends Fragment {
     }
 
     //Check to see if hour is between valid sleeping hours
-    private boolean SleepHourCheck(){
+    private boolean SleepHourCheck() {
         Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR);
         String amPm = getAmPm();
 
-        if((hour >= calibratedSleepHour && amPm.equals("PM")) || (hour <= calibratedSleepHour && amPm.equals("AM"))){
+        if ((hour >= calibratedSleepHour && amPm.equals("PM")) || (hour <= calibratedSleepHour && amPm.equals("AM"))) {
             return true;
         }
         return false;
     }
 
     //check to see if light is below valid level
-    private boolean SleepLightCheck(){
-        if(lightIntensity < calibratedLight){
+    private boolean SleepLightCheck() {
+        if (lightIntensity < calibratedLight) {
             return true;
         }
-       return false;
+        return false;
     }
 
     //check to see if audio is below valid level
-    private boolean SleepAudioCheck(){
-        if(audioAmplitude < calibratedAmplitude){
+    private boolean SleepAudioCheck() {
+        if (audioAmplitude < calibratedAmplitude) {
             return true;
         }
         return false;
@@ -443,7 +390,7 @@ public class SleepFragment extends Fragment {
         int secDuration;
 
         //both AM or both PM: simply subtract
-        if((sleepAmPm.equals("PM") && wakeAmPm.equals("PM")) || (sleepAmPm.equals("AM") && wakeAmPm.equals("AM"))){
+        if ((sleepAmPm.equals("PM") && wakeAmPm.equals("PM")) || (sleepAmPm.equals("AM") && wakeAmPm.equals("AM"))) {
             hourDuration = Math.abs(sleepHour - wakeHour);
             minDuration = Math.abs(sleepMin - wakeMin);
             secDuration = Math.abs(sleepSec - wakeSec);
@@ -467,11 +414,11 @@ public class SleepFragment extends Fragment {
         }
 
         //make sure a full hour/minute has changed
-        if((sleepSec >= wakeSec) && minDuration == 1){
+        if ((sleepSec >= wakeSec) && minDuration == 1) {
             minDuration--;
             secDuration = (60 - sleepSec) + wakeSec;
         }
-        if((sleepMin >= wakeMin) && hourDuration == 1){
+        if ((sleepMin >= wakeMin) && hourDuration == 1) {
             hourDuration--;
             minDuration = (60 - sleepMin) + wakeMin;
         }
@@ -481,9 +428,9 @@ public class SleepFragment extends Fragment {
     }
 
     //add new sleep duration to existing sleep duration
-    private void getTotalDuration(int newHours, int newMins, int newSecs){
+    private void getTotalDuration(int newHours, int newMins, int newSecs) {
         Log.d("AddToDuration", "Added " + Integer.toString(newHours) + ":" + Integer.toString(newMins) + ":" + Integer.toString(newSecs) + "to"
-                                        + Integer.toString(durationHours)  + ":" + Integer.toString(durationMins) + ":" + Integer.toString(durationSec));
+                + Integer.toString(durationHours) + ":" + Integer.toString(durationMins) + ":" + Integer.toString(durationSec));
         durationHours += newHours;
         durationMins += newMins;
         durationSec += newSecs;
@@ -501,19 +448,19 @@ public class SleepFragment extends Fragment {
     }
 
     // Get the efficiency of the current sleep session
-    private int getEfficiency(){
+    private int getEfficiency() {
         //based on avg 11 wakeups per 8 hours, each wakeup resulting in a -0.625% efficiency (Source: FitBit)
         double sleepFactor = ((durationHours * 60 * 60) + (durationMins * 60) + durationSec) / 28800;
         double expectedWakeups = sleepFactor * 11;
         double extraWakeups = numWakeups - expectedWakeups;
 
-        if(extraWakeups <= 0){
+        if (extraWakeups <= 0) {
             extraWakeups = 1;
         }
 
-        efficiency = 100 - (int)Math.floor(extraWakeups * 0.625);
+        efficiency = 100 - (int) Math.floor(extraWakeups * 0.625);
 
-        if(efficiency < 0) {
+        if (efficiency < 0) {
             efficiency = 0;
         }
 

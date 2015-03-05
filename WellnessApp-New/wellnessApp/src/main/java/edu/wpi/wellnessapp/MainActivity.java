@@ -85,6 +85,16 @@ public class MainActivity extends FragmentActivity implements TabListener {
         actionBar.addTab(sleepTab);
         actionBar.addTab(moodTab);
 
+        // Auto start services
+        if (!Utils.isServiceRunning(this, SleepService.class) && !Utils.isServiceRunning(this, MoodAlertService.class)) {
+            this.startService(new Intent(this, SleepService.class));
+            this.startService(new Intent(this, MoodAlertService.class));
+
+            Utils.displayDialog(this, "Tracking Started!", "This app uses the light sensor, accelerometer and microphone to track your sleep and exercise " +
+                            "patterns. Be sure to keep your device close to you while you sleep for best results.",
+                    null, "OK", Utils.emptyRunnable(), null);
+        }
+
     }
 
     @Override
