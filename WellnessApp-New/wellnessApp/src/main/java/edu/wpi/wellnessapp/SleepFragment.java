@@ -23,6 +23,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.jjoe64.graphview.DefaultLabelFormatter;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class SleepFragment extends Fragment {
@@ -44,6 +51,10 @@ public class SleepFragment extends Fragment {
     private TextView trackingStatus;
     private TextView sleepEfficiency;
     private TextView duration;
+
+    // Graph
+    private GraphView graphView;
+    LineGraphSeries<DataPoint> sleepDataSeries;
 
     // Raw Sensor Data
     private int audioAmplitude;
@@ -101,6 +112,17 @@ public class SleepFragment extends Fragment {
         }
     };
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        sleepDataSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
+                new DataPoint(0, 1),
+                new DataPoint(1, 5),
+                new DataPoint(2, 3),
+                new DataPoint(3, 2),
+                new DataPoint(4, 6)
+        });
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_sleep, container, false);
@@ -114,10 +136,13 @@ public class SleepFragment extends Fragment {
         trackingStatus = (TextView) view.findViewById(R.id.textViewTrackingStatus);
         duration = (TextView) view.findViewById(R.id.textViewDuration);
         sleepEfficiency = (TextView) view.findViewById(R.id.textViewEfficiency);
+        graphView = (GraphView) view.findViewById(R.id.sleepGraph);
+        calibrateButton = (Button) view.findViewById(R.id.calibrateButton);
+        stopStartButton = (Button) view.findViewById(R.id.stopStartSleepButton);
+        moreSessionInfo = (Button) view.findViewById(R.id.moreSleepSessionInfo);
 
         // Start Button
-        this.calibrateButton = (Button) view.findViewById(R.id.calibrateButton);
-        this.calibrateButton.setOnClickListener(new OnClickListener() {
+        calibrateButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isTracking) {
@@ -129,8 +154,7 @@ public class SleepFragment extends Fragment {
             }
         });
 
-        // Stop Button
-        this.stopStartButton = (Button) view.findViewById(R.id.stopStartSleepButton);
+        // Stop / Start Button
 
         if (isTracking) {
             trackingStatus.setText("Tracking...");
@@ -142,7 +166,7 @@ public class SleepFragment extends Fragment {
             calibrateButton.setEnabled(false);
         }
 
-        this.stopStartButton.setOnClickListener(new OnClickListener() {
+        stopStartButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isTracking) {
@@ -155,8 +179,8 @@ public class SleepFragment extends Fragment {
             }
         });
 
-        this.moreSessionInfo = (Button) view.findViewById(R.id.moreSleepSessionInfo);
-        this.moreSessionInfo.setOnClickListener(new OnClickListener() {
+
+        moreSessionInfo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Utils.displayDialog(getActivity(), "More Sleep Session Info: During your previous session...",
@@ -167,6 +191,26 @@ public class SleepFragment extends Fragment {
                                 + "\nTotal Time Asleep: " + Integer.toString(durationHours) + ":" + Integer.toString(durationMins) + ":" + Integer.toString(durationSec)
                                 + "\nNumber of Wake Ups: " + Integer.toString(numWakeups),
                         null, "OK", Utils.emptyRunnable(), null);
+            }
+        });
+
+        graphView.addSeries(sleepDataSeries);
+
+        graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+        graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+        graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
+        graphView.getGridLabelRenderer().setTextSize(20);
+
+        graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+            @Override
+            public String formatLabel(double value, boolean isValueX) {
+                if (isValueX) {
+                    SimpleDateFormat hoursDateFormat = new SimpleDateFormat("MMM dd");
+
+                    return hoursDateFormat.format(value);
+                } else {
+                    return super.formatLabel(value, isValueX);
+                }
             }
         });
 
