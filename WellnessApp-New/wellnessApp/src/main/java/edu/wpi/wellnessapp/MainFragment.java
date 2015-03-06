@@ -19,6 +19,7 @@
 
 package edu.wpi.wellnessapp;
 
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,8 +36,12 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.PopupWindow;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.VideoView;
+
+import java.util.ArrayList;
 
 
 public class MainFragment extends Fragment {
@@ -49,7 +54,11 @@ public class MainFragment extends Fragment {
     private TextView moodCircle;
     private TextView mainCircle;
 
+    private Button helpButton;
+    private Button achievButton;
+
     private PopupWindow helpPopup;
+    private PopupWindow achievPopup;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +71,9 @@ public class MainFragment extends Fragment {
         sleepCircle = (TextView) rootView.findViewById(R.id.sleepCircle);
         moodCircle = (TextView) rootView.findViewById(R.id.moodCircle);
         mainCircle = (TextView) rootView.findViewById(R.id.mainCircle);
+
+        helpButton = (Button) rootView.findViewById(R.id.help_button);
+        achievButton = (Button) rootView.findViewById(R.id.achiev_button);
 
         activityCircle.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -95,11 +107,18 @@ public class MainFragment extends Fragment {
 
         updateCircles();
 
-        Button helpButton = (Button) rootView.findViewById(R.id.help_button);
+
         helpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 showHelpPopup(v);
+            }
+        });
+
+        achievButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAchievPopup(v);
             }
         });
 
@@ -118,14 +137,13 @@ public class MainFragment extends Fragment {
     }
 
     private void showHelpPopup(View anchorView) {
-        LayoutInflater mInflater;
-        mInflater = LayoutInflater.from(anchorView.getContext().getApplicationContext());
+        LayoutInflater mInflater = LayoutInflater.from(anchorView.getContext().getApplicationContext());
 
-        final View popupView = mInflater.inflate(R.layout.help_popup, null);
+        View popupView = mInflater.inflate(R.layout.help_popup, null);
         helpPopup = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
 
-        final Button closeHelpButton = (Button) popupView.findViewById(R.id.closeButton);
+        Button closeHelpButton = (Button) popupView.findViewById(R.id.closeButton);
         closeHelpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,6 +155,53 @@ public class MainFragment extends Fragment {
         helpPopup.setFocusable(true);
 
         helpPopup.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+    }
+
+    private void showAchievPopup(View anchorView) {
+        LayoutInflater mInflater = LayoutInflater.from(anchorView.getContext().getApplicationContext());
+
+        View popupView = mInflater.inflate(R.layout.achiev_popup, null);
+        achievPopup = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+
+        Button closeHelpButton = (Button) popupView.findViewById(R.id.closeButton);
+        TableLayout achievTable = (TableLayout) popupView.findViewById(R.id.achiev_table);
+
+        ArrayList<Achievement> achievList = Utils.parseAchievementXML(getResources().openRawResource(R.raw.achievements));
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("achiev_status", 0);
+
+        for (Achievement a : achievList) {
+            TableRow row = new TableRow(popupView.getContext());
+            TextView textView = new TextView(popupView.getContext());
+
+            String unlockStatus = "LOCKED";
+
+            if (sharedPreferences.getInt(String.valueOf(a.getId()), 0) == 1) {
+                unlockStatus = "EARNED";
+            }
+            else {
+                unlockStatus = "LOCKED";
+            }
+
+            textView.setText(a.getName() + " -- " + a.getDescription() + " -- " + unlockStatus);
+            textView.setTextSize(20);
+
+            row.addView(textView);
+            achievTable.addView(row);
+        }
+
+
+
+        closeHelpButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                achievPopup.dismiss();
+            }
+        });
+
+        // If the PopupWindow should be focusable
+        achievPopup.setFocusable(true);
+
+        achievPopup.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
     }
 
     private void animateAvatar() {

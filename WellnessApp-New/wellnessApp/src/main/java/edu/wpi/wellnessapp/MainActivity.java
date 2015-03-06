@@ -94,7 +94,6 @@ public class MainActivity extends FragmentActivity implements TabListener {
                             "patterns. Be sure to keep your device close to you while you sleep for best results.",
                     null, "OK", Utils.emptyRunnable(), null);
         }
-
     }
 
     @Override
