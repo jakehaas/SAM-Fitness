@@ -98,17 +98,17 @@ public class MoodFragment extends Fragment {
 
         final View popupView = mInflater.inflate(R.layout.mood_popup, null);
 
-        final PopupWindow popupWindow = new PopupWindow(popupView, 400, 400);
+        final PopupWindow popupWindow = new PopupWindow(popupView, 0, 0);
 
-        final TextView tv = (TextView) popupView.findViewById(R.id.textView1);
-        tv.setText("Set your Mood!");
+        final TextView popupTitle = (TextView) popupView.findViewById(R.id.popupTitle);
+        popupTitle.setText("Set your Mood!");
 
         final Button setMoodConfirmButton = (Button) popupView.findViewById(R.id.set_mood_button);
         setMoodConfirmButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 RatingBar rb = (RatingBar) popupView.findViewById(R.id.ratingBar1);
-                tv.setText("Saved " + rb.getRating() + " !");
+                popupTitle.setText("Saved " + rb.getRating() + " !");
 
                 setMoodConfirmButton.setText("Close!");
                 setMoodConfirmButton.setOnClickListener(new OnClickListener() {

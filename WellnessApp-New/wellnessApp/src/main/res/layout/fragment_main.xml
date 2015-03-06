@@ -80,12 +80,12 @@
             android:paddingRight="10dp" />
 
         <Button
-            android:id="@+id/settings_button"
+            android:id="@+id/help_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:text="Settings" />
+            android:text="  Help  " />
 
     </RelativeLayout>
 

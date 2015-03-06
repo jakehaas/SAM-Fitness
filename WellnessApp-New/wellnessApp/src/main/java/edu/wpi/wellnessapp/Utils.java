@@ -24,7 +24,6 @@ import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v4.view.ViewPager;
 
 import java.text.DecimalFormat;
 
@@ -56,12 +55,14 @@ public class Utils {
     }
 
     public static boolean isServiceRunning(Context context, Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ActivityManager.RunningServiceInfo service : activityManager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -152,7 +153,7 @@ public class Utils {
      */
     public static double todaysSteps = 0.0D;
     public static String getStepScore() {
-        return String.valueOf((int)Math.round(todaysSteps));
+        return String.valueOf((int) Math.round(todaysSteps));
     }
 
     /**

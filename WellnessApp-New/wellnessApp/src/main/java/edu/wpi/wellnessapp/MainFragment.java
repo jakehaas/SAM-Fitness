@@ -19,14 +19,12 @@
 
 package edu.wpi.wellnessapp;
 
-import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -51,8 +49,7 @@ public class MainFragment extends Fragment {
     private TextView moodCircle;
     private TextView mainCircle;
 
-    private boolean canShowSettingPopup = true;
-    private PopupWindow popupWindow;
+    private PopupWindow helpPopup;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -98,23 +95,13 @@ public class MainFragment extends Fragment {
 
         updateCircles();
 
-        Button settingButton = (Button) rootView.findViewById(R.id.settings_button);
-        settingButton.setOnClickListener(new OnClickListener() {
+        Button helpButton = (Button) rootView.findViewById(R.id.help_button);
+        helpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (canShowSettingPopup) {
-                    showSettingsPopup(v);
-                    canShowSettingPopup = false;
-                } else {
-                    if (popupWindow != null) {
-                        popupWindow.dismiss();
-                        popupWindow = null;
-                        canShowSettingPopup = true;
-                    }
-                }
+                showHelpPopup(v);
             }
         });
-
 
         videoView.setMediaController(new MediaController(rootView.getContext().getApplicationContext()));
 
@@ -130,33 +117,26 @@ public class MainFragment extends Fragment {
         return rootView;
     }
 
-    public void showSettingsPopup(View anchorView) {
+    private void showHelpPopup(View anchorView) {
         LayoutInflater mInflater;
-        Context context = anchorView.getContext().getApplicationContext();
-        mInflater = LayoutInflater.from(context);
+        mInflater = LayoutInflater.from(anchorView.getContext().getApplicationContext());
 
-        final View popupView = mInflater.inflate(R.layout.settings_popup, null);
-        popupWindow = new PopupWindow(popupView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-
-        popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+        final View popupView = mInflater.inflate(R.layout.help_popup, null);
+        helpPopup = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
 
-        final Button setMoodConfirmButton = (Button) popupView.findViewById(R.id.set_mood_button);
-        setMoodConfirmButton.setOnClickListener(new OnClickListener() {
+        final Button closeHelpButton = (Button) popupView.findViewById(R.id.closeButton);
+        closeHelpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                setMoodConfirmButton.setText("Close!");
-                setMoodConfirmButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        popupWindow.dismiss();
-                        popupWindow = null;
-                        canShowSettingPopup = true;
-                    }
-                });
+                helpPopup.dismiss();
             }
         });
 
+        // If the PopupWindow should be focusable
+        helpPopup.setFocusable(true);
+
+        helpPopup.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
     }
 
     private void animateAvatar() {
@@ -197,16 +177,12 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("On Resume", "On Resume Called");
-
-        //playAvatarAnimation(INTRO_ANIMATION);
+        updateCircles();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d("On Pause", "On Pause Called");
-
         videoView.pause();
     }
 }
