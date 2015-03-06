@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#252525">
 
     <TextView
         android:id="@+id/titleText"
@@ -12,6 +13,7 @@
         android:layout_margin="16dp"
         android:layout_marginTop="14dp"
         android:text="Sleep Monitor"
+        android:textColor="#FFFFFF"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
@@ -47,6 +49,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="72dp"
         android:text="Not Tracking..."
+        android:textColor="#FFFFFF"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -57,6 +60,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="245dp"
         android:text="Light Sensor Value: "
+        android:textColor="#FFFFFF"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -67,6 +71,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="265dp"
         android:text="Audio Level: "
+        android:textColor="#FFFFFF"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -77,6 +82,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="350dp"
         android:text="Fell Asleep: "
+        android:textColor="#FFFFFF"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -87,6 +93,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="380dp"
         android:text="Woke Up: "
+        android:textColor="#FFFFFF"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -97,6 +104,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="410dp"
         android:text="Duration: "
+        android:textColor="#FFFFFF"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -107,6 +115,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="440dp"
         android:text="Efficiency: "
+        android:textColor="#FFFFFF"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 
