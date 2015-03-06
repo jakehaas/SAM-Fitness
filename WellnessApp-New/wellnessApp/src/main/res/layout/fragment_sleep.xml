@@ -19,9 +19,9 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <com.jjoe64.graphview.GraphView
+        android:id="@+id/sleepGraph"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
-        android:id="@+id/graph"
         android:background="#252525"
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
