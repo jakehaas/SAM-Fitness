@@ -105,6 +105,7 @@ public class MainFragment extends Fragment {
             }
         });
 
+
         updateCircles();
 
 
@@ -151,7 +152,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-        // If the PopupWindow should be focusable
         helpPopup.setFocusable(true);
 
         helpPopup.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
@@ -173,22 +173,21 @@ public class MainFragment extends Fragment {
             TableRow row = new TableRow(popupView.getContext());
             TextView textView = new TextView(popupView.getContext());
 
-            String unlockStatus = "LOCKED";
+            String color;
 
             if (sharedPreferences.getInt(String.valueOf(a.getId()), 0) == 1) {
-                unlockStatus = "EARNED";
-            }
-            else {
-                unlockStatus = "LOCKED";
+                color = "green";
+            } else {
+                color = "red";
             }
 
-            textView.setText(a.getName() + " -- " + a.getDescription() + " -- " + unlockStatus);
+            textView.setText(Html.fromHtml("<font color=\"" + color + "\"><b>" + a.getName() + "</b><br />" + a.getDescription() + "</font><br />"));
             textView.setTextSize(20);
+            textView.setGravity(Gravity.CENTER);
 
             row.addView(textView);
             achievTable.addView(row);
         }
-
 
 
         closeHelpButton.setOnClickListener(new OnClickListener() {
@@ -220,7 +219,7 @@ public class MainFragment extends Fragment {
     }
 
     private void updateCircles() {
-       activityCircle.setText(Html.fromHtml("<b>" + Utils.getStepScore() + "</b><br />Steps"));
+        activityCircle.setText(Html.fromHtml("<b>" + Utils.getStepScore() + "</b><br />Steps"));
         moodCircle.setText(Html.fromHtml("<b>" + Utils.getMoodScore() + "</b><br />Happiness"));
         sleepCircle.setText(Html.fromHtml("<b>" + Utils.getSleepScore() + "</b><br />Hours"));
         mainCircle.setText(Html.fromHtml("<b>" + Utils.getTotalScore() + "</b><br />Total Score"));
