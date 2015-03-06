@@ -108,14 +108,15 @@ public class Utils {
 
     public static Runnable emptyRunnable() {
         return new Runnable() {
-            public void run() {}
+            public void run() {
+            }
         };
     }
 
 
     /**
      * getTotalScore()
-     *
+     * <p/>
      * Get the total average score for the user
      */
     public static String getTotalScore() {
@@ -132,7 +133,7 @@ public class Utils {
         if (todaysSteps >= RECOMMENDED_STEP_COUNT) {
             weightedSteps = 100.0F;
         } else {
-            weightedSteps = Math.round(map((float)todaysSteps, 0.0F, (float)RECOMMENDED_STEP_COUNT, 0.0F, MAX_TOTAL_SCORE));
+            weightedSteps = Math.round(map((float) todaysSteps, 0.0F, (float) RECOMMENDED_STEP_COUNT, 0.0F, MAX_TOTAL_SCORE));
         }
 
         if (todaysSleepHours >= RECOMMENDED_SLEEP_HOURS) {
@@ -156,20 +157,22 @@ public class Utils {
 
     /**
      * getStepScore()
-     *
+     * <p/>
      * Get the step score for the user
      */
     public static double todaysSteps = 0.0D;
+
     public static String getStepScore() {
         return String.valueOf((int) Math.round(todaysSteps));
     }
 
     /**
      * getSleepScore()
-     *
+     * <p/>
      * Get the sleep score for the user
      */
     public static float todaysSleepHours = 0.0F;
+
     public static String getSleepScore() {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
@@ -178,10 +181,11 @@ public class Utils {
 
     /**
      * getMoodScore()
-     *
+     * <p/>
      * Get the mood score for the user
      */
     public static float todaysMoodScore = 0.0F;
+
     public static String getMoodScore() {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
@@ -190,17 +194,16 @@ public class Utils {
 
     /**
      * map(float x, float in_min, float in_max, float out_min, float out_max)
-     *
+     * <p/>
      * Map a value from one range into another
      */
-    public static float map(float x, float in_min, float in_max, float out_min, float out_max)
-    {
+    public static float map(float x, float in_min, float in_max, float out_min, float out_max) {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 
     /**
      * ArrayList<Achievement> parseAchievementXML(InputStream inputXML)
-     *
+     * <p/>
      * Parse the achievement XML file into an ArrayList
      */
     public static ArrayList<Achievement> parseAchievementXML(InputStream inputXML) {
@@ -264,13 +267,19 @@ public class Utils {
     }
 
 
-    public static void unlock(int id, Context context) throws Exception {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("achiev_status", 0);
-        SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+    public static void unlockAchievement(int id, Activity activity) {
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("achiev_status", 0);
+        ArrayList<Achievement> achievList = Utils.parseAchievementXML(activity.getResources().openRawResource(R.raw.achievements));
 
-        sharedPreferencesEditor.putInt(String.valueOf(id), 1);
+        if (sharedPreferences.getInt(String.valueOf(achievList.get(id).getId()), 0) == 0) {
+            SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
 
-        sharedPreferencesEditor.commit();
+            sharedPreferencesEditor.putInt(String.valueOf(id), 1);
+
+            sharedPreferencesEditor.commit();
+
+            displayDialog(activity, "Achievement Unlocked -- " + achievList.get(id).getName() + "!", achievList.get(id).getDescription(), null, "OK", emptyRunnable(), null);
+        }
     }
 
 }
