@@ -42,10 +42,6 @@ public class SleepFragment extends Fragment {
     private Button stopStartButton;
     private Button moreSessionInfo;
     private TextView trackingStatus;
-    private TextView lightSensorValue;
-    private TextView audioValue;
-    private TextView sleepTime;
-    private TextView wakeTime;
     private TextView sleepEfficiency;
     private TextView duration;
 
@@ -60,8 +56,8 @@ public class SleepFragment extends Fragment {
     private int calibratedWakeHour = 11;
 
     // Final Sleep Times
-    private String fallAsleepTime;
-    private String wakeUpTime;
+    private String fallAsleepTime = "";
+    private String wakeUpTime = "";
     private int sleepHour;
     private int sleepMin;
     private int sleepSec;
@@ -97,9 +93,6 @@ public class SleepFragment extends Fragment {
                 String maxAmplitudeIn = extras.getString("maxAmplitude");
                 String lightIntensityIn = extras.getString("lightIntensity");
 
-                audioValue.setText("Audio Value: " + maxAmplitudeIn);
-                lightSensorValue.setText("Light Sensor Value: " + lightIntensityIn);
-
                 audioAmplitude = Integer.parseInt(maxAmplitudeIn);
                 lightIntensity = Float.parseFloat(lightIntensityIn);
 
@@ -119,10 +112,6 @@ public class SleepFragment extends Fragment {
 
         // Initialize UI elements
         trackingStatus = (TextView) view.findViewById(R.id.textViewTrackingStatus);
-        lightSensorValue = (TextView) view.findViewById(R.id.textViewLightSensorValue);
-        audioValue = (TextView) view.findViewById(R.id.textViewAudioValue);
-        sleepTime = (TextView) view.findViewById(R.id.textViewSleepTime);
-        wakeTime = (TextView) view.findViewById(R.id.textViewWakeTime);
         duration = (TextView) view.findViewById(R.id.textViewDuration);
         sleepEfficiency = (TextView) view.findViewById(R.id.textViewEfficiency);
 
@@ -208,8 +197,6 @@ public class SleepFragment extends Fragment {
 
         trackingStatus.setText("Tracking...");
         calibrateButton.setEnabled(true);
-        sleepTime.setText("Fell Asleep: ");
-        wakeTime.setText("Woke Up: ");
 
         isCalibrated = false;
 
@@ -228,8 +215,6 @@ public class SleepFragment extends Fragment {
 
         trackingStatus.setText("Not Tracking...");
         calibrateButton.setEnabled(false);
-        lightSensorValue.setText("Light Sensor Value: ");
-        audioValue.setText("Audio Value: ");
 
         sleepEfficiency.setText("Efficiency: " + Integer.toString(getEfficiency()));
     }
@@ -287,7 +272,6 @@ public class SleepFragment extends Fragment {
             isAsleep = true;
 
             fallAsleepTime = getTime('S');
-            sleepTime.setText("Fell Asleep: " + fallAsleepTime);
         }
 
         // Check to see if user woke up
@@ -298,7 +282,6 @@ public class SleepFragment extends Fragment {
             isAsleep = false;
 
             wakeUpTime = getTime('W');
-            wakeTime.setText("Woke Up: " + wakeUpTime);
 
             duration.setText("Duration: " + getDuration());
 
@@ -367,7 +350,15 @@ public class SleepFragment extends Fragment {
             amPm = "AM";
         }
 
-        if ((hour >= calibratedSleepHour && amPm.equals("PM")) || ((hour <= calibratedWakeHour || hour == 12) && amPm.equals("AM"))) {
+        if(hour == 12 && amPm.equals("PM")){
+            return false;
+        }
+
+        if(hour == 12 && amPm.equals("AM")){
+            return true;
+        }
+
+        if ((hour >= calibratedSleepHour && amPm.equals("PM")) || (hour <= calibratedWakeHour && amPm.equals("AM"))) {
             return true;
         }
         return false;
