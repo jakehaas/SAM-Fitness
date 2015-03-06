@@ -24,8 +24,16 @@ import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class Utils {
 
@@ -189,4 +197,80 @@ public class Utils {
     {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
+
+    /**
+     * ArrayList<Achievement> parseAchievementXML(InputStream inputXML)
+     *
+     * Parse the achievement XML file into an ArrayList
+     */
+    public static ArrayList<Achievement> parseAchievementXML(InputStream inputXML) {
+        XmlPullParserFactory pullParserFactory;
+        ArrayList<Achievement> achievementsList = null;
+
+        try {
+            pullParserFactory = XmlPullParserFactory.newInstance();
+            XmlPullParser parser = pullParserFactory.newPullParser();
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(inputXML, null);
+
+            int eventType = parser.getEventType();
+            Achievement currentAchievement = null;
+
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                String name;
+
+                switch (eventType) {
+                    case XmlPullParser.START_DOCUMENT:
+                        achievementsList = new ArrayList<Achievement>();
+                        break;
+
+                    case XmlPullParser.START_TAG:
+                        name = parser.getName();
+                        if (name.equals("achievement")) {
+                            currentAchievement = new Achievement();
+                        } else if (currentAchievement != null) {
+                            if (name.equals("id")) {
+                                String id = parser.nextText();
+                                if (Utils.tryParseInt(id)) {
+                                    currentAchievement.setId(Integer.parseInt(id));
+                                } else {
+                                    throw new XmlPullParserException("Error parsing Achievements List.");
+                                }
+                            } else if (name.equals("name")) {
+                                currentAchievement.setName(parser.nextText());
+                            } else if (name.equals("description")) {
+                                currentAchievement.setDescription(parser.nextText());
+                            }
+                        }
+                        break;
+
+                    case XmlPullParser.END_TAG:
+                        name = parser.getName();
+                        if (name.equalsIgnoreCase("achievement") && currentAchievement != null) {
+                            achievementsList.add(currentAchievement);
+                        }
+                        break;
+                }
+                eventType = parser.next();
+            }
+
+        } catch (XmlPullParserException e) {
+
+        } catch (IOException e) {
+
+        }
+
+        return achievementsList;
+    }
+
+
+    public static void unlock(int id, Context context) throws Exception {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("achiev_status", 0);
+        SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+
+        sharedPreferencesEditor.putInt(String.valueOf(id), 1);
+
+        sharedPreferencesEditor.commit();
+    }
+
 }

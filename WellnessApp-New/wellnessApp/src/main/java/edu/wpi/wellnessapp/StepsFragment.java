@@ -868,16 +868,6 @@ public class StepsFragment extends Fragment {
             previousX = x;
             previousY = y;
             previousZ = z;
-
-            if (Utils.tryParseInt((String) textViewSteps.getText())) {
-                if (Integer.parseInt((String) textViewSteps.getText()) >= 10) {
-                    if (!AchievementList.UNLOCKED_FIRST_STEPS) {
-                        new Achievement(getView(), 1);
-                        AchievementList.UNLOCKED_FIRST_STEPS = true;
-                    }
-                }
-            }
-
         }
 
 
