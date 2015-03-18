@@ -258,9 +258,9 @@ public class Utils {
             }
 
         } catch (XmlPullParserException e) {
-
+            e.printStackTrace();
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
 
         return achievementsList;

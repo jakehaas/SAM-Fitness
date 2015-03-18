@@ -41,6 +41,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 
@@ -62,18 +64,18 @@ public class MainFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
 
         ANIMATION_VIDEO_PATH = "android.resource://" + getActivity().getApplicationContext().getPackageName() + "/" + R.raw.avatar_anims;
-        videoView = (VideoView) rootView.findViewById(R.id.mainAvatar);
+        videoView = (VideoView) view.findViewById(R.id.mainAvatar);
 
-        activityCircle = (TextView) rootView.findViewById(R.id.activityCircle);
-        sleepCircle = (TextView) rootView.findViewById(R.id.sleepCircle);
-        moodCircle = (TextView) rootView.findViewById(R.id.moodCircle);
-        mainCircle = (TextView) rootView.findViewById(R.id.mainCircle);
+        activityCircle = (TextView) view.findViewById(R.id.activityCircle);
+        sleepCircle = (TextView) view.findViewById(R.id.sleepCircle);
+        moodCircle = (TextView) view.findViewById(R.id.moodCircle);
+        mainCircle = (TextView) view.findViewById(R.id.mainCircle);
 
-        helpButton = (Button) rootView.findViewById(R.id.help_button);
-        achievButton = (Button) rootView.findViewById(R.id.achiev_button);
+        helpButton = (Button) view.findViewById(R.id.help_button);
+        achievButton = (Button) view.findViewById(R.id.achiev_button);
 
         activityCircle.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -111,8 +113,8 @@ public class MainFragment extends Fragment {
 
         helpButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
-                showHelpPopup(v);
+            public void onClick(View view) {
+                showHelpPopup(view);
             }
         });
 
@@ -123,7 +125,7 @@ public class MainFragment extends Fragment {
             }
         });
 
-        videoView.setMediaController(new MediaController(rootView.getContext().getApplicationContext()));
+        videoView.setMediaController(new MediaController(view.getContext().getApplicationContext()));
 
         videoView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -134,7 +136,7 @@ public class MainFragment extends Fragment {
 
         animateAvatar();
 
-        return rootView;
+        return view;
     }
 
     private void showHelpPopup(View anchorView) {
@@ -143,8 +145,11 @@ public class MainFragment extends Fragment {
         View popupView = mInflater.inflate(R.layout.help_popup, null);
         helpPopup = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
-
+        TextView helpTextView = (TextView) popupView.findViewById(R.id.helpText);
         Button closeHelpButton = (Button) popupView.findViewById(R.id.closeButton);
+
+        helpTextView.setText(Html.fromHtml(getString(R.string.help_text)));
+
         closeHelpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,6 +176,8 @@ public class MainFragment extends Fragment {
 
         for (Achievement a : achievList) {
             TableRow row = new TableRow(popupView.getContext());
+            row.setGravity(Gravity.CENTER);
+
             TextView textView = new TextView(popupView.getContext());
 
             String color;
@@ -209,7 +216,6 @@ public class MainFragment extends Fragment {
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-
                 videoView.seekTo(150);
                 videoView.start();
             }

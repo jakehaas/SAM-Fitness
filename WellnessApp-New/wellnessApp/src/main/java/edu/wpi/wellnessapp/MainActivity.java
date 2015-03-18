@@ -62,7 +62,7 @@ public class MainActivity extends FragmentActivity implements TabListener {
 
         actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setTitle("Wellness App");
+        actionBar.setTitle(getString(R.string.app_name));
 
         ActionBar.Tab mainTab = actionBar.newTab();
         mainTab.setText("Main");
