@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <achievements>
-
     <achievement>
         <id>0</id>
         <name>Baby Steps!</name>
@@ -73,5 +72,4 @@
         <name>Happy New Year!</name>
         <description>Score 70+ for your daily mood score for 70% of the days in 1 year.</description>
     </achievement>
-
 </achievements>
