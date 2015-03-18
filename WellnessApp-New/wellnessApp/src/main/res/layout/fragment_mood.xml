@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#252525"
+    android:background="#ffffff"
     android:orientation="vertical">
 
     <com.jjoe64.graphview.GraphView
@@ -12,7 +12,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:background="#252525"
+        android:background="#ffffff"
         android:gravity="center_horizontal"
         android:paddingLeft="10dp"
         android:paddingRight="10dp" />
@@ -31,6 +31,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_toLeftOf="@+id/alert_hour_spinner"
             android:layout_toStartOf="@+id/alert_hour_spinner"
+            android:textColor="#000000"
             android:text="Remind me to set my mood every " />
 
         <Spinner
@@ -49,6 +50,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_toEndOf="@+id/alert_hour_spinner"
             android:layout_toRightOf="@+id/alert_hour_spinner"
+            android:textColor="#000000"
             android:text="hours." />
 
     </RelativeLayout>
