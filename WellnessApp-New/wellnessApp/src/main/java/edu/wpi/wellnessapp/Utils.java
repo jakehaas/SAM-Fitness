@@ -25,6 +25,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Point;
+import android.view.Display;
+import android.view.WindowManager;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -280,6 +283,26 @@ public class Utils {
 
             displayDialog(activity, "Achievement Unlocked -- " + achievList.get(id).getName() + "!", achievList.get(id).getDescription(), null, "OK", emptyRunnable(), null);
         }
+    }
+
+    public static int getScreenWidthInPX(Context context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+
+        Point size = new Point();
+        display.getSize(size);
+
+        return size.x;
+    }
+
+    public static int getScreenHeightInPX(Context context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+
+        Point size = new Point();
+        display.getSize(size);
+
+        return size.y;
     }
 
 }

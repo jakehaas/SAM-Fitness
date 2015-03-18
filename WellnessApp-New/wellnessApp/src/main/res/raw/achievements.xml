@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <achievements>
-
     <achievement>
         <id>0</id>
         <name>Baby Steps!</name>
@@ -38,4 +37,39 @@
         <description>Take 1,000,000 steps.</description>
     </achievement>
 
+    <achievement>
+        <id>6</id>
+        <name>Happy Day!</name>
+        <description>Score 70+ for your daily mood score.</description>
+    </achievement>
+
+    <achievement>
+        <id>7</id>
+        <name>Happy Camper!</name>
+        <description>Score 70+ for your daily mood score for 1 week consecutively.</description>
+    </achievement>
+
+    <achievement>
+        <id>8</id>
+        <name>Good Month!</name>
+        <description>Score 70+ for your daily mood score for 70% of the days in a month.</description>
+    </achievement>
+
+    <achievement>
+        <id>9</id>
+        <name>Good Quarter!</name>
+        <description>Score 70+ for your daily mood score for 70% of the days in 3 months.</description>
+    </achievement>
+
+    <achievement>
+        <id>10</id>
+        <name>Happy Half-Birthday!</name>
+        <description>Score 70+ for your daily mood score for 70% of the days in 6 months.</description>
+    </achievement>
+
+    <achievement>
+        <id>10</id>
+        <name>Happy New Year!</name>
+        <description>Score 70+ for your daily mood score for 70% of the days in 1 year.</description>
+    </achievement>
 </achievements>

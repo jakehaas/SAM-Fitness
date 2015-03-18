@@ -19,13 +19,16 @@
 
 package edu.wpi.wellnessapp;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,6 +36,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.PopupWindow;
@@ -178,7 +182,7 @@ public class MainFragment extends Fragment {
             TableRow row = new TableRow(popupView.getContext());
             row.setGravity(Gravity.CENTER);
 
-            TextView textView = new TextView(popupView.getContext());
+            TextView titleTextView = new TextView(popupView.getContext());
 
             String color;
 
@@ -188,11 +192,12 @@ public class MainFragment extends Fragment {
                 color = "red";
             }
 
-            textView.setText(Html.fromHtml("<font color=\"" + color + "\"><b>" + a.getName() + "</b><br />" + a.getDescription() + "</font><br />"));
-            textView.setTextSize(20);
-            textView.setGravity(Gravity.CENTER);
+            titleTextView.setText(Html.fromHtml("<font color=\"" + color + "\"><large><b>" + a.getName() + "</b></large><br /><small>" + a.getDescription() + "</small></font><br />"));
+            titleTextView.setTextSize(20);
+            titleTextView.setGravity(Gravity.CENTER);
+            titleTextView.setMaxWidth(Utils.getScreenWidthInPX(getActivity().getApplicationContext()) - 20);
 
-            row.addView(textView);
+            row.addView(titleTextView);
             achievTable.addView(row);
         }
 
