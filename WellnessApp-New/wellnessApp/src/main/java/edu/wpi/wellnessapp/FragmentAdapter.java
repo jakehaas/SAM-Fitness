@@ -34,11 +34,11 @@ class FragmentAdapter extends FragmentStatePagerAdapter {
      * FragmentAdapter Constructor
      * FragmentAdapter(FragmentManager fm)
      *
-     * @param fm The FragmentManager used to switch
+     * @param fragmentManager The FragmentManager used to switch
      *           between fragments on the tabbed pane
      */
-    public FragmentAdapter(FragmentManager fm) {
-        super(fm);
+    public FragmentAdapter(FragmentManager fragmentManager) {
+        super(fragmentManager);
         mainFragment = new MainFragment();
         stepFragment = new StepsFragment();
         sleepFragment = new SleepFragment();

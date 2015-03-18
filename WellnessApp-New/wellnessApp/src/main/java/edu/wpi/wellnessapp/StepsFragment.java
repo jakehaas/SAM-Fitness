@@ -143,7 +143,7 @@ public class StepsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_step, container, false);
 
         Log.d("onCreate View", "Create View Called");
-        DatabaseHandler db = new DatabaseHandler(getActivity());
+        //DatabaseHandler db = new DatabaseHandler(getActivity());
 
         //final java.text.DateFormat dateTimeFormatter = DateFormat.getTimeFormat(getActivity());
         Calendar c = Calendar.getInstance();
@@ -831,7 +831,7 @@ public class StepsFragment extends Fragment {
             currentY = y;
             currentZ = z;
 
-            DatabaseHandler db = new DatabaseHandler(getActivity());
+            //DatabaseHandler db = new DatabaseHandler(getActivity());
             Calendar c = Calendar.getInstance();
             int minutes = c.get(Calendar.MINUTE);
             int hours = c.get(Calendar.HOUR);
@@ -843,12 +843,12 @@ public class StepsFragment extends Fragment {
                 fullDate.append(hours);
                 fullDate.append("-");
                 fullDate.append(tmpMinutes);
-                db.addStepsTaken(new StepsTaken(fullDate.toString(), numSteps));
-                StepsTaken stepsTakenObject = db.getStepsTaken(idCounter);
+               // db.addStepsTaken(new StepsTaken(fullDate.toString(), numSteps));
+                //StepsTaken stepsTakenObject = db.getStepsTaken(idCounter);
 
                 idCounter++;
 
-                exampleSeries.appendData(new DataPoint(now, stepsTakenObject.steps), false, 5);
+               // exampleSeries.appendData(new DataPoint(now, stepsTakenObject.steps), false, 5);
                 numSteps = 0;
 
                 tmpMinutes = minutes;
