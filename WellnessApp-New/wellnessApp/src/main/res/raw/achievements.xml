@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <achievements>
+
     <achievement>
         <id>0</id>
         <name>Baby Steps!</name>
@@ -68,8 +69,45 @@
     </achievement>
 
     <achievement>
-        <id>10</id>
+        <id>11</id>
         <name>Happy New Year!</name>
         <description>Score 70+ for your daily mood score for 70% of the days in 1 year.</description>
     </achievement>
+
+    <achievement>
+        <id>12</id>
+        <name>Power Nap!</name>
+        <description>Sleep at least 8 hours in a 24 hour period.</description>
+    </achievement>
+
+    <achievement>
+        <id>13</id>
+        <name>Good Night Sleep!</name>
+        <description>Sleep 56 hours in 1 week.</description>
+    </achievement>
+
+    <achievement>
+        <id>14</id>
+        <name>Enter Sandman!</name>
+        <description>Sleep 180 hours in 1 month.</description>
+    </achievement>
+
+    <achievement>
+        <id>15</id>
+        <name>Sleeping Beauty!</name>
+        <description>Sleep 800 hours in 6 months.</description>
+    </achievement>
+
+    <achievement>
+        <id>16</id>
+        <name>Snorlax!</name>
+        <description>Sleep 2000 hours in 1 year.</description>
+    </achievement>
+
+    <achievement>
+        <id>17</id>
+        <name>Rip Van Winkle!</name>
+        <description>Sleep 3000 hours in 1 year.</description>
+    </achievement>
+
 </achievements>
