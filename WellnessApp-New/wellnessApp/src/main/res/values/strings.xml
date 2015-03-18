@@ -7,13 +7,13 @@
     <b>About</b><br />
     SAM Fitness tracks your sleep, mood and exercise habits. By learning where you can improve...<br />
     <br />
-    <b>Exercise Tracking</b><br />
+    <font color="#ff0000"><b>Exercise Tracking</b></font><br />
     SAM Fitness uses Google\'s step counting algorithm to estimate how much you move around during the day.<br />
     <br />
-    <b>Sleep Tracking</b><br />
+    <font color="#004fff"><b>Sleep Tracking</b></font><br />
     SAM Fitness uses your devices microphone and light sensor to track how much sleep you are getting. It is recommended to calibrate the sensors right before you fall asleep so the app can get an idea of the ambient sound and light.<br />
     <br />
-    <b>Sleep Tracking</b><br />
+    <font color="#00ff00"><b>Sleep Tracking</b></font><br />
     Every few hours, SAM Fitness will prompt you to enter your mood at the current time. SAM will then keep track of how your sleep and exercise habits effect your mood.
     ]]></string>
 
