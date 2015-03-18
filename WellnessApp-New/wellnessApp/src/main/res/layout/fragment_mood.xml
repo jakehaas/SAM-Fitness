@@ -17,13 +17,41 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp" />
 
-    <Spinner
-        android:id="@+id/alert_hour_spinner"
-        android:layout_marginTop="20dp"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
 
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="100">
+
+        <TextView
+            android:id="@+id/alert_pre"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_toLeftOf="@+id/alert_hour_spinner"
+            android:layout_toStartOf="@+id/alert_hour_spinner"
+            android:text="Remind me to set my mood every " />
+
+        <Spinner
+            android:id="@+id/alert_hour_spinner"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/alert_post"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_toEndOf="@+id/alert_hour_spinner"
+            android:layout_toRightOf="@+id/alert_hour_spinner"
+            android:text="hours." />
+
+    </RelativeLayout>
 
 
     <Button
@@ -40,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:gravity="center_horizontal" />
 
     <Button
