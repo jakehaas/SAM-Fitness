@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#252525"
+    android:background="#ffffff"
     android:orientation="vertical">
 
     <com.jjoe64.graphview.GraphView
@@ -12,18 +12,48 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:background="#252525"
+        android:background="#ffffff"
         android:gravity="center_horizontal"
         android:paddingLeft="10dp"
         android:paddingRight="10dp" />
 
-    <Spinner
-        android:id="@+id/alert_hour_spinner"
-        android:layout_marginTop="20dp"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
 
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="100">
+
+        <TextView
+            android:id="@+id/alert_pre"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_toLeftOf="@+id/alert_hour_spinner"
+            android:layout_toStartOf="@+id/alert_hour_spinner"
+            android:textColor="#000000"
+            android:text="Remind me to set my mood every " />
+
+        <Spinner
+            android:id="@+id/alert_hour_spinner"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/alert_post"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_toEndOf="@+id/alert_hour_spinner"
+            android:layout_toRightOf="@+id/alert_hour_spinner"
+            android:textColor="#000000"
+            android:text="hours." />
+
+    </RelativeLayout>
 
 
     <Button
@@ -40,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:gravity="center_horizontal" />
 
     <Button
