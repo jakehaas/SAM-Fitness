@@ -386,7 +386,8 @@ public class StepsFragment extends Fragment {
 
                 if (values.size() >= 1) {
                     Utils.todaysSteps = getTimeStamps[values.size() - 1].getY();
-                    textViewSteps.setText("Today's Steps: " + String.valueOf(getTimeStamps[values.size() - 1].getY()));
+                    checkStepAchievements();
+                    textViewSteps.setText("Today's Steps: " + Utils.todaysSteps);
                     graphView.getGridLabelRenderer().setNumHorizontalLabels(values.size());
                     graphView.getViewport().setXAxisBoundsManual(true);
                     graphView.getViewport().setMinX(getTimeStamps[0].getX());
@@ -396,6 +397,34 @@ public class StepsFragment extends Fragment {
 
             }
         });
+    }
+
+    private void checkStepAchievements() {
+        int stepCount = (int)Utils.todaysSteps;
+
+        if (stepCount >= 100) {
+            Utils.unlockAchievement(0, getActivity());
+        }
+
+        if (stepCount >= 1000) {
+            Utils.unlockAchievement(1, getActivity());
+        }
+
+        if (stepCount >= 10000) {
+            Utils.unlockAchievement(2, getActivity());
+        }
+
+        if (stepCount >= 100000) {
+            Utils.unlockAchievement(3, getActivity());
+        }
+
+        if (stepCount >= 500000) {
+            Utils.unlockAchievement(4, getActivity());
+        }
+
+        if (stepCount >= 1000000) {
+            Utils.unlockAchievement(5, getActivity());
+        }
     }
 
 
