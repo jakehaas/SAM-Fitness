@@ -60,12 +60,6 @@ public class SleepFragment extends Fragment {
     private int audioAmplitude;
     private float lightIntensity;
 
-    // Calibrated Sensor Data (defaults set if left uncalibrated)
-    private float calibratedLight = 14;
-    private int calibratedAmplitude = 200;
-    private int calibratedSleepHour = 8;
-    private int calibratedWakeHour = 11;
-
     // Final Sleep Times
     private String fallAsleepTime = "";
     private String wakeUpTime = "";
@@ -81,8 +75,16 @@ public class SleepFragment extends Fragment {
     private int durationMins = 0;
     private int durationSec = 0;
 
+    // Calibrated Sensor Data (defaults set if left uncalibrated)
+    private float calibratedLight = 14;
+    private int calibratedAmplitude = 200;
+    private int calibratedSleepHour = 8;
+    private int calibratedWakeHour = 11;
+
     // Calibration
     private final int CALIBRATE_TIME = 10;
+    private final int NOISE_MARGIN = 300;
+    private final int LIGHT_MARGIN = 10;
     private boolean isCalibrated = false;
     private CountDownTimer calibrateTimer;
     private float avgBy = 0;
@@ -285,8 +287,8 @@ public class SleepFragment extends Fragment {
                 calibratedAmplitude = calibratedAmplitude / Math.round(avgBy);
 
                 //after averages are calculated, add in some margin of noise/light
-                calibratedLight += 15;
-                calibratedAmplitude += 200;
+                calibratedLight += LIGHT_MARGIN;
+                calibratedAmplitude += NOISE_MARGIN;
 
                 Log.d("SleepMonitor", "Calibrated sensors");
                 isCalibrated = true;
