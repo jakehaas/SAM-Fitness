@@ -1,27 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="16dp"
-        android:layout_marginTop="14dp"
-        android:text="This is MoodFragment"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/moodGraph"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="0.5"
+        android:background="#ffffff"
+        android:gravity="center_horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="34dp"
-        android:text="Set Mood" />
 
-</RelativeLayout><!-- From: file:/Users/jakehaas/Desktop/MQP/Wellness-App-MQP/WellnessApp-New/wellnessApp/src/main/res/layout/fragment_mood.xml -->
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="10dp"
+        android:layout_weight="0.5">
+
+        <LinearLayout
+            android:id="@+id/moodSetLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="#ffffff"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/alert_pre"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_toLeftOf="@+id/alert_hour_spinner"
+                android:layout_toStartOf="@+id/alert_hour_spinner"
+                android:text="Remind me to set my mood every "
+                android:textColor="#000000" />
+
+            <Spinner
+                android:id="@+id/alert_hour_spinner"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/alert_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_toEndOf="@+id/alert_hour_spinner"
+                android:layout_toRightOf="@+id/alert_hour_spinner"
+                android:text="hours."
+                android:textColor="#000000" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/startMoodButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Start Mood Tracking"
+            android:width="200dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/moodSetLayout"
+            android:layout_alignRight="@+id/setMoodButton"
+            android:layout_alignEnd="@+id/setMoodButton" />
+
+        <RatingBar
+            android:id="@+id/moodRatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/startMoodButton"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp" />
+
+        <Button
+            android:id="@+id/setMoodButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/moodRatingBar"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:width="200dp"
+            android:text="Set Current Mood" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>
+<!-- From: file:/Users/Nate/Documents/MQP/Wellness-App-MQP/WellnessApp-New/wellnessApp/src/main/res/layout/fragment_mood.xml -->

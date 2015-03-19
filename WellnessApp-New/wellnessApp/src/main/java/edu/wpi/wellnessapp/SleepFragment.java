@@ -83,7 +83,7 @@ public class SleepFragment extends Fragment {
 
     // Calibration
     private final int CALIBRATE_TIME = 10;
-    private final int NOISE_MARGIN = 300;
+    private final int NOISE_MARGIN = 250;
     private final int LIGHT_MARGIN = 10;
     private boolean isCalibrated = false;
     private CountDownTimer calibrateTimer;
@@ -126,6 +126,15 @@ public class SleepFragment extends Fragment {
         });
     }
 
+    /**
+     * onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+     * Creates the sleep fragment tab
+     *
+     * @param inflater LayoutInflater
+     * @param container ViewGroup
+     * @param savedInstanceState previous state
+     * @return view
+     */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_sleep, container, false);
 
@@ -221,7 +230,10 @@ public class SleepFragment extends Fragment {
         return view;
     }
 
-
+    /**
+     * stopSleepRunnable()
+     * Procedure to stop sleep tracking that can be called from static classes
+     */
     private Runnable stopSleepRunnable() {
         return new Runnable() {
             public void run() {
@@ -231,6 +243,10 @@ public class SleepFragment extends Fragment {
         };
     }
 
+    /**
+     * startSleepTracking()
+     * Begins tracking sleep
+     */
     private void startSleepTracking() {
         // Start service
         getActivity().startService(new Intent(getActivity(), SleepService.class));
@@ -255,6 +271,10 @@ public class SleepFragment extends Fragment {
         }
     }
 
+    /**
+     * stopSleepTracking()
+     * Stops tracking sleep
+     */
     private void stopSleepTracking() {
         getActivity().stopService(new Intent(getActivity(), SleepService.class));
         Log.d("SleepFragment", "Stopping sleep service");
@@ -265,7 +285,11 @@ public class SleepFragment extends Fragment {
         calibrateButton.setEnabled(false);
     }
 
-    //calibrate the light/sound levels by getting avgs (get values every 1sec for 10sec period)
+    /**
+     * calibrateSensors()
+     * Calibrates the light/sound levels by getting avgs (get values every 1sec for 10sec period) and
+     *   adding a preset margin to allow for movement/daybreak
+     */
     private void calibrateSensors() {
 
         trackingStatus.setText("Calibrating...");
@@ -309,6 +333,11 @@ public class SleepFragment extends Fragment {
         }.start();
     }
 
+    /**
+     * checkSleepStatus()
+     * Checks time and light/sound levels to see if the user falls within all sleep thresholds,
+     *   sets isAsleep equal to true or false and sets fallAsleepTime and wakeUpTime
+     */
     private void checkSleepStatus() {
 
         // Check all conditions to see if user fell asleep
@@ -334,7 +363,13 @@ public class SleepFragment extends Fragment {
         }
     }
 
-    //get the time in HH:MM:SS format, takes in a char if the sleep/wake variables need to be reset
+    /**
+     * getTime(char set)
+     * Gets the time in HH:MM:SS format, takes in a char if the sleep/wake variables need to be reset
+     *
+     * @param set flag if the sleep/wake times need to be updated
+     * @return current time in HH:MM:SS format
+     */
     private String getTime(char set) {
         Log.d("getTime", "Getting current time");
         Calendar c = Calendar.getInstance();
@@ -370,7 +405,12 @@ public class SleepFragment extends Fragment {
         return Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(seconds) + getAmPm();
     }
 
-    //Check to see if time of day AM or PM
+    /**
+     * getAmPm()
+     * Checks to see if time of day is AM or PM
+     *
+     * @return string containing either "AM" or "PM"
+     */
     private String getAmPm() {
         Calendar c = Calendar.getInstance();
         int am_pm = c.get(Calendar.AM_PM);
@@ -384,7 +424,12 @@ public class SleepFragment extends Fragment {
         return amPm;
     }
 
-    //Check to see if hour is between valid sleeping hours
+    /**
+     * SleepHourCheck()
+     * Checks to see if the current hour is between the valid sleeping hours
+     *
+     * @return true if hour is valid, false if hour is not valid
+     */
     private boolean SleepHourCheck() {
         Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR);
@@ -409,7 +454,12 @@ public class SleepFragment extends Fragment {
         return false;
     }
 
-    //check to see if light is below valid level
+    /**
+     * SleepLightCheck()
+     * Checks to see if the light level is below the valid sleeping light level
+     *
+     * @return true if light level is valid, false if light level is not valid
+     */
     private boolean SleepLightCheck() {
         if (lightIntensity < calibratedLight) {
             return true;
@@ -418,6 +468,13 @@ public class SleepFragment extends Fragment {
     }
 
     //check to see if audio is below valid level
+
+    /**
+     * SleepAudioCheck()
+     * Checks to see if the sound level is below the valid sleeping sound level
+     *
+     * @return true if sound level is valid, false if sound level is not valid
+     */
     private boolean SleepAudioCheck() {
         if (audioAmplitude < calibratedAmplitude) {
             return true;
@@ -426,6 +483,13 @@ public class SleepFragment extends Fragment {
     }
 
     //gets duration of sleep to wake time
+
+    /**
+     * getDuration()
+     * Calculates the duration of time slept based on the time the user fell asleep, woke up, and previous
+     *   duration during the night
+     * @return duration of sleep for a night
+     */
     private String getDuration() {
         int hourDuration;
         int minDuration;
@@ -470,6 +534,15 @@ public class SleepFragment extends Fragment {
     }
 
     //add new sleep duration to existing sleep duration
+
+    /**
+     * getTotalDuration(int newHours, int newMins, int newSecs)
+     * Adds time to total duration for a night (accounts for wakeups during the night)
+     *
+     * @param newHours number of hours to add to duration
+     * @param newMins number of minutes to add to duration
+     * @param newSecs number of seconds to add to duration
+     */
     private void getTotalDuration(int newHours, int newMins, int newSecs) {
         Log.d("AddToDuration", "Added " + Integer.toString(newHours) + ":" + Integer.toString(newMins) + ":" + Integer.toString(newSecs) + "to"
                 + Integer.toString(durationHours) + ":" + Integer.toString(durationMins) + ":" + Integer.toString(durationSec));
@@ -490,6 +563,14 @@ public class SleepFragment extends Fragment {
     }
 
     // Get the efficiency of the current sleep session
+
+    /**
+     * getEfficiency()
+     * Gets the overall efficiency of the current sleep session based on the amount of time
+     *   slept and the number of wakeups
+     *
+     * @return efficiency on scale of 0-100
+     */
     private int getEfficiency() {
         //based on avg 11 wakeups per 8 hours, each wakeup resulting in a -0.625% efficiency (Source: FitBit)
         double sleepFactor = ((durationHours * 60 * 60) + (durationMins * 60) + durationSec) / 28800;

@@ -174,6 +174,11 @@ public class StepsFragment extends Fragment {
 
 
         graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
+
+       // graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+       // graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+       // graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
+
         graphView.getGridLabelRenderer().setTextSize(20);
         //graphView.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
 

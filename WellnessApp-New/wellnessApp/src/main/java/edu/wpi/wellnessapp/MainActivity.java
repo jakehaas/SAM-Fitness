@@ -100,7 +100,8 @@ public class MainActivity extends FragmentActivity implements TabListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_OAUTH) {
-            Fragment fragment =  getSupportFragmentManager()
+
+            Fragment fragment = getSupportFragmentManager()
                     .findFragmentById(R.id.pager);
             fragment.onActivityResult(requestCode, resultCode, data);
 

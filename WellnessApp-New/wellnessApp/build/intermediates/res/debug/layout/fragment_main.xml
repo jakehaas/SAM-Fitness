@@ -1,89 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="right" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff"
+    android:gravity="top|center"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/mainAvatar"
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="#252525"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp" >
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.75">
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/mainCircle"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/main_circle"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@android:color/black" />
 
-    <Button
-        android:id="@+id/settings_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="Settings" />
+        <TextView
+            android:id="@+id/sleepCircle"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignLeft="@+id/mainCircle"
+            android:layout_below="@+id/mainCircle"
+            android:background="@drawable/sleep_circle"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@android:color/black" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_below="@+id/textView3"
-        android:background="@drawable/mood_circle"
-        android:gravity="center"
-        android:shadowColor="@android:color/white"
-        android:shadowRadius="10.0"
-        android:text="89"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        <TextView
+            android:id="@+id/activityCircle"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/mainCircle"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@+id/sleepCircle"
+            android:background="@drawable/activity_circle"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@android:color/black" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/main_circle"
-        android:gravity="center"
-        android:shadowColor="@android:color/white"
-        android:shadowRadius="10.0"
-        android:text="86.3"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        <TextView
+            android:id="@+id/moodCircle"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/mainCircle"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/sleepCircle"
+            android:background="@drawable/mood_circle"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@android:color/black" />
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignBaseline="@+id/textView4"
-        android:layout_alignBottom="@+id/textView4"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="56dp"
-        android:background="@drawable/sleep_circle"
-        android:gravity="center"
-        android:shadowColor="@android:color/white"
-        android:shadowRadius="10.0"
-        android:text="96"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_below="@+id/textView3"
-        android:layout_marginLeft="42dp"
-        android:layout_toRightOf="@+id/textView1"
-        android:background="@drawable/activity_circle"
-        android:gravity="center"
-        android:shadowColor="@android:color/white"
-        android:shadowRadius="10.0"
-        android:text="74"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.55"
+        android:orientation="vertical">
 
-</RelativeLayout><!-- From: file:/Users/jakehaas/Desktop/MQP/Wellness-App-MQP/WellnessApp-New/wellnessApp/src/main/res/layout/fragment_main.xml -->
+        <VideoView
+            android:id="@+id/mainAvatar"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="fill"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
+
+        <Button
+            android:id="@+id/help_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:text="  Help  " />
+
+        <Button
+            android:id="@+id/achiev_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text=" Achievements " />
+
+    </RelativeLayout>
+
+
+</LinearLayout><!-- From: file:/Users/Nate/Documents/MQP/Wellness-App-MQP/WellnessApp-New/wellnessApp/src/main/res/layout/fragment_main.xml -->
