@@ -172,9 +172,9 @@ public class StepsFragment extends Fragment {
 
         graphView.addSeries(exampleSeries); // data
 
-        graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
-        graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
-        graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
+       // graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+       // graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+       // graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
         graphView.getGridLabelRenderer().setTextSize(20);
         //graphView.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
 
@@ -384,7 +384,46 @@ public class StepsFragment extends Fragment {
                 }
                 DataPoint[] getTimeStamps = values.toArray(new DataPoint[values.size()]);
 
-                if (values.size() >= 1) {
+                if (values.size() < 1) {
+                    Date now = new Date();
+                    //LineGraphSeries<DataPoint> mSeries1 = new LineGraphSeries<DataPoint>();
+                    Log.d("I'm a huge", "bitch");
+                    graphView.getGridLabelRenderer().setNumHorizontalLabels(4);
+                    graphView.getViewport().setXAxisBoundsManual(true);
+                    graphView.getViewport().setMinX(now.getTime() - 4*24*60*60*1000);
+                    graphView.getViewport().setMaxX(now.getTime());
+                    exampleSeries.setColor(Color.WHITE);
+                    exampleSeries.setThickness(0);
+
+                    exampleSeries.resetData(new DataPoint[] {
+                            new DataPoint((now.getTime() - 3*24*60*60*1000), 1),
+                            new DataPoint((now.getTime() - 2*24*60*60*1000), 10),
+                            new DataPoint((now.getTime() - 1*24*60*60*1000), 1),
+                            new DataPoint(now.getTime(), 10)});
+
+                }
+
+                if (values.size() == 1) {
+                    Date now = new Date();
+                    Utils.todaysSteps = getTimeStamps[values.size() - 1].getY();
+                    checkStepAchievements();
+                    textViewSteps.setText("Today's Steps: " + Utils.todaysSteps);
+
+                    graphView.getGridLabelRenderer().setNumHorizontalLabels(4);
+                    graphView.getViewport().setXAxisBoundsManual(true);
+                    graphView.getViewport().setMinX(now.getTime() - 4*24*60*60*1000);
+                    graphView.getViewport().setMaxX(now.getTime());
+                    //exampleSeries.setColor(Color.WHITE);
+                    //exampleSeries.setThickness(0);
+
+                    exampleSeries.resetData(new DataPoint[] {
+                            new DataPoint((now.getTime() - 3*24*60*60*1000), 0),
+                            new DataPoint((now.getTime() - 2*24*60*60*1000), 0),
+                            new DataPoint((now.getTime() - 1*24*60*60*1000), 0),
+                            new DataPoint(now.getTime(), Utils.todaysSteps)});
+                }
+
+                if (values.size() > 1) {
                     Utils.todaysSteps = getTimeStamps[values.size() - 1].getY();
                     checkStepAchievements();
                     textViewSteps.setText("Today's Steps: " + Utils.todaysSteps);
@@ -392,8 +431,10 @@ public class StepsFragment extends Fragment {
                     graphView.getViewport().setXAxisBoundsManual(true);
                     graphView.getViewport().setMinX(getTimeStamps[0].getX());
                     graphView.getViewport().setMaxX(getTimeStamps[values.size() - 1].getX());
+                    exampleSeries.resetData(values.toArray(new DataPoint[values.size()]));
+
                 }
-                exampleSeries.resetData(values.toArray(new DataPoint[values.size()]));
+
 
             }
         });
