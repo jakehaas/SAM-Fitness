@@ -8,10 +8,11 @@
     <com.jjoe64.graphview.GraphView
         android:id="@+id/moodGraph"
         android:layout_width="fill_parent"
-        android:layout_height="238dp"
+        android:layout_height="fill_parent"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
+        android:layout_weight="0.5"
         android:background="#ffffff"
         android:gravity="center_horizontal"
         android:paddingLeft="10dp"
@@ -21,7 +22,8 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="100">
+        android:layout_weight="0.5"
+        android:layout_marginTop="10dp">
 
         <TextView
             android:id="@+id/alert_pre"
