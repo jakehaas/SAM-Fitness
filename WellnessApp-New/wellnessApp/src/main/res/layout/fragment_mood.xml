@@ -22,38 +22,48 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="0.5"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_weight="0.5">
 
-        <TextView
-            android:id="@+id/alert_pre"
-            android:layout_width="100dp"
+        <LinearLayout
+            android:id="@+id/moodSetLayout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_toLeftOf="@+id/alert_hour_spinner"
-            android:layout_toStartOf="@+id/alert_hour_spinner"
-            android:textColor="#000000"
-            android:text="Remind me to set my mood every " />
-
-        <Spinner
-            android:id="@+id/alert_hour_spinner"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal" />
+            android:layout_marginTop="10dp"
+            android:background="#ffffff"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/alert_post"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_toEndOf="@+id/alert_hour_spinner"
-            android:layout_toRightOf="@+id/alert_hour_spinner"
-            android:textColor="#000000"
-            android:text="hours." />
+            <TextView
+                android:id="@+id/alert_pre"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_toLeftOf="@+id/alert_hour_spinner"
+                android:layout_toStartOf="@+id/alert_hour_spinner"
+                android:text="Remind me to set my mood every "
+                android:textColor="#000000" />
+
+            <Spinner
+                android:id="@+id/alert_hour_spinner"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/alert_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_toEndOf="@+id/alert_hour_spinner"
+                android:layout_toRightOf="@+id/alert_hour_spinner"
+                android:text="hours."
+                android:textColor="#000000" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/startMoodButton"
@@ -61,27 +71,30 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="Start Mood Tracking"
-            android:layout_below="@+id/alert_pre"
-            android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true" />
+            android:width="200dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/moodSetLayout"
+            android:layout_alignRight="@+id/setMoodButton"
+            android:layout_alignEnd="@+id/setMoodButton" />
 
         <RatingBar
             android:id="@+id/moodRatingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_below="@+id/startMoodButton"
-            android:layout_marginTop="30dp"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp" />
 
         <Button
             android:id="@+id/setMoodButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Set Current Mood"
             android:layout_below="@+id/moodRatingBar"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:width="200dp"
+            android:text="Set Current Mood" />
 
     </RelativeLayout>
 
