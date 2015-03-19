@@ -209,8 +209,6 @@ public class SleepFragment extends Fragment {
 
         graphView.addSeries(sleepDataSeries);
 
-        graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
-        graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
         graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
         graphView.getGridLabelRenderer().setTextSize(20);
 
