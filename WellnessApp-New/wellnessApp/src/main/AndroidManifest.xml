@@ -16,7 +16,7 @@
         android:hardwareAccelerated="true"
         android:allowBackup="true"
         android:debuggable="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/sam"
         android:label="@string/app_name"
         android:theme="@style/Theme.Base.AppCompat.Light">
         <activity
