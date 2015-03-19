@@ -25,38 +25,55 @@ public class Achievement {
     private String description;
 
     /**
-     * getID()
-     * @return achievement id
+     * Get the id of this achievement.
+     *
+     * @return The current id of this achievement.
      */
     public int getId() {
         return id;
     }
 
     /**
-     * getName()
-     * @return achievement name
+     * Get the name of this achievement.
+     *
+     * @return The current name of this achievement.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * getDescription()
-     * @return achievement description
+     * Get the description of this achievement.
+     *
+     * @return The current description of this achievement.
      */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Changes the id of this achievement.
+     *
+     * @param id The new id.
+     */
     public void setId(int id) {
         this.id = id;
     }
 
-
+    /**
+     * Changes the name of this achievement.
+     *
+     * @param name The new name.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Changes the description of this achievement.
+     *
+     * @param description The new description.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
