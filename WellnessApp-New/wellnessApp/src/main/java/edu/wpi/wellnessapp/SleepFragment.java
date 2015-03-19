@@ -49,8 +49,8 @@ public class SleepFragment extends Fragment {
     private Button stopStartButton;
     private Button moreSessionInfo;
     private TextView trackingStatus;
-    private TextView sleepEfficiency;
-    private TextView duration;
+    private TextView todaysHours;
+    private TextView todaysEfficiency;
 
     // Graph
     private GraphView graphView;
@@ -133,15 +133,14 @@ public class SleepFragment extends Fragment {
         isTracking = Utils.isServiceRunning(getActivity(), SleepService.class);
 
         // Initialize UI elements
+        todaysHours = (TextView) view.findViewById(R.id.textViewTodaysHours);
+        todaysEfficiency = (TextView) view.findViewById(R.id.textViewEfficiency);
         trackingStatus = (TextView) view.findViewById(R.id.textViewTrackingStatus);
-        duration = (TextView) view.findViewById(R.id.textViewDuration);
-        sleepEfficiency = (TextView) view.findViewById(R.id.textViewEfficiency);
         graphView = (GraphView) view.findViewById(R.id.sleepGraph);
         calibrateButton = (Button) view.findViewById(R.id.calibrateButton);
         stopStartButton = (Button) view.findViewById(R.id.stopStartSleepButton);
         moreSessionInfo = (Button) view.findViewById(R.id.moreSleepSessionInfo);
 
-        // Start Button
         calibrateButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,8 +152,6 @@ public class SleepFragment extends Fragment {
                 }
             }
         });
-
-        // Stop / Start Button
 
         if (isTracking) {
             trackingStatus.setText("Tracking...");
@@ -183,14 +180,19 @@ public class SleepFragment extends Fragment {
         moreSessionInfo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.displayDialog(getActivity(), "More Sleep Session Info: During your previous session...",
-                        "Calibrated Audio Level: " + Integer.toString(calibratedAmplitude)
-                                + "\nCalibrated Light Level: " + Float.toString(calibratedLight)
-                                + "\nLast Fell Asleep: " + fallAsleepTime
-                                + "\nLast Woke Up: " + wakeUpTime
+                if (fallAsleepTime.equals("") || wakeUpTime.equals("")) {
+                    Utils.displayDialog(getActivity(), "Last Sleep Session Information",
+                            "You must have at least 1 sleep session to view stats.", null, "OK", Utils.emptyRunnable(), null);
+                } else {
+                    Utils.displayDialog(getActivity(), "Today's Sleep Stats",
+                            "Last Time Fell Asleep: " + fallAsleepTime
+                                + "\nLast Time Woke Up: " + wakeUpTime
                                 + "\nTotal Time Asleep: " + Integer.toString(durationHours) + ":" + Integer.toString(durationMins) + ":" + Integer.toString(durationSec)
-                                + "\nNumber of Wake Ups: " + Integer.toString(numWakeups),
-                        null, "OK", Utils.emptyRunnable(), null);
+                                + "\nNumber of Wake Ups: " + Integer.toString(numWakeups)
+                                + "\nCalibrated Audio Level: " + Integer.toString(calibratedAmplitude)
+                                + "\nCalibrated Light Level: " + Float.toString(calibratedLight),
+                            null, "OK", Utils.emptyRunnable(), null);
+                }
             }
         });
 
@@ -259,8 +261,6 @@ public class SleepFragment extends Fragment {
 
         trackingStatus.setText("Not Tracking...");
         calibrateButton.setEnabled(false);
-
-        sleepEfficiency.setText("Efficiency: " + Integer.toString(getEfficiency()));
     }
 
     //calibrate the light/sound levels by getting avgs (get values every 1sec for 10sec period)
@@ -327,9 +327,8 @@ public class SleepFragment extends Fragment {
 
             wakeUpTime = getTime('W');
 
-            duration.setText("Duration: " + getDuration());
-
-            sleepEfficiency.setText("Efficiency: " + getEfficiency());
+            todaysHours.setText("Hours Slept Today: " + getDuration());
+            todaysEfficiency.setText("Today's Efficiency: " + getEfficiency());
         }
     }
 
