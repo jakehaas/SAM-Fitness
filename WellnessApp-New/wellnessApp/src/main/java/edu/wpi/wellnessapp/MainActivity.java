@@ -69,21 +69,21 @@ public class MainActivity extends FragmentActivity implements TabListener {
         mainTab.setText("Main");
         mainTab.setTabListener(this);
 
-        ActionBar.Tab stepTab = actionBar.newTab();
-        stepTab.setText("Exercise");
-        stepTab.setTabListener(this);
-
         ActionBar.Tab sleepTab = actionBar.newTab();
         sleepTab.setText("Sleep");
         sleepTab.setTabListener(this);
+
+        ActionBar.Tab stepTab = actionBar.newTab();
+        stepTab.setText("Activity");
+        stepTab.setTabListener(this);
 
         ActionBar.Tab moodTab = actionBar.newTab();
         moodTab.setText("Mood");
         moodTab.setTabListener(this);
 
         actionBar.addTab(mainTab);
-        actionBar.addTab(stepTab);
         actionBar.addTab(sleepTab);
+        actionBar.addTab(stepTab);
         actionBar.addTab(moodTab);
 
         // Auto start services

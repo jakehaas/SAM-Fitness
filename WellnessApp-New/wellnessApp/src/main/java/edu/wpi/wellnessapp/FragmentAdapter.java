@@ -60,12 +60,15 @@ class FragmentAdapter extends FragmentStatePagerAdapter {
             case 0:
                 fragment = mainFragment;
                 break;
+
             case 1:
-                fragment = stepFragment;
-                break;
-            case 2:
                 fragment = sleepFragment;
                 break;
+
+            case 2:
+                fragment = stepFragment;
+                break;
+
             case 3:
                 fragment = moodFragment;
                 break;

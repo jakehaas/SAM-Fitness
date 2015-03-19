@@ -129,7 +129,7 @@ public class MainFragment extends Fragment {
             }
         });
 
-        videoView.setMediaController(new MediaController(view.getContext().getApplicationContext()));
+        videoView.setMediaController(null);
 
         videoView.setOnTouchListener(new View.OnTouchListener() {
             @Override
