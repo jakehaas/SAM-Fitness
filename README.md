@@ -1,4 +1,4 @@
-About\n
+About
 SAM Fitness tracks your sleep, mood and exercise habits. By learning where you can improve...
 
 Exercise Tracking
