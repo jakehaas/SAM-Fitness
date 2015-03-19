@@ -24,27 +24,27 @@ public class Achievement {
     private String name;
     private String description;
 
+    /**
+     * getID()
+     * @return achievement id
+     */
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
+    /**
+     * getName()
+     * @return achievement name
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    /**
+     * getDescription()
+     * @return achievement description
+     */
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }
