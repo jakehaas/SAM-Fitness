@@ -53,33 +53,35 @@
             android:textColor="#000000"
             android:text="hours." />
 
+        <Button
+            android:id="@+id/startMoodButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Start Mood Tracking"
+            android:layout_below="@+id/alert_pre"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true" />
+
+        <RatingBar
+            android:id="@+id/moodRatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/startMoodButton"
+            android:layout_marginTop="30dp"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:id="@+id/setMoodButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Set Current Mood"
+            android:layout_below="@+id/moodRatingBar"
+            android:layout_centerHorizontal="true" />
+
     </RelativeLayout>
 
-
-    <Button
-        android:id="@+id/startMoodButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:text="Start Mood Tracking" />
-
-    <RatingBar
-        android:id="@+id/moodRatingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal" />
-
-    <Button
-        android:id="@+id/setMoodButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="0dp"
-        android:gravity="center_horizontal"
-        android:text="Set Current Mood" />
 
 </LinearLayout>
