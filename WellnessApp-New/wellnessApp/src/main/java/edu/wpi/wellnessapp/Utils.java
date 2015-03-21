@@ -179,7 +179,7 @@ public class Utils {
     public static String getSleepScore() {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
-        return decimalFormat.format(todaysSleepHours);
+        return decimalFormat.format(map(todaysSleepHours, 0.0F, 8.5F, 0.0F, 100.0F));
     }
 
     /**
@@ -192,7 +192,7 @@ public class Utils {
     public static String getMoodScore() {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
-        return decimalFormat.format(todaysMoodScore);
+        return decimalFormat.format(map(todaysMoodScore, 0.0F, 5.0F, 0.0F, 100.0F));
     }
 
     /**

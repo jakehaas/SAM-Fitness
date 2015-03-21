@@ -369,6 +369,13 @@ public class SleepFragment extends Fragment {
                 todaysEfficiency.setText("Today's Efficiency: " + getEfficiency());
 
                 numWakeups++;
+
+                Calendar c = Calendar.getInstance();
+                int date = c.get(Calendar.DATE);
+
+                DatabaseHandler db = new DatabaseHandler(getActivity());
+                db.addHoursSlept(new HoursSlept(String.valueOf(date), Float.valueOf(getDuration())));
+                Utils.todaysSleepHours = db.getTodaysSleepTotal();
             }
         }
     }

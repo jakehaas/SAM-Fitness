@@ -19,22 +19,22 @@
 
 package edu.wpi.wellnessapp;
 
-public class HoursSlept {
+public class MoodTic {
     private int id;
     String date;
-    float hours;
+    float mood;
 
-    public HoursSlept() {}
+    public MoodTic() {}
 
-    public HoursSlept(String date, float hours) {
+    public MoodTic(String date, float mood) {
         super();
         this.date = date;
-        this.hours = hours;
+        this.mood = mood;
     }
 
     @Override
     public String toString() {
-        return "HoursSlept [id=" + id + ", date=" + date + ", hours=" + hours + "]";
+        return "Mood [id=" + id + ", date=" + date + ", mood=" + mood + "]";
     }
 
     public int getId() {
@@ -53,11 +53,11 @@ public class HoursSlept {
         this.date = date;
     }
 
-    public float getHours() {
-        return hours;
+    public float getMood() {
+        return mood;
     }
 
-    public void setHours(float hours) {
-        this.hours = hours;
+    public void setMood(float mood) {
+        this.mood = mood;
     }
 }
