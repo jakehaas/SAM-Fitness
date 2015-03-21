@@ -144,7 +144,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void addHoursSlept(HoursSlept hoursSlept) {
-        Log.d("Saving SleepHours to DB...", hoursSlept.toString());
+        Log.d("Saving SleepHours to DB", hoursSlept.toString());
 
         SQLiteDatabase db = this.getWritableDatabase();
 

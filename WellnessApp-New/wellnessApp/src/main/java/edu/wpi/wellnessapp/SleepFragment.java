@@ -59,6 +59,7 @@ public class SleepFragment extends Fragment {
     // Raw Sensor Data
     private int audioAmplitude;
     private float lightIntensity;
+    private boolean hourCheck;
 
     // Final Sleep Times
     private String fallAsleepTime = "";
@@ -105,11 +106,18 @@ public class SleepFragment extends Fragment {
 
                 String maxAmplitudeIn = extras.getString("maxAmplitude");
                 String lightIntensityIn = extras.getString("lightIntensity");
+  //              String hourCheckIn = extras.getString("sleepHourCheck");
 
                 audioAmplitude = Integer.parseInt(maxAmplitudeIn);
                 lightIntensity = Float.parseFloat(lightIntensityIn);
+//                hourCheck = Boolean.parseBoolean(hourCheckIn);
 
-                checkSleepStatus();
+ //               if(hourCheck){
+                    checkSleepStatus();
+   //             }
+     //           else{
+       //             stopSleepTracking();
+        //        }
             }
         }
     };
@@ -451,9 +459,6 @@ public class SleepFragment extends Fragment {
         Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR);
         String amPm = getAmPm();
-
-
-        Log.d("SleepHourCheck", "Current Hour: " + Integer.toString(hour) + amPm);
 
         if(hour == 0){
             hour = 12;
