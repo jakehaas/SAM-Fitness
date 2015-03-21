@@ -460,7 +460,6 @@ public class SleepFragment extends Fragment {
         int hour = c.get(Calendar.HOUR);
         String amPm = getAmPm();
 
-
         if(hour == 0){
             hour = 12;
         }
