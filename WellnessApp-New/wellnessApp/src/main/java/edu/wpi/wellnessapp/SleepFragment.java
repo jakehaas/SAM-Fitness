@@ -209,6 +209,8 @@ public class SleepFragment extends Fragment {
 
         graphView.addSeries(sleepDataSeries);
 
+        graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+        graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
         graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
         graphView.getGridLabelRenderer().setTextSize(20);
 
@@ -258,6 +260,11 @@ public class SleepFragment extends Fragment {
                 null, "OK", Utils.emptyRunnable(), null);
 
         trackingStatus.setText("Tracking...");
+
+        durationHours = 0;
+        durationMins = 0;
+        durationSec = 0;
+
         calibrateButton.setEnabled(true);
 
         isCalibrated = false;
@@ -338,26 +345,31 @@ public class SleepFragment extends Fragment {
      */
     private void checkSleepStatus() {
 
-        // Check all conditions to see if user fell asleep
-        if (!isAsleep && SleepHourCheck() && SleepLightCheck() && SleepAudioCheck()) {
-            Log.d("SleepMonitor", "Fell Asleep:" + fallAsleepTime);
+        //Time check first
+        if(!SleepHourCheck()){
+            Log.d("StopSleepTracking:", "Outside hour range.");
+            stopSleepTracking();
+        }else {
+            // Check all conditions to see if user fell asleep
+            if (!isAsleep && SleepHourCheck() && SleepLightCheck() && SleepAudioCheck()) {
+                Log.d("SleepMonitor", "Fell Asleep:" + fallAsleepTime);
 
-            isAsleep = true;
+                isAsleep = true;
 
-            fallAsleepTime = getTime('S');
-        }
+                fallAsleepTime = getTime('S');
+            }
 
-        // Check to see if user woke up
-        if (isAsleep && (!SleepHourCheck() || !SleepLightCheck() || !SleepAudioCheck())) {
-            Log.d("SleepMonitor", "Woke Up:" + fallAsleepTime);
-            numWakeups++;
+            // Check to see if user woke up
+            if (isAsleep && (!SleepHourCheck() || !SleepLightCheck() || !SleepAudioCheck())) {
+                Log.d("SleepMonitor", "Woke Up:" + fallAsleepTime);
 
-            isAsleep = false;
+                isAsleep = false;
+                wakeUpTime = getTime('W');
+                todaysHours.setText("Hours Slept Today: " + getDuration());
+                todaysEfficiency.setText("Today's Efficiency: " + getEfficiency());
 
-            wakeUpTime = getTime('W');
-
-            todaysHours.setText("Hours Slept Today: " + getDuration());
-            todaysEfficiency.setText("Today's Efficiency: " + getEfficiency());
+                numWakeups++;
+            }
         }
     }
 
@@ -433,9 +445,11 @@ public class SleepFragment extends Fragment {
         int hour = c.get(Calendar.HOUR);
         String amPm = getAmPm();
 
+
+        Log.d("SleepHourCheck", "Current Hour: " + Integer.toString(hour) + amPm);
+
         if(hour == 0){
             hour = 12;
-            amPm = "AM";
         }
 
         if(hour == 12 && amPm.equals("PM")){
@@ -588,5 +602,14 @@ public class SleepFragment extends Fragment {
         Log.d("GetEfficiency", "Efficiency: " + Integer.toString(efficiency));
 
         return efficiency;
+    }
+
+    private double getDurationForGraph(){
+        double totalDuration;
+
+        totalDuration = durationMins / 60.0;
+        totalDuration += durationHours;
+
+        return totalDuration;
     }
 }
