@@ -31,6 +31,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -41,6 +42,8 @@ public class SleepService extends Service {
     SensorManager sensorMgr = null;
     Sensor lightSensor = null;
     float lightIntensity;
+    private int calibratedSleepHour = 8;
+    private int calibratedWakeHour = 11;
 
     Timer timer;
 
@@ -77,7 +80,8 @@ public class SleepService extends Service {
         }
 
         @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) { }
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
     };
 
     @Override
@@ -122,18 +126,77 @@ public class SleepService extends Service {
         return START_NOT_STICKY;
     }
 
-    private void sampleSensors()
-    {
+    /**
+     * sampleSensors()
+     * Gets light and sound data from sensors at a fixed rate and sends broadcast with the values in
+     * it (reveiced in the SleepFragment)
+     */
+    private void sampleSensors() {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 Intent i = new Intent("SensorData");
-                i.putExtra("maxAmplitude", Integer.toString(mRecorder.getMaxAmplitude()));
-                i.putExtra("lightIntensity", Float.toString(lightIntensity));
-                sendBroadcast(i);
+                if(SleepHourCheck()) {
+                    i.putExtra("maxAmplitude", Integer.toString(mRecorder.getMaxAmplitude()));
+                    i.putExtra("lightIntensity", Float.toString(lightIntensity));
+                    sendBroadcast(i);
+                }else{
+                    i.putExtra("sleepHourCheck", Boolean.toString(SleepHourCheck()));
+                }
+
             }
         }, 0, SAMPLE_RATE);
+    }
+
+    /**
+     * SleepHourCheck()
+     * Checks to see if the current hour is between the valid sleeping hours
+     *
+     * @return true if hour is valid, false if hour is not valid
+     */
+    private boolean SleepHourCheck() {
+        Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR);
+        String amPm = getAmPm();
 
 
+        Log.d("SleepHourCheck", "Current Hour: " + Integer.toString(hour) + amPm);
+
+        if (hour == 0) {
+            hour = 12;
+        }
+
+        if (hour == 12 && amPm.equals("PM")) {
+            return false;
+        }
+
+        if (hour == 12 && amPm.equals("AM")) {
+            return true;
+        }
+
+        if ((hour >= calibratedSleepHour && amPm.equals("PM")) || (hour <= calibratedWakeHour && amPm.equals("AM"))) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * getAmPm()
+     * Checks to see if time of day is AM or PM
+     *
+     * @return string containing either "AM" or "PM"
+     */
+    private String getAmPm() {
+        Calendar c = Calendar.getInstance();
+        int am_pm = c.get(Calendar.AM_PM);
+        String amPm;
+
+        if (am_pm == 0)
+            amPm = "AM";
+        else
+            amPm = "PM";
+
+        return amPm;
     }
 }
+
