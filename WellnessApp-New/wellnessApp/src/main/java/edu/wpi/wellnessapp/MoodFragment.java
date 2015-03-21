@@ -41,6 +41,7 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class MoodFragment extends Fragment {
     private Button startStopMoodButton;
@@ -124,6 +125,8 @@ public class MoodFragment extends Fragment {
 
         graphView.addSeries(moodDataSeries);
 
+        graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+        graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
         graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
         graphView.getGridLabelRenderer().setTextSize(20);
 
@@ -147,6 +150,13 @@ public class MoodFragment extends Fragment {
         return new Runnable() {
             public void run() {
                 Toast.makeText(getActivity(), "Saved " + ratingBar.getRating(), Toast.LENGTH_LONG).show();
+
+                Calendar c = Calendar.getInstance();
+                int date = c.get(Calendar.DATE);
+
+                DatabaseHandler db = new DatabaseHandler(getActivity());
+                db.addMood(new MoodTic(String.valueOf(date), ratingBar.getRating()));
+                Utils.todaysMoodScore = db.getTodaysMoodAvg();
                 ratingBar.setRating(0.0F);
             }
         };
