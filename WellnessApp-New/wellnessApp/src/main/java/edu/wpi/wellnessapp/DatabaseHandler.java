@@ -100,7 +100,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public float getTodaysMoodAvg(int date) {
 
-        Log.d("DD", "Getting todays mood avg from DB...");
         // 1. get reference to readable DB
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -136,6 +135,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             if (rowCount == 0) {
                 return 0.00F;
             } else {
+                Log.d("DBHandler", "Getting " + date + "'s mood avg from DB... " + todaysAvg);
                 return todaysAvg;
             }
         } else {
