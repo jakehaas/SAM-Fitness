@@ -1,6 +1,6 @@
 /**
  * Achievement.java
- * Wellness-App-MQP
+ * Sam Fitness
  *
  * @version 1.0.0
  *
@@ -17,7 +17,7 @@
  * PARTICULAR PURPOSE.
  */
 
-package edu.wpi.wellnessapp;
+package edu.wpi.samfitness;
 
 public class Achievement {
     private int id;

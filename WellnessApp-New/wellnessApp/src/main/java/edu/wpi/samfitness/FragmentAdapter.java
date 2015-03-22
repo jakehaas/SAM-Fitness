@@ -1,6 +1,6 @@
 /**
  * FragmentAdapter.java
- * Wellness-App-MQP
+ * WSam Fitness
  *
  * @version 1.0.0
  *
@@ -17,7 +17,7 @@
  * PARTICULAR PURPOSE.
  */
 
-package edu.wpi.wellnessapp;
+package edu.wpi.samfitness;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -35,7 +35,7 @@ class FragmentAdapter extends FragmentStatePagerAdapter {
      * FragmentAdapter(FragmentManager fm)
      *
      * @param fragmentManager The FragmentManager used to switch
-     *           between fragments on the tabbed pane
+     *                        between fragments on the tabbed pane
      */
     public FragmentAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
@@ -47,7 +47,7 @@ class FragmentAdapter extends FragmentStatePagerAdapter {
 
     /**
      * Fragment getItem(int arg0)
-     *
+     * <p/>
      * Returns the currently selected tab fragment
      *
      * @param arg0 The currently selected tab
@@ -79,7 +79,7 @@ class FragmentAdapter extends FragmentStatePagerAdapter {
 
     /**
      * int getCount()
-     *
+     * <p/>
      * Returns the total number of available tabs for the tabbed pane
      */
     @Override

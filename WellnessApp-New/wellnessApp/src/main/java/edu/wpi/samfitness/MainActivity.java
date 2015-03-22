@@ -1,6 +1,6 @@
 /**
  * MainActivity.java
- * Wellness-App-MQP
+ * Sam Fitness
  *
  * @version 1.0.0
  *
@@ -17,7 +17,7 @@
  * PARTICULAR PURPOSE.
  */
 
-package edu.wpi.wellnessapp;
+package edu.wpi.samfitness;
 
 
 import android.app.ActionBar;
@@ -29,6 +29,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+
+import edu.wpi.wellnessapp.R;
 
 public class MainActivity extends FragmentActivity implements TabListener {
 

@@ -1,6 +1,6 @@
 /**
  * MoodFragment.java
- * Wellness-App-MQP
+ * Sam Fitness
  *
  * @version 1.0.0
  *
@@ -17,7 +17,7 @@
  * PARTICULAR PURPOSE.
  */
 
-package edu.wpi.wellnessapp;
+package edu.wpi.samfitness;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -45,6 +45,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+
+import edu.wpi.wellnessapp.R;
 
 public class MoodFragment extends Fragment {
     private Button startStopMoodButton;

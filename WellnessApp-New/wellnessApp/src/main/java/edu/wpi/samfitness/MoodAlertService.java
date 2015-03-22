@@ -1,6 +1,6 @@
 /**
  * MainFragment.java
- * Wellness-App-MQP
+ * Sam Fitness
  *
  * @version 1.0.0
  *
@@ -17,7 +17,7 @@
  * PARTICULAR PURPOSE.
  */
 
-package edu.wpi.wellnessapp;
+package edu.wpi.samfitness;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -32,6 +32,8 @@ import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import edu.wpi.wellnessapp.R;
 
 
 public class MoodAlertService extends Service {
@@ -69,7 +71,7 @@ public class MoodAlertService extends Service {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if(firstRun) {
+                if (firstRun) {
                     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
                             .setSmallIcon(R.drawable.mood_circle)
                             .setContentTitle("Mood Service")
@@ -91,8 +93,7 @@ public class MoodAlertService extends Service {
                     notification.flags = Notification.FLAG_AUTO_CANCEL;
 
                     notificationManager.notify(1, notification);
-                }
-                else {
+                } else {
                     firstRun = true;
                 }
             }

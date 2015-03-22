@@ -1,6 +1,6 @@
 /**
  * Utils.java
- * Wellness-App-MQP
+ * Sam Fitness
  *
  * @version 1.0.0
  *
@@ -17,7 +17,7 @@
  * PARTICULAR PURPOSE.
  */
 
-package edu.wpi.wellnessapp;
+package edu.wpi.samfitness;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import edu.wpi.wellnessapp.R;
 
 public class Utils {
 
