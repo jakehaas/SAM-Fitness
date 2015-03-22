@@ -1,6 +1,6 @@
 /**
  * SleepFragment.java
- * Wellness-App-MQP
+ * Sam Fitness
  *
  * @version 1.0.0
  *
@@ -17,7 +17,7 @@
  * PARTICULAR PURPOSE.
  */
 
-package edu.wpi.wellnessapp;
+package edu.wpi.samfitness;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -45,6 +45,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+
+import edu.wpi.wellnessapp.R;
 
 public class SleepFragment extends Fragment {
     // UI Elements
@@ -109,18 +111,18 @@ public class SleepFragment extends Fragment {
 
                 String maxAmplitudeIn = extras.getString("maxAmplitude");
                 String lightIntensityIn = extras.getString("lightIntensity");
-  //              String hourCheckIn = extras.getString("sleepHourCheck");
+                //              String hourCheckIn = extras.getString("sleepHourCheck");
 
                 audioAmplitude = Integer.parseInt(maxAmplitudeIn);
                 lightIntensity = Float.parseFloat(lightIntensityIn);
 //                hourCheck = Boolean.parseBoolean(hourCheckIn);
 
- //               if(hourCheck){
-                    checkSleepStatus();
-   //             }
-     //           else{
-       //             stopSleepTracking();
-        //        }
+                //               if(hourCheck){
+                checkSleepStatus();
+                //             }
+                //           else{
+                //             stopSleepTracking();
+                //        }
             }
         }
     };
@@ -128,7 +130,7 @@ public class SleepFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sleepDataSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
+        sleepDataSeries = new LineGraphSeries<DataPoint>(new DataPoint[]{
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
                 new DataPoint(2, 3),
@@ -141,8 +143,8 @@ public class SleepFragment extends Fragment {
      * onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
      * Creates the sleep fragment tab
      *
-     * @param inflater LayoutInflater
-     * @param container ViewGroup
+     * @param inflater           LayoutInflater
+     * @param container          ViewGroup
      * @param savedInstanceState previous state
      * @return view
      */
@@ -208,11 +210,11 @@ public class SleepFragment extends Fragment {
                 } else {
                     Utils.displayDialog(getActivity(), "Today's Sleep Stats",
                             "Last Time Fell Asleep: " + fallAsleepTime
-                                + "\nLast Time Woke Up: " + wakeUpTime
-                                + "\nTotal Time Asleep: " + Integer.toString(durationHours) + ":" + Integer.toString(durationMins) + ":" + Integer.toString(durationSec)
-                                + "\nNumber of Wake Ups: " + Integer.toString(numWakeups)
-                                + "\nCalibrated Audio Level: " + Integer.toString(calibratedAmplitude)
-                                + "\nCalibrated Light Level: " + Float.toString(calibratedLight),
+                                    + "\nLast Time Woke Up: " + wakeUpTime
+                                    + "\nTotal Time Asleep: " + Integer.toString(durationHours) + ":" + Integer.toString(durationMins) + ":" + Integer.toString(durationSec)
+                                    + "\nNumber of Wake Ups: " + Integer.toString(numWakeups)
+                                    + "\nCalibrated Audio Level: " + Integer.toString(calibratedAmplitude)
+                                    + "\nCalibrated Light Level: " + Float.toString(calibratedLight),
                             null, "OK", Utils.emptyRunnable(), null);
                 }
             }
@@ -304,7 +306,7 @@ public class SleepFragment extends Fragment {
     /**
      * calibrateSensors()
      * Calibrates the light/sound levels by getting avgs (get values every 1sec for 10sec period) and
-     *   adding a preset margin to allow for movement/daybreak
+     * adding a preset margin to allow for movement/daybreak
      */
     private void calibrateSensors() {
 
@@ -352,15 +354,15 @@ public class SleepFragment extends Fragment {
     /**
      * checkSleepStatus()
      * Checks time and light/sound levels to see if the user falls within all sleep thresholds,
-     *   sets isAsleep equal to true or false and sets fallAsleepTime and wakeUpTime
+     * sets isAsleep equal to true or false and sets fallAsleepTime and wakeUpTime
      */
     private void checkSleepStatus() {
 
         //Time check first
-        if(!SleepHourCheck()){
+        if (!SleepHourCheck()) {
             Log.d("StopSleepTracking:", "Outside hour range.");
             stopSleepTracking();
-        }else {
+        } else {
             // Check all conditions to see if user fell asleep
             if (!isAsleep && SleepHourCheck() && SleepLightCheck() && SleepAudioCheck()) {
                 Log.d("SleepMonitor", "Fell Asleep:" + fallAsleepTime);
@@ -466,15 +468,15 @@ public class SleepFragment extends Fragment {
         int hour = c.get(Calendar.HOUR);
         String amPm = getAmPm();
 
-        if(hour == 0){
+        if (hour == 0) {
             hour = 12;
         }
 
-        if(hour == 12 && amPm.equals("PM")){
+        if (hour == 12 && amPm.equals("PM")) {
             return false;
         }
 
-        if(hour == 12 && amPm.equals("AM")){
+        if (hour == 12 && amPm.equals("AM")) {
             return true;
         }
 
@@ -517,7 +519,8 @@ public class SleepFragment extends Fragment {
     /**
      * getDuration()
      * Calculates the duration of time slept based on the time the user fell asleep, woke up, and previous
-     *   duration during the night
+     * duration during the night
+     *
      * @return duration of sleep for a night
      */
     private String getDuration() {
@@ -570,8 +573,8 @@ public class SleepFragment extends Fragment {
      * Adds time to total duration for a night (accounts for wakeups during the night)
      *
      * @param newHours number of hours to add to duration
-     * @param newMins number of minutes to add to duration
-     * @param newSecs number of seconds to add to duration
+     * @param newMins  number of minutes to add to duration
+     * @param newSecs  number of seconds to add to duration
      */
     private void getTotalDuration(int newHours, int newMins, int newSecs) {
         Log.d("AddToDuration", "Added " + Integer.toString(newHours) + ":" + Integer.toString(newMins) + ":" + Integer.toString(newSecs) + "to"
@@ -597,7 +600,7 @@ public class SleepFragment extends Fragment {
     /**
      * getEfficiency()
      * Gets the overall efficiency of the current sleep session based on the amount of time
-     *   slept and the number of wakeups
+     * slept and the number of wakeups
      *
      * @return efficiency on scale of 0-100
      */
@@ -622,7 +625,7 @@ public class SleepFragment extends Fragment {
         return efficiency;
     }
 
-    private double getDurationForGraph(){
+    private double getDurationForGraph() {
         double totalDuration;
 
         totalDuration = durationMins / 60.0;

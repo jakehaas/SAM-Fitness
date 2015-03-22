@@ -1,6 +1,6 @@
 /**
- * MoodTic.java
- * Wellness-App-MQP
+ * HoursSlept.java
+ * WSam Fitness
  *
  * @version 1.0.0
  *
@@ -17,24 +17,25 @@
  * PARTICULAR PURPOSE.
  */
 
-package edu.wpi.wellnessapp;
+package edu.wpi.samfitness;
 
-public class MoodTic {
+public class HoursSlept {
     private int id;
     String date;
-    float mood;
+    float hours;
 
-    public MoodTic() {}
+    public HoursSlept() {
+    }
 
-    public MoodTic(String date, float mood) {
+    public HoursSlept(String date, float hours) {
         super();
         this.date = date;
-        this.mood = mood;
+        this.hours = hours;
     }
 
     @Override
     public String toString() {
-        return "Mood [id=" + id + ", date=" + date + ", mood=" + mood + "]";
+        return "HoursSlept [id=" + id + ", date=" + date + ", hours=" + hours + "]";
     }
 
     public int getId() {
@@ -53,11 +54,11 @@ public class MoodTic {
         this.date = date;
     }
 
-    public float getMood() {
-        return mood;
+    public float getHours() {
+        return hours;
     }
 
-    public void setMood(float mood) {
-        this.mood = mood;
+    public void setHours(float hours) {
+        this.hours = hours;
     }
 }

@@ -1,6 +1,6 @@
 /**
  * DatabaseHandler.java
- * Wellness-App-MQP
+ * Sam Fitness
  *
  * @version 1.0.0
  *
@@ -17,7 +17,7 @@
  * PARTICULAR PURPOSE.
  */
 
-package edu.wpi.wellnessapp;
+package edu.wpi.samfitness;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -25,8 +25,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import java.util.Calendar;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "SAMDB";
@@ -59,7 +57,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_MOOD_TABLE);
@@ -77,38 +74,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-
     public void addMood(MoodTic moodTic) {
         Log.d("Saving Mood to DB...", moodTic.toString());
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // 2. create ContentValues to add key "column"/value
         ContentValues values = new ContentValues();
-        values.put("date", moodTic.getDate()); // get title
-        values.put("mood", moodTic.getMood()); // get author
+        values.put("date", moodTic.getDate());
+        values.put("mood", moodTic.getMood());
 
-        // 3. insert
-        db.insert(TABLE_MOOD, // table
-                null, // nullColumnHack
-                values); // key/value -> keys = column names/ values = column
-        // values
+        db.insert(TABLE_MOOD, null, values);
 
-        // 4. close
         db.close();
     }
 
     public float getTodaysMoodAvg(int date) {
-
-        // 1. get reference to readable DB
         SQLiteDatabase db = this.getReadableDatabase();
-
-//        Calendar c = Calendar.getInstance();
-//        int date = c.get(Calendar.DATE);
-
         String selArgs = " date=" + String.valueOf(date);
 
-        // 2. build query
         Cursor cursor = db.query(TABLE_MOOD, // a. table
                 MOOD_COLUMNS, // b. column names
                 selArgs, // c. selections
@@ -118,7 +101,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 null, // g. order by
                 null); // h. limit
 
-        // 3. if we got results loop through them
         if (cursor != null) {
             cursor.moveToFirst();
             int rowCount = 0;
@@ -133,12 +115,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             float todaysAvg = (moodTotal / rowCount);
 
             if (rowCount == 0) {
+                Log.d("DBHandler", "Getting " + date + "'s mood avg from DB... NO DATA FOUND");
                 return 0.00F;
             } else {
                 Log.d("DBHandler", "Getting " + date + "'s mood avg from DB... " + todaysAvg);
                 return todaysAvg;
             }
         } else {
+            Log.d("DBHandler", "Getting " + date + "'s mood avg from DB... DATABASE ERROR");
             return 0.00F;
         }
     }
@@ -148,33 +132,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // 2. create ContentValues to add key "column"/value
         ContentValues values = new ContentValues();
-        values.put("date", hoursSlept.getDate()); // get title
-        values.put("hours", hoursSlept.getHours()); // get author
+        values.put("date", hoursSlept.getDate());
+        values.put("hours", hoursSlept.getHours());
 
-        // 3. insert
-        db.insert(TABLE_HOURSSLEPT, // table
-                null, // nullColumnHack
-                values); // key/value -> keys = column names/ values = column
-        // values
+        db.insert(TABLE_HOURSSLEPT, null, values);
 
-        // 4. close
         db.close();
     }
 
     public float getTodaysSleepTotal(int date) {
-
-        Log.d("DatabaseHandler", "Getting todays sleep total from DB...");
-        // 1. get reference to readable DB
         SQLiteDatabase db = this.getReadableDatabase();
-
-//        Calendar c = Calendar.getInstance();
-//        int date = c.get(Calendar.DATE);
 
         String selArgs = " date=" + String.valueOf(date);
 
-        // 2. build query
         Cursor cursor = db.query(TABLE_HOURSSLEPT, // a. table
                 HOURSSLEPT_COLUMNS, // b. column names
                 selArgs, // c. selections
@@ -184,7 +155,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 null, // g. order by
                 null); // h. limit
 
-        // 3. if we got results loop through them
         if (cursor != null) {
             cursor.moveToFirst();
             int rowCount = 0;
@@ -197,11 +167,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             cursor.close();
 
             if (rowCount == 0) {
+                Log.d("DBHandler", "Getting " + date + "'s sleep hours from DB... NO DATA FOUND");
                 return 0.00F;
             } else {
+                Log.d("DBHandler", "Getting " + date + "'s sleep hours from DB... " + sleepTotal);
                 return sleepTotal;
             }
         } else {
+            Log.d("DBHandler", "Getting " + date + "'s sleep hours from DB... DATABASE ERROR");
             return 0.00F;
         }
     }

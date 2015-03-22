@@ -1,6 +1,6 @@
 /**
  * SleepService.java
- * Wellness-App-MQP
+ * Sam Fitness
  *
  * @version 1.0.0
  *
@@ -17,7 +17,7 @@
  * PARTICULAR PURPOSE.
  */
 
-package edu.wpi.wellnessapp;
+package edu.wpi.samfitness;
 
 import android.app.Service;
 import android.content.Intent;
@@ -31,7 +31,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -141,6 +140,6 @@ public class SleepService extends Service {
             }
         }, 0, SAMPLE_RATE);
     }
-    
+
 }
 

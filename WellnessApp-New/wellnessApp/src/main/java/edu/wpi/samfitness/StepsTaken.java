@@ -1,6 +1,6 @@
 /**
- * HoursSlept.java
- * Wellness-App-MQP
+ * StepsTaken.java
+ * Sam Fitness
  *
  * @version 1.0.0
  *
@@ -17,32 +17,27 @@
  * PARTICULAR PURPOSE.
  */
 
-package edu.wpi.wellnessapp;
+package edu.wpi.samfitness;
 
-public class HoursSlept {
+public class StepsTaken {
     private int id;
     String date;
-    float hours;
+    int steps;
 
-    public HoursSlept() {}
+    public StepsTaken() {
+    }
 
-    public HoursSlept(String date, float hours) {
+    public StepsTaken(String date, int steps) {
         super();
         this.date = date;
-        this.hours = hours;
+        this.steps = steps;
     }
+
+    // getters & setters
 
     @Override
     public String toString() {
-        return "HoursSlept [id=" + id + ", date=" + date + ", hours=" + hours + "]";
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        return "StepsTaken [id=" + id + ", date=" + date + ", steps=" + steps + "]";
     }
 
     public String getDate() {
@@ -53,11 +48,20 @@ public class HoursSlept {
         this.date = date;
     }
 
-    public float getHours() {
-        return hours;
+    public int getSteps() {
+        return steps;
     }
 
-    public void setHours(float hours) {
-        this.hours = hours;
+    public void setSteps(int steps) {
+        this.steps = steps;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    // Will be used by the ArrayAdapter in the ListView
 }

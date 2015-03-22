@@ -1,6 +1,6 @@
 /**
  * StepsFragment.java
- * Wellness-App-MQP
+ * Sam Fitness
  *
  * @version 1.0.0
  *
@@ -17,7 +17,7 @@
  * PARTICULAR PURPOSE.
  */
 
-package edu.wpi.wellnessapp;
+package edu.wpi.samfitness;
 
 import android.content.Context;
 import android.content.Intent;
@@ -73,6 +73,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import edu.wpi.wellnessapp.R;
+
 public class StepsFragment extends Fragment {
 
     private SensorManager sensorManager;
@@ -86,11 +88,10 @@ public class StepsFragment extends Fragment {
 
 
     /**
-     *  Track whether an authorization activity is stacking over the current activity, i.e. when
-     *  a known auth error is being resolved, such as showing the account chooser or presenting a
-     *  consent dialog. This avoids common duplications as might happen on screen rotations, etc.
+     * Track whether an authorization activity is stacking over the current activity, i.e. when
+     * a known auth error is being resolved, such as showing the account chooser or presenting a
+     * consent dialog. This avoids common duplications as might happen on screen rotations, etc.
      */
-
 
 
     private static final String AUTH_PENDING = "auth_state_pending";
@@ -175,9 +176,9 @@ public class StepsFragment extends Fragment {
 
         graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
 
-       // graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
-       // graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
-       // graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
+        // graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+        // graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+        // graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
 
         graphView.getGridLabelRenderer().setTextSize(20);
         //graphView.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
@@ -199,26 +200,21 @@ public class StepsFragment extends Fragment {
 
         Date now = new Date();
         //graphView.getViewport().setXAxisBoundsManual(true);
-       // graphView.getViewport().setMinX(now.getTime() - 5*24*60*60*1000);
-       // graphView.getViewport().setMaxX(now.getTime());
+        // graphView.getViewport().setMinX(now.getTime() - 5*24*60*60*1000);
+        // graphView.getViewport().setMaxX(now.getTime());
 
 
         return view;
     }
 
 
-
-
-
-
-
     /**
-     *  Build a {@link GoogleApiClient} that will authenticate the user and allow the application
-     *  to connect to Fitness APIs. The scopes included should match the scopes your app needs
-     *  (see documentation for details). Authentication will occasionally fail intentionally,
-     *  and in those cases, there will be a known resolution, which the OnConnectionFailedListener()
-     *  can address. Examples of this include the user never having signed in before, or having
-     *  multiple accounts on the device and needing to specify which account to use, etc.
+     * Build a {@link GoogleApiClient} that will authenticate the user and allow the application
+     * to connect to Fitness APIs. The scopes included should match the scopes your app needs
+     * (see documentation for details). Authentication will occasionally fail intentionally,
+     * and in those cases, there will be a known resolution, which the OnConnectionFailedListener()
+     * can address. Examples of this include the user never having signed in before, or having
+     * multiple accounts on the device and needing to specify which account to use, etc.
      */
     private void buildFitnessClient() {
         // Create the Google API Client
@@ -299,8 +295,8 @@ public class StepsFragment extends Fragment {
      * Find available data sources and attempt to register on a specific {@link DataType}.
      * If the application cares about a data type but doesn't care about the source of the data,
      * this can be skipped entirely, instead calling
-     *     {@link com.google.android.gms.fitness.SensorsApi
-     *     #register(GoogleApiClient, SensorRequest, DataSourceListener)},
+     * {@link com.google.android.gms.fitness.SensorsApi
+     * #register(GoogleApiClient, SensorRequest, DataSourceListener)},
      * where the {@link SensorRequest} contains the desired data type.
      */
     private void findFitnessDataSources() {
@@ -394,15 +390,15 @@ public class StepsFragment extends Fragment {
                     Log.d("I'm a huge", "bitch");
                     graphView.getGridLabelRenderer().setNumHorizontalLabels(4);
                     graphView.getViewport().setXAxisBoundsManual(true);
-                    graphView.getViewport().setMinX(now.getTime() - 4*24*60*60*1000);
+                    graphView.getViewport().setMinX(now.getTime() - 4 * 24 * 60 * 60 * 1000);
                     graphView.getViewport().setMaxX(now.getTime());
                     exampleSeries.setColor(Color.WHITE);
                     exampleSeries.setThickness(0);
 
-                    exampleSeries.resetData(new DataPoint[] {
-                            new DataPoint((now.getTime() - 3*24*60*60*1000), 1),
-                            new DataPoint((now.getTime() - 2*24*60*60*1000), 10),
-                            new DataPoint((now.getTime() - 1*24*60*60*1000), 1),
+                    exampleSeries.resetData(new DataPoint[]{
+                            new DataPoint((now.getTime() - 3 * 24 * 60 * 60 * 1000), 1),
+                            new DataPoint((now.getTime() - 2 * 24 * 60 * 60 * 1000), 10),
+                            new DataPoint((now.getTime() - 1 * 24 * 60 * 60 * 1000), 1),
                             new DataPoint(now.getTime(), 10)});
 
                 }
@@ -415,15 +411,15 @@ public class StepsFragment extends Fragment {
 
                     graphView.getGridLabelRenderer().setNumHorizontalLabels(4);
                     graphView.getViewport().setXAxisBoundsManual(true);
-                    graphView.getViewport().setMinX(now.getTime() - 4*24*60*60*1000);
+                    graphView.getViewport().setMinX(now.getTime() - 4 * 24 * 60 * 60 * 1000);
                     graphView.getViewport().setMaxX(now.getTime());
                     //exampleSeries.setColor(Color.WHITE);
                     //exampleSeries.setThickness(0);
 
-                    exampleSeries.resetData(new DataPoint[] {
-                            new DataPoint((now.getTime() - 3*24*60*60*1000), 0),
-                            new DataPoint((now.getTime() - 2*24*60*60*1000), 0),
-                            new DataPoint((now.getTime() - 1*24*60*60*1000), 0),
+                    exampleSeries.resetData(new DataPoint[]{
+                            new DataPoint((now.getTime() - 3 * 24 * 60 * 60 * 1000), 0),
+                            new DataPoint((now.getTime() - 2 * 24 * 60 * 60 * 1000), 0),
+                            new DataPoint((now.getTime() - 1 * 24 * 60 * 60 * 1000), 0),
                             new DataPoint(now.getTime(), Utils.todaysSteps)});
                 }
 
@@ -445,7 +441,7 @@ public class StepsFragment extends Fragment {
     }
 
     private void checkStepAchievements() {
-        int stepCount = (int)Utils.todaysSteps;
+        int stepCount = (int) Utils.todaysSteps;
 
         if (stepCount >= 100) {
             Utils.unlockAchievement(0, getActivity());
@@ -483,12 +479,12 @@ public class StepsFragment extends Fragment {
 
 
         DataPoint[] values = new DataPoint[count];
-        for (int i=0; i<count; i++) {
+        for (int i = 0; i < count; i++) {
             cal.add(Calendar.DAY_OF_YEAR, i);
             long startTime = cal.getTimeInMillis();
             double x = startTime;
-            double f = mRand.nextDouble()*0.15+0.3;
-            double y = Math.sin(i*f+2) + mRand.nextDouble()*0.3;
+            double f = mRand.nextDouble() * 0.15 + 0.3;
+            double y = Math.sin(i * f + 2) + mRand.nextDouble() * 0.3;
             DataPoint v = new DataPoint(x, y);
             values[i] = v;
         }
@@ -565,21 +561,17 @@ public class StepsFragment extends Fragment {
         outState.putBoolean(AUTH_PENDING, authInProgress);
 
 
-
-
     }
 
 
-
-
     /**
-     *  Create a {@link DataSet} to insert data into the History API, and
-     *  then create and execute a {@link DataReadRequest} to verify the insertion succeeded.
-     *  By using an {@link AsyncTask}, we can schedule synchronous calls, so that we can query for
-     *  data after confirming that our insert was successful. Using asynchronous calls and callbacks
-     *  would not guarantee that the insertion had concluded before the read request was made.
-     *  An example of an asynchronous call using a callback can be found in the example
-     *  on deleting data below.
+     * Create a {@link DataSet} to insert data into the History API, and
+     * then create and execute a {@link DataReadRequest} to verify the insertion succeeded.
+     * By using an {@link AsyncTask}, we can schedule synchronous calls, so that we can query for
+     * data after confirming that our insert was successful. Using asynchronous calls and callbacks
+     * would not guarantee that the insertion had concluded before the read request was made.
+     * An example of an asynchronous call using a callback can be found in the example
+     * on deleting data below.
      */
     private class InsertAndVerifyDataTask extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... params) {
@@ -725,12 +717,11 @@ public class StepsFragment extends Fragment {
                 }
             }
             updateTextViewWithStepCounter(values);
-        }
-        else if (dataReadResult.getDataSets().size() > 0) {
+        } else if (dataReadResult.getDataSets().size() > 0) {
             Log.i(TAG, "Number of returned DataSets is: "
                     + dataReadResult.getDataSets().size());
             for (DataSet dataSet : dataReadResult.getDataSets()) {
-                dumpDataSet(dataSet,values);
+                dumpDataSet(dataSet, values);
 
             }
             updateTextViewWithStepCounter(values);
@@ -739,7 +730,7 @@ public class StepsFragment extends Fragment {
     }
 
     // [START parse_dataset]
-    private void dumpDataSet(DataSet dataSet,  ArrayList<DataPoint> values) {
+    private void dumpDataSet(DataSet dataSet, ArrayList<DataPoint> values) {
         //Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
 
 
@@ -753,7 +744,7 @@ public class StepsFragment extends Fragment {
             double time;
             time = dp.getEndTime(TimeUnit.MILLISECONDS);
 
-            for(Field field : dp.getDataType().getFields()) {
+            for (Field field : dp.getDataType().getFields()) {
                 Log.i(TAG, "\tField: " + field.getName() +
                         " Value: " + dp.getValue(field));
                 if (field.getName().equals("steps")) {
@@ -917,20 +908,20 @@ public class StepsFragment extends Fragment {
                 fullDate.append(hours);
                 fullDate.append("-");
                 fullDate.append(tmpMinutes);
-               // db.addStepsTaken(new StepsTaken(fullDate.toString(), numSteps));
+                // db.addStepsTaken(new StepsTaken(fullDate.toString(), numSteps));
                 //StepsTaken stepsTakenObject = db.getStepsTaken(idCounter);
 
                 idCounter++;
 
-               // exampleSeries.appendData(new DataPoint(now, stepsTakenObject.steps), false, 5);
+                // exampleSeries.appendData(new DataPoint(now, stepsTakenObject.steps), false, 5);
                 numSteps = 0;
 
                 tmpMinutes = minutes;
             }
 
 
-            if ( Math.sqrt( ((currentX * currentX) + (currentY * currentY) + (currentZ * currentZ)) -
-                    ((previousX * previousX) + (previousY * previousY) + (previousZ * previousZ)) ) >  threshold) {
+            if (Math.sqrt(((currentX * currentX) + (currentY * currentY) + (currentZ * currentZ)) -
+                    ((previousX * previousX) + (previousY * previousY) + (previousZ * previousZ))) > threshold) {
 
 
                 numSteps++;
@@ -943,8 +934,6 @@ public class StepsFragment extends Fragment {
             previousY = y;
             previousZ = z;
         }
-
-
 
 
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
