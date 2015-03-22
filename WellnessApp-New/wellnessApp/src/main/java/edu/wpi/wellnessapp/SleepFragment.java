@@ -43,6 +43,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class SleepFragment extends Fragment {
@@ -380,8 +381,11 @@ public class SleepFragment extends Fragment {
 
                 numWakeups++;
 
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTime(new Date());
+
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
-                int date = Integer.valueOf(dateFormat.format(new Date()));
+                int date = Integer.valueOf(dateFormat.format(calendar.getTime()));
 
                 DatabaseHandler db = new DatabaseHandler(getActivity());
                 db.addHoursSlept(new HoursSlept(String.valueOf(date), Float.valueOf(getDuration())));

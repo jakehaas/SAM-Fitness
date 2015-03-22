@@ -43,6 +43,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class MoodFragment extends Fragment {
@@ -130,10 +131,15 @@ public class MoodFragment extends Fragment {
 
         graphView.addSeries(moodDataSeries);
 
-        graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
-        graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+        graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.BLACK);
+        graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.BLACK);
         graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
         graphView.getGridLabelRenderer().setTextSize(20);
+
+        Date now = new Date();
+        graphView.getViewport().setXAxisBoundsManual(true);
+        graphView.getViewport().setMinX(now.getTime() - 6*24*60*60*1000);
+        graphView.getViewport().setMaxX(now.getTime());
 
         graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
@@ -148,6 +154,8 @@ public class MoodFragment extends Fragment {
             }
         });
 
+        updateGraphData();
+
         return view;
     }
 
@@ -156,8 +164,11 @@ public class MoodFragment extends Fragment {
             public void run() {
                 Toast.makeText(getActivity(), "Saved " + ratingBar.getRating(), Toast.LENGTH_LONG).show();
 
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTime(new Date());
+
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
-                int date = Integer.valueOf(dateFormat.format(new Date()));
+                int date = Integer.valueOf(dateFormat.format(calendar.getTime()));
 
                 DatabaseHandler db = new DatabaseHandler(getActivity());
                 db.addMood(new MoodTic(String.valueOf(date), ratingBar.getRating()));
@@ -171,18 +182,52 @@ public class MoodFragment extends Fragment {
     private void updateGraphData() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
 
-        Log.d("YOLO", dateFormat.format(new Date()));
+        DatabaseHandler db = new DatabaseHandler(getActivity());
 
-        moodDataSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
-        });
+        Date now = new Date();
 
-        graphView.removeAllSeries();
-        graphView.addSeries(moodDataSeries);
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(now);
+
+        Log.d("YOLO", String.valueOf(db.getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())))));
+
+        float day1 = db.getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        day1 = Utils.map(day1, 0.0F, 5.0F, 0.0F, 100.0F);
+        calendar.add(Calendar.HOUR, -24);
+
+        float day2 = db.getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        day2 = Utils.map(day2, 0.0F, 5.0F, 0.0F, 100.0F);
+        calendar.add(Calendar.HOUR, -24);
+
+        float day3 = db.getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        day3 = Utils.map(day3, 0.0F, 5.0F, 0.0F, 100.0F);
+        calendar.add(Calendar.HOUR, -24);
+
+        float day4 = db.getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        day4 = Utils.map(day4, 0.0F, 5.0F, 0.0F, 100.0F);
+        calendar.add(Calendar.HOUR, -24);
+
+        float day5 = db.getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        day5 = Utils.map(day5, 0.0F, 5.0F, 0.0F, 100.0F);
+        calendar.add(Calendar.HOUR, -24);
+
+        float day6 = db.getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        day6 = Utils.map(day6, 0.0F, 5.0F, 0.0F, 100.0F);
+        calendar.add(Calendar.HOUR, -24);
+
+        float day7 = db.getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        day7 = Utils.map(day7, 0.0F, 5.0F, 0.0F, 100.0F);
+
+
+        moodDataSeries.resetData(new DataPoint[] {
+                new DataPoint((now.getTime() - 6*24*60*60*1000), day7),
+                new DataPoint((now.getTime() - 5*24*60*60*1000), day6),
+                new DataPoint((now.getTime() - 4*24*60*60*1000), day5),
+                new DataPoint((now.getTime() - 3*24*60*60*1000), day4),
+                new DataPoint((now.getTime() - 2*24*60*60*1000), day3),
+                new DataPoint((now.getTime() - 1*24*60*60*1000), day2),
+                new DataPoint(now.getTime(), day1)});
+
     }
 
     private void startMoodTracking() {
