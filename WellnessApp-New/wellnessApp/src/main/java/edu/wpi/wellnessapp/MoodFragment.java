@@ -63,16 +63,7 @@ public class MoodFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         moodDataSeries = new LineGraphSeries<DataPoint>();
-
-        /*moodDataSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
-        });*/
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -138,8 +129,12 @@ public class MoodFragment extends Fragment {
 
         Date now = new Date();
         graphView.getViewport().setXAxisBoundsManual(true);
-        graphView.getViewport().setMinX(now.getTime() - 6*24*60*60*1000);
+        graphView.getViewport().setMinX(now.getTime() - 6 * 24 * 60 * 60 * 1000);
         graphView.getViewport().setMaxX(now.getTime());
+
+        graphView.getViewport().setYAxisBoundsManual(true);
+        graphView.getViewport().setMinY(0);
+        graphView.getViewport().setMaxY(100);
 
         graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
@@ -189,8 +184,6 @@ public class MoodFragment extends Fragment {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(now);
 
-        Log.d("YOLO", String.valueOf(db.getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())))));
-
         float day1 = db.getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
         day1 = Utils.map(day1, 0.0F, 5.0F, 0.0F, 100.0F);
         calendar.add(Calendar.HOUR, -24);
@@ -218,20 +211,38 @@ public class MoodFragment extends Fragment {
         float day7 = db.getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
         day7 = Utils.map(day7, 0.0F, 5.0F, 0.0F, 100.0F);
 
+        // Check to see if there is no data yet
+        // For the jjoe64 graphview workaround
+        if (day1 == 0.0F && day2 == 0.0F && day3 == 0.0F && day4 == 0.0F && day5 == 0.0F && day6 == 0.0F && day7 == 0.0F) {
+            moodDataSeries.resetData(new DataPoint[]{
+                    new DataPoint((now.getTime() - 6 * 24 * 60 * 60 * 1000), 1),
+                    new DataPoint((now.getTime() - 5 * 24 * 60 * 60 * 1000), 2),
+                    new DataPoint((now.getTime() - 4 * 24 * 60 * 60 * 1000), 1),
+                    new DataPoint((now.getTime() - 3 * 24 * 60 * 60 * 1000), 2),
+                    new DataPoint((now.getTime() - 2 * 24 * 60 * 60 * 1000), 1),
+                    new DataPoint((now.getTime() - 1 * 24 * 60 * 60 * 1000), 2),
+                    new DataPoint(now.getTime(), 1)});
 
-        moodDataSeries.resetData(new DataPoint[] {
-                new DataPoint((now.getTime() - 6*24*60*60*1000), day7),
-                new DataPoint((now.getTime() - 5*24*60*60*1000), day6),
-                new DataPoint((now.getTime() - 4*24*60*60*1000), day5),
-                new DataPoint((now.getTime() - 3*24*60*60*1000), day4),
-                new DataPoint((now.getTime() - 2*24*60*60*1000), day3),
-                new DataPoint((now.getTime() - 1*24*60*60*1000), day2),
-                new DataPoint(now.getTime(), day1)});
+            moodDataSeries.setThickness(0);
+            moodDataSeries.setColor(Color.WHITE);
+        } else {
+            moodDataSeries.resetData(new DataPoint[]{
+                    new DataPoint((now.getTime() - 6 * 24 * 60 * 60 * 1000), day7),
+                    new DataPoint((now.getTime() - 5 * 24 * 60 * 60 * 1000), day6),
+                    new DataPoint((now.getTime() - 4 * 24 * 60 * 60 * 1000), day5),
+                    new DataPoint((now.getTime() - 3 * 24 * 60 * 60 * 1000), day4),
+                    new DataPoint((now.getTime() - 2 * 24 * 60 * 60 * 1000), day3),
+                    new DataPoint((now.getTime() - 1 * 24 * 60 * 60 * 1000), day2),
+                    new DataPoint(now.getTime(), day1)});
+
+            moodDataSeries.setThickness(5);
+            moodDataSeries.setColor(Color.argb(255, 0, 255, 0));
+        }
 
     }
 
     private void startMoodTracking() {
-        Intent intent =  new Intent(getActivity(), MoodAlertService.class);
+        Intent intent = new Intent(getActivity(), MoodAlertService.class);
         getActivity().startService(intent);
         isTracking = true;
         setMoodButton.setEnabled(true);
