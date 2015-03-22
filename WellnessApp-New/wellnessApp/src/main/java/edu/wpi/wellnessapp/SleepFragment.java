@@ -383,7 +383,7 @@ public class SleepFragment extends Fragment {
 
                 DatabaseHandler db = new DatabaseHandler(getActivity());
                 db.addHoursSlept(new HoursSlept(String.valueOf(date), Float.valueOf(getDuration())));
-                Utils.todaysSleepHours = db.getTodaysSleepTotal();
+                Utils.todaysSleepHours = db.getTodaysSleepTotal(date);
             }
         }
     }

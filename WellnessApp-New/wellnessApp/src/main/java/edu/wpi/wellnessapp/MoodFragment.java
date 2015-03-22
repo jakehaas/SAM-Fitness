@@ -60,13 +60,16 @@ public class MoodFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        moodDataSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
+
+        moodDataSeries = new LineGraphSeries<DataPoint>();
+
+        /*moodDataSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
                 new DataPoint(2, 3),
                 new DataPoint(3, 2),
                 new DataPoint(4, 6)
-        });
+        });*/
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -160,6 +163,10 @@ public class MoodFragment extends Fragment {
                 ratingBar.setRating(0.0F);
             }
         };
+    }
+
+    private void updateGraphData() {
+
     }
 
     private void startMoodTracking() {

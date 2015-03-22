@@ -98,14 +98,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public float getTodaysMoodAvg() {
+    public float getTodaysMoodAvg(int date) {
 
         Log.d("DD", "Getting todays mood avg from DB...");
         // 1. get reference to readable DB
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Calendar c = Calendar.getInstance();
-        int date = c.get(Calendar.DATE);
+//        Calendar c = Calendar.getInstance();
+//        int date = c.get(Calendar.DATE);
 
         String selArgs = " date=" + String.valueOf(date);
 
@@ -163,14 +163,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public float getTodaysSleepTotal() {
+    public float getTodaysSleepTotal(int date) {
 
         Log.d("DatabaseHandler", "Getting todays sleep total from DB...");
         // 1. get reference to readable DB
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Calendar c = Calendar.getInstance();
-        int date = c.get(Calendar.DATE);
+//        Calendar c = Calendar.getInstance();
+//        int date = c.get(Calendar.DATE);
 
         String selArgs = " date=" + String.valueOf(date);
 

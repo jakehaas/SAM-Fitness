@@ -1,5 +1,5 @@
 /**
- * Mood.java
+ * MoodTic.java
  * Wellness-App-MQP
  *
  * @version 1.0.0
