@@ -64,7 +64,6 @@ public class SleepFragment extends Fragment {
     // Raw Sensor Data
     private int audioAmplitude;
     private float lightIntensity;
-    private boolean hourCheck;
 
     // Final Sleep Times
     private String fallAsleepTime = "";
@@ -85,7 +84,7 @@ public class SleepFragment extends Fragment {
     private float calibratedLight = 14;
     private int calibratedAmplitude = 200;
     private int calibratedSleepHour = 8;
-    private int calibratedWakeHour = 11;
+    private int calibratedWakeHour = 11; 
 
     // Calibration
     private final int CALIBRATE_TIME = 10;
@@ -111,18 +110,11 @@ public class SleepFragment extends Fragment {
 
                 String maxAmplitudeIn = extras.getString("maxAmplitude");
                 String lightIntensityIn = extras.getString("lightIntensity");
-                //              String hourCheckIn = extras.getString("sleepHourCheck");
 
                 audioAmplitude = Integer.parseInt(maxAmplitudeIn);
                 lightIntensity = Float.parseFloat(lightIntensityIn);
-//                hourCheck = Boolean.parseBoolean(hourCheckIn);
 
-                //               if(hourCheck){
                 checkSleepStatus();
-                //             }
-                //           else{
-                //             stopSleepTracking();
-                //        }
 
                 updateGraphData();
             }
@@ -456,7 +448,7 @@ public class SleepFragment extends Fragment {
                 int date = Integer.valueOf(dateFormat.format(calendar.getTime()));
 
                 DatabaseHandler db = new DatabaseHandler(getActivity());
-                db.addHoursSlept(new HoursSlept(String.valueOf(date), Float.valueOf(getDuration())));
+                db.addHoursSlept(new HoursSlept(String.valueOf(date), Float.valueOf(getDurationForGraph())));
                 Utils.todaysSleepHours = db.getTodaysSleepTotal(date);
             }
         }
@@ -691,12 +683,12 @@ public class SleepFragment extends Fragment {
         return efficiency;
     }
 
-    private double getDurationForGraph() {
-        double totalDuration;
+    private float getDurationForGraph() {
+        double totalDuration = 0;
 
         totalDuration = durationMins / 60.0;
         totalDuration += durationHours;
 
-        return totalDuration;
+        return (float)totalDuration;
     }
 }
