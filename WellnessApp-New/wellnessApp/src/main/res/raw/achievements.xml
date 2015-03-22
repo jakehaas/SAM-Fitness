@@ -40,74 +40,74 @@
 
     <achievement>
         <id>6</id>
-        <name>Happy Day!</name>
-        <description>Score 70+ for your daily mood score.</description>
+        <name>Good Week!</name>
+        <description>Score 70+ for your daily mood score for 1 week consecutively.</description>
     </achievement>
 
     <achievement>
         <id>7</id>
         <name>Happy Camper!</name>
-        <description>Score 70+ for your daily mood score for 1 week consecutively.</description>
+        <description>Score 75+ for your daily mood score for 1 week consecutively.</description>
     </achievement>
 
     <achievement>
         <id>8</id>
-        <name>Good Month!</name>
-        <description>Score 70+ for your daily mood score for 70% of the days in a month.</description>
+        <name>Great Week!</name>
+        <description>Score 80+ for your daily mood score for 1 week consecutively.</description>
     </achievement>
 
     <achievement>
         <id>9</id>
-        <name>Good Quarter!</name>
-        <description>Score 70+ for your daily mood score for 70% of the days in 3 months.</description>
+        <name>Walkin' on Sunshine!</name>
+        <description>Score 85+ for your daily mood score for 1 week consecutively.</description>
     </achievement>
 
     <achievement>
         <id>10</id>
-        <name>Happy Half-Birthday!</name>
-        <description>Score 70+ for your daily mood score for 70% of the days in 6 months.</description>
+        <name>Best Week Ever!</name>
+        <description>Score 90+ for your daily mood score for 1 week consecutively.</description>
     </achievement>
 
     <achievement>
         <id>11</id>
-        <name>Happy New Year!</name>
-        <description>Score 70+ for your daily mood score for 70% of the days in 1 year.</description>
+        <name>Cloud Nine!</name>
+        <description>Score 95+ for your daily mood score for 1 week consecutively.</description>
     </achievement>
 
     <achievement>
         <id>12</id>
         <name>Power Nap!</name>
-        <description>Sleep at least 8 hours in a 24 hour period.</description>
+        <description>Sleep at least once in a 24 hour period.</description>
     </achievement>
 
     <achievement>
         <id>13</id>
         <name>Good Night's Sleep!</name>
-        <description>Sleep 56 hours in 1 week.</description>
+        <description>Sleep for at least 8 hours in 1 day.</description>
     </achievement>
 
     <achievement>
         <id>14</id>
         <name>Enter Sandman!</name>
-        <description>Sleep 180 hours in 1 month.</description>
+        <description>Sleep for at least 56 hours in 1 week.</description>
     </achievement>
 
     <achievement>
         <id>15</id>
         <name>Sleeping Beauty!</name>
-        <description>Sleep 800 hours in 6 months.</description>
+        <description>Sleep 1000 hours.</description>
     </achievement>
 
     <achievement>
         <id>16</id>
         <name>Snorlax!</name>
-        <description>Sleep 2000 hours in 1 year.</description>
+        <description>Sleep 2500 hours.</description>
     </achievement>
 
     <achievement>
         <id>17</id>
         <name>Rip Van Winkle!</name>
-        <description>Sleep 3000 hours in 1 year.</description>
+        <description>Sleep 5000 hours.</description>
     </achievement>
 
 </achievements>

@@ -26,6 +26,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -283,7 +285,7 @@ public class Utils {
 
             sharedPreferencesEditor.commit();
 
-            displayDialog(activity, "Achievement Unlocked -- " + achievList.get(id).getName() + "!", achievList.get(id).getDescription(), null, "OK", emptyRunnable(), null);
+            displayDialog(activity, "Achievement Unlocked -- " + achievList.get(id).getName(), achievList.get(id).getDescription(), null, "OK", emptyRunnable(), null);
         }
     }
 
@@ -305,6 +307,35 @@ public class Utils {
         display.getSize(size);
 
         return size.y;
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return (activeNetworkInfo != null && activeNetworkInfo.isConnected());
+    }
+
+    public static void fakeData(Activity activity) {
+        DatabaseHandler db = new DatabaseHandler(activity);
+
+        db.addHoursSlept(new HoursSlept("3222015", 8.0F));
+        db.addHoursSlept(new HoursSlept("3212015", 6.0F));
+        db.addHoursSlept(new HoursSlept("3202015", 9.0F));
+        db.addHoursSlept(new HoursSlept("3192015", 2.0F));
+        db.addHoursSlept(new HoursSlept("3182015", 7.0F));
+        db.addHoursSlept(new HoursSlept("3172015", 8.0F));
+        db.addHoursSlept(new HoursSlept("3162015", 8.0F));
+
+        db.addMood(new MoodTic("3222015", 4.0F));
+        db.addMood(new MoodTic("3212015", 5.0F));
+        db.addMood(new MoodTic("3202015", 4.5F));
+        db.addMood(new MoodTic("3192015", 3.5F));
+        db.addMood(new MoodTic("3182015", 4.0F));
+        db.addMood(new MoodTic("3172015", 4.5F));
+        db.addMood(new MoodTic("3162015", 5.0F));
+
+        todaysSteps = 100000000;
     }
 
 }

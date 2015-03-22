@@ -26,6 +26,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
 public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "SAMDB";
     private static final int DATABASE_VERSION = 1;
@@ -178,5 +184,106 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             return 0.00F;
         }
     }
+
+    public float getWeeksSleepTotal() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+        Date now = new Date();
+
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(now);
+
+        float day1 = getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day2 = getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day3 = getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day4 = getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day5 = getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day6 = getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day7 = getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+
+        return (day1 + day2 + day3 + day4 + day5 + day6 + day7);
+    }
+
+    public float getWeeksMoodAvg() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+        Date now = new Date();
+
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(now);
+
+        float day1 = getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day2 = getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day3 = getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day4 = getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day5 = getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day6 = getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day7 = getTodaysMoodAvg(Integer.valueOf(dateFormat.format(calendar.getTime())));
+
+        float hours = ((day1 + day2 + day3 + day4 + day5 + day6 + day7) / 7);
+
+        Log.d("DBHandler", "Got past week's sleep hours from DB... " + hours);
+
+        return hours;
+    }
+
+    public float getAllTimeSleepTotal() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_HOURSSLEPT, // a. table
+                HOURSSLEPT_COLUMNS, // b. column names
+                null, // c. selections
+                null, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int rowCount = 0;
+            float sleepTotal = 0;
+            while (cursor.isAfterLast() == false) {
+                sleepTotal += Float.valueOf(cursor.getString(2));
+                rowCount++;
+                cursor.moveToNext();
+            }
+            cursor.close();
+
+            if (rowCount == 0) {
+                Log.d("DBHandler", "Getting total sleep hours from DB... NO DATA FOUND");
+                return 0.00F;
+            } else {
+                Log.d("DBHandler", "Getting total sleep hours from DB... " + sleepTotal);
+                return sleepTotal;
+            }
+        } else {
+            Log.d("DBHandler", "Getting total sleep hours from DB... DATABASE ERROR");
+            return 0.00F;
+        }
+    }
+
 
 }

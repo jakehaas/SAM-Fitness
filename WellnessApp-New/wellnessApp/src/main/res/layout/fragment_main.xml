@@ -26,24 +26,24 @@
             android:textColor="@android:color/black" />
 
         <TextView
-            android:id="@+id/sleepCircle"
+            android:id="@+id/activityCircle"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_alignLeft="@+id/mainCircle"
             android:layout_below="@+id/mainCircle"
-            android:background="@drawable/sleep_circle"
+            android:background="@drawable/activity_circle"
             android:gravity="center"
             android:text=""
             android:textColor="@android:color/black" />
 
         <TextView
-            android:id="@+id/activityCircle"
+            android:id="@+id/sleepCircle"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_below="@+id/mainCircle"
             android:layout_marginRight="15dp"
-            android:layout_toLeftOf="@+id/sleepCircle"
-            android:background="@drawable/activity_circle"
+            android:layout_toLeftOf="@+id/activityCircle"
+            android:background="@drawable/sleep_circle"
             android:gravity="center"
             android:text=""
             android:textColor="@android:color/black" />
@@ -54,7 +54,7 @@
             android:layout_height="100dp"
             android:layout_below="@+id/mainCircle"
             android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@+id/sleepCircle"
+            android:layout_toRightOf="@+id/activityCircle"
             android:background="@drawable/mood_circle"
             android:gravity="center"
             android:text=""
