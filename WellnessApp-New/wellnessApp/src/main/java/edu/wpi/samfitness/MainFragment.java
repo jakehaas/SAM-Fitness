@@ -140,7 +140,7 @@ public class MainFragment extends Fragment {
 
         animateAvatar();
 
-        Utils.fakeData(getActivity());
+        //Utils.fakeData(getActivity());
 
         return view;
     }
