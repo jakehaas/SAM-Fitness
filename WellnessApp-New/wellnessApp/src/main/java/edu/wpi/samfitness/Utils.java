@@ -320,12 +320,12 @@ public class Utils {
         DatabaseHandler db = new DatabaseHandler(activity);
 
         db.addHoursSlept(new HoursSlept("3222015", 8.0F));
-        db.addHoursSlept(new HoursSlept("3212015", 6.0F));
-        db.addHoursSlept(new HoursSlept("3202015", 9.0F));
-        db.addHoursSlept(new HoursSlept("3192015", 2.0F));
-        db.addHoursSlept(new HoursSlept("3182015", 7.0F));
-        db.addHoursSlept(new HoursSlept("3172015", 8.0F));
-        db.addHoursSlept(new HoursSlept("3162015", 8.0F));
+        db.addHoursSlept(new HoursSlept("3212015", 0.0F));
+        db.addHoursSlept(new HoursSlept("3202015", 0.0F));
+        db.addHoursSlept(new HoursSlept("3192015", 0.0F));
+        db.addHoursSlept(new HoursSlept("3182015", 0.0F));
+        db.addHoursSlept(new HoursSlept("3172015", 0.0F));
+        db.addHoursSlept(new HoursSlept("3162015", 0.0F));
 
         db.addMood(new MoodTic("3222015", 4.0F));
         db.addMood(new MoodTic("3212015", 5.0F));

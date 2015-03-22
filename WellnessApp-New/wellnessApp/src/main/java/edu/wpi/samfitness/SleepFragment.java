@@ -281,7 +281,20 @@ public class SleepFragment extends Fragment {
 
         // Check to see if there is no data yet
         // For the jjoe64 graphview workaround
-        if (day1 == 0.0F && day2 == 0.0F && day3 == 0.0F && day4 == 0.0F && day5 == 0.0F && day6 == 0.0F && day7 == 0.0F) {
+
+        if (day1 > 0.0F && day2 == 0.0F && day3 == 0.0F && day4 == 0.0F && day5 == 0.0F && day6 == 0.0F && day7 == 0.0F) {
+            sleepDataSeries.resetData(new DataPoint[]{
+                    new DataPoint((now.getTime() - 6 * 24 * 60 * 60 * 1000), 0),
+                    new DataPoint((now.getTime() - 5 * 24 * 60 * 60 * 1000), 0),
+                    new DataPoint((now.getTime() - 4 * 24 * 60 * 60 * 1000), 0),
+                    new DataPoint((now.getTime() - 3 * 24 * 60 * 60 * 1000), 0),
+                    new DataPoint((now.getTime() - 2 * 24 * 60 * 60 * 1000), 0),
+                    new DataPoint((now.getTime() - 1 * 24 * 60 * 60 * 1000), 0),
+                    new DataPoint(now.getTime(), day1)});
+
+            sleepDataSeries.setThickness(5);
+            sleepDataSeries.setColor(Color.argb(255, 0, 79, 255));
+        } else if (day1 == 0.0F && day2 == 0.0F && day3 == 0.0F && day4 == 0.0F && day5 == 0.0F && day6 == 0.0F && day7 == 0.0F) {
             sleepDataSeries.resetData(new DataPoint[]{
                     new DataPoint((now.getTime() - 6 * 24 * 60 * 60 * 1000), 1),
                     new DataPoint((now.getTime() - 5 * 24 * 60 * 60 * 1000), 2),
