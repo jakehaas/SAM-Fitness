@@ -118,7 +118,7 @@ public class StepsFragment extends Fragment {
 
 
     //  private List<GraphViewData> dataArray = new ArrayList<GraphViewData>();
-    LineGraphSeries<DataPoint> exampleSeries;
+    LineGraphSeries<DataPoint> stepDataSeries;
 
 
     private TextView textViewSteps;
@@ -126,7 +126,7 @@ public class StepsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        exampleSeries = new LineGraphSeries<DataPoint>();
+        stepDataSeries = new LineGraphSeries<DataPoint>();
 
         if (savedInstanceState != null) {
             authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
@@ -171,7 +171,7 @@ public class StepsFragment extends Fragment {
 
         //if (graphView.)
 
-        graphView.addSeries(exampleSeries); // data
+        graphView.addSeries(stepDataSeries); // data
 
 
         graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
@@ -198,11 +198,29 @@ public class StepsFragment extends Fragment {
             }
         });
 
-        Date now = new Date();
+//        Date now = new Date();
         //graphView.getViewport().setXAxisBoundsManual(true);
         // graphView.getViewport().setMinX(now.getTime() - 5*24*60*60*1000);
         // graphView.getViewport().setMaxX(now.getTime());
 
+        if (!Utils.isNetworkAvailable(getActivity())) {
+            Date now = new Date();
+            graphView.getGridLabelRenderer().setNumHorizontalLabels(4);
+            graphView.getViewport().setXAxisBoundsManual(true);
+            graphView.getViewport().setMinX(now.getTime() - 4 * 24 * 60 * 60 * 1000);
+            graphView.getViewport().setMaxX(now.getTime());
+            stepDataSeries.setColor(Color.WHITE);
+            stepDataSeries.setThickness(0);
+
+            stepDataSeries.resetData(new DataPoint[]{
+                    new DataPoint((now.getTime() - 3 * 24 * 60 * 60 * 1000), 1),
+                    new DataPoint((now.getTime() - 2 * 24 * 60 * 60 * 1000), 10),
+                    new DataPoint((now.getTime() - 1 * 24 * 60 * 60 * 1000), 1),
+                    new DataPoint(now.getTime(), 10)});
+        }
+
+
+        checkStepAchievements();
 
         return view;
     }
@@ -269,6 +287,21 @@ public class StepsFragment extends Fragment {
                                     // Show the localized error dialog
                                     GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(),
                                             getActivity(), 0).show();
+
+                                    Date now = new Date();
+                                    graphView.getGridLabelRenderer().setNumHorizontalLabels(4);
+                                    graphView.getViewport().setXAxisBoundsManual(true);
+                                    graphView.getViewport().setMinX(now.getTime() - 4 * 24 * 60 * 60 * 1000);
+                                    graphView.getViewport().setMaxX(now.getTime());
+                                    stepDataSeries.setColor(Color.WHITE);
+                                    stepDataSeries.setThickness(0);
+
+                                    stepDataSeries.resetData(new DataPoint[]{
+                                            new DataPoint((now.getTime() - 3 * 24 * 60 * 60 * 1000), 1),
+                                            new DataPoint((now.getTime() - 2 * 24 * 60 * 60 * 1000), 10),
+                                            new DataPoint((now.getTime() - 1 * 24 * 60 * 60 * 1000), 1),
+                                            new DataPoint(now.getTime(), 10)});
+
                                     return;
                                 }
                                 // The failure has a resolution. Resolve it.
@@ -392,10 +425,10 @@ public class StepsFragment extends Fragment {
                     graphView.getViewport().setXAxisBoundsManual(true);
                     graphView.getViewport().setMinX(now.getTime() - 4 * 24 * 60 * 60 * 1000);
                     graphView.getViewport().setMaxX(now.getTime());
-                    exampleSeries.setColor(Color.WHITE);
-                    exampleSeries.setThickness(0);
+                    stepDataSeries.setColor(Color.WHITE);
+                    stepDataSeries.setThickness(0);
 
-                    exampleSeries.resetData(new DataPoint[]{
+                    stepDataSeries.resetData(new DataPoint[]{
                             new DataPoint((now.getTime() - 3 * 24 * 60 * 60 * 1000), 1),
                             new DataPoint((now.getTime() - 2 * 24 * 60 * 60 * 1000), 10),
                             new DataPoint((now.getTime() - 1 * 24 * 60 * 60 * 1000), 1),
@@ -416,7 +449,7 @@ public class StepsFragment extends Fragment {
                     //exampleSeries.setColor(Color.WHITE);
                     //exampleSeries.setThickness(0);
 
-                    exampleSeries.resetData(new DataPoint[]{
+                    stepDataSeries.resetData(new DataPoint[]{
                             new DataPoint((now.getTime() - 3 * 24 * 60 * 60 * 1000), 0),
                             new DataPoint((now.getTime() - 2 * 24 * 60 * 60 * 1000), 0),
                             new DataPoint((now.getTime() - 1 * 24 * 60 * 60 * 1000), 0),
@@ -431,7 +464,7 @@ public class StepsFragment extends Fragment {
                     graphView.getViewport().setXAxisBoundsManual(true);
                     graphView.getViewport().setMinX(getTimeStamps[0].getX());
                     graphView.getViewport().setMaxX(getTimeStamps[values.size() - 1].getX());
-                    exampleSeries.resetData(values.toArray(new DataPoint[values.size()]));
+                    stepDataSeries.resetData(values.toArray(new DataPoint[values.size()]));
 
                 }
 

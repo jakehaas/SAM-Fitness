@@ -304,7 +304,7 @@ public class SleepFragment extends Fragment {
                     new DataPoint(now.getTime(), day1)});
 
             sleepDataSeries.setThickness(5);
-            sleepDataSeries.setColor(Color.argb(255, 0, 0, 255));
+            sleepDataSeries.setColor(Color.argb(255, 0, 79, 255));
         }
 
     }
@@ -367,6 +367,8 @@ public class SleepFragment extends Fragment {
 
         trackingStatus.setText("Not Tracking...");
         calibrateButton.setEnabled(false);
+
+        checkSleepAchievements();
     }
 
     /**
@@ -691,12 +693,43 @@ public class SleepFragment extends Fragment {
         return efficiency;
     }
 
-    private double getDurationForGraph() {
-        double totalDuration;
+    private void checkSleepAchievements() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
 
-        totalDuration = durationMins / 60.0;
-        totalDuration += durationHours;
+        DatabaseHandler db = new DatabaseHandler(getActivity());
 
-        return totalDuration;
+        Date now = new Date();
+
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(now);
+
+        float pastWeekHours = db.getWeeksSleepTotal();
+        float allTimeHours = db.getAllTimeSleepTotal();
+        float todaysHours = db.getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        Log.d("SleepFrag", "Checking sleep achievements... Today's Hours: " + todaysHours + " pastWeekHours: " + pastWeekHours + " all time: " + allTimeHours);
+
+        if (todaysHours > 0.0F) {
+            Utils.unlockAchievement(12, getActivity());
+        }
+
+        if (todaysHours >= 8.0F) {
+            Utils.unlockAchievement(13, getActivity());
+        }
+
+        if (pastWeekHours >= 56.0F) {
+            Utils.unlockAchievement(14, getActivity());
+        }
+
+        if (allTimeHours >= 1000.0F) {
+            Utils.unlockAchievement(15, getActivity());
+        }
+
+        if (allTimeHours >= 2500.0F) {
+            Utils.unlockAchievement(16, getActivity());
+        }
+
+        if (allTimeHours >= 5000.0F) {
+            Utils.unlockAchievement(17, getActivity());
+        }
     }
 }

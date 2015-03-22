@@ -85,7 +85,7 @@ public class MainFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent motionEvent) {
                 ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.pager);
-                viewPager.setCurrentItem(1);
+                viewPager.setCurrentItem(2);
 
                 return true;
             }
@@ -95,7 +95,7 @@ public class MainFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent motionEvent) {
                 ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.pager);
-                viewPager.setCurrentItem(2);
+                viewPager.setCurrentItem(1);
 
                 return true;
             }
@@ -139,6 +139,8 @@ public class MainFragment extends Fragment {
         });
 
         animateAvatar();
+
+        Utils.fakeData(getActivity());
 
         return view;
     }

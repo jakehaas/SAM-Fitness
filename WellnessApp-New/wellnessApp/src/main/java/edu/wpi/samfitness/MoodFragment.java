@@ -152,6 +152,7 @@ public class MoodFragment extends Fragment {
         });
 
         updateGraphData();
+        checkMoodAchievements();
 
         return view;
     }
@@ -171,6 +172,7 @@ public class MoodFragment extends Fragment {
                 db.addMood(new MoodTic(String.valueOf(date), ratingBar.getRating()));
                 Utils.todaysMoodScore = db.getTodaysMoodAvg(date);
                 updateGraphData();
+                checkMoodAchievements();
                 ratingBar.setRating(0.0F);
             }
         };
@@ -241,6 +243,38 @@ public class MoodFragment extends Fragment {
             moodDataSeries.setColor(Color.argb(255, 0, 255, 0));
         }
 
+    }
+
+    private void checkMoodAchievements() {
+        DatabaseHandler db = new DatabaseHandler(getActivity());
+
+        float pastWeekMood = Utils.map(db.getWeeksMoodAvg(), 0.0F, 5.0F, 0.0F, 100.0F);
+
+        Log.d("MoodFrag", "Checking mood achievements... Weeks Total: " + pastWeekMood);
+
+        if (pastWeekMood >= 70.0F) {
+            Utils.unlockAchievement(6, getActivity());
+        }
+
+        if (pastWeekMood >= 75.0F) {
+            Utils.unlockAchievement(7, getActivity());
+        }
+
+        if (pastWeekMood >= 80.0F) {
+            Utils.unlockAchievement(8, getActivity());
+        }
+
+        if (pastWeekMood >= 85.0F) {
+            Utils.unlockAchievement(9, getActivity());
+        }
+
+        if (pastWeekMood >= 90.0F) {
+            Utils.unlockAchievement(10, getActivity());
+        }
+
+        if (pastWeekMood >= 95.0F) {
+            Utils.unlockAchievement(11, getActivity());
+        }
     }
 
     private void startMoodTracking() {
