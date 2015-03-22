@@ -64,7 +64,6 @@ public class SleepFragment extends Fragment {
     // Raw Sensor Data
     private int audioAmplitude;
     private float lightIntensity;
-    private boolean hourCheck;
 
     // Final Sleep Times
     private String fallAsleepTime = "";
@@ -84,7 +83,7 @@ public class SleepFragment extends Fragment {
     // Calibrated Sensor Data (defaults set if left uncalibrated)
     private float calibratedLight = 14;
     private int calibratedAmplitude = 200;
-    private int calibratedSleepHour = 8;
+    private int calibratedSleepHour = 7;
     private int calibratedWakeHour = 11;
 
     // Calibration
@@ -458,7 +457,7 @@ public class SleepFragment extends Fragment {
                 int date = Integer.valueOf(dateFormat.format(calendar.getTime()));
 
                 DatabaseHandler db = new DatabaseHandler(getActivity());
-                db.addHoursSlept(new HoursSlept(String.valueOf(date), Float.valueOf(getDuration())));
+                db.addHoursSlept(new HoursSlept(String.valueOf(date), Float.valueOf(getDurationForGraph())));
                 Utils.todaysSleepHours = db.getTodaysSleepTotal(date);
             }
         }
@@ -663,6 +662,14 @@ public class SleepFragment extends Fragment {
         }
     }
 
+
+    private float getDurationForGraph(){
+        double graphDuration;
+
+        graphDuration = durationHours + (durationMins / 60.0);
+
+        return (float)graphDuration;
+    }
     // Get the efficiency of the current sleep session
 
     /**
