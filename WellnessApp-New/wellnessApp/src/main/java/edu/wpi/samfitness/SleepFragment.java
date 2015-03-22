@@ -123,6 +123,8 @@ public class SleepFragment extends Fragment {
                 //           else{
                 //             stopSleepTracking();
                 //        }
+
+                updateGraphData();
             }
         }
     };
@@ -130,13 +132,7 @@ public class SleepFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sleepDataSeries = new LineGraphSeries<DataPoint>(new DataPoint[]{
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
-        });
+        sleepDataSeries = new LineGraphSeries<DataPoint>();
     }
 
     /**
@@ -200,7 +196,6 @@ public class SleepFragment extends Fragment {
             }
         });
 
-
         moreSessionInfo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -222,10 +217,19 @@ public class SleepFragment extends Fragment {
 
         graphView.addSeries(sleepDataSeries);
 
-        graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
-        graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+        graphView.getGridLabelRenderer().setHorizontalLabelsColor(Color.BLACK);
+        graphView.getGridLabelRenderer().setVerticalLabelsColor(Color.BLACK);
         graphView.getGridLabelRenderer().setGridColor(Color.LTGRAY);
         graphView.getGridLabelRenderer().setTextSize(20);
+
+        Date now = new Date();
+        graphView.getViewport().setXAxisBoundsManual(true);
+        graphView.getViewport().setMinX(now.getTime() - 6 * 24 * 60 * 60 * 1000);
+        graphView.getViewport().setMaxX(now.getTime());
+
+//        graphView.getViewport().setYAxisBoundsManual(true);
+//        graphView.getViewport().setMinY(0);
+//        graphView.getViewport().setMaxY(100);
 
         graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
@@ -240,7 +244,69 @@ public class SleepFragment extends Fragment {
             }
         });
 
+        updateGraphData();
+
         return view;
+    }
+
+    private void updateGraphData() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+
+        DatabaseHandler db = new DatabaseHandler(getActivity());
+
+        Date now = new Date();
+
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(now);
+
+        float day1 = db.getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day2 = db.getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day3 = db.getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day4 = db.getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day5 = db.getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day6 = db.getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        calendar.add(Calendar.HOUR, -24);
+
+        float day7 = db.getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+
+        // Check to see if there is no data yet
+        // For the jjoe64 graphview workaround
+        if (day1 == 0.0F && day2 == 0.0F && day3 == 0.0F && day4 == 0.0F && day5 == 0.0F && day6 == 0.0F && day7 == 0.0F) {
+            sleepDataSeries.resetData(new DataPoint[]{
+                    new DataPoint((now.getTime() - 6 * 24 * 60 * 60 * 1000), 1),
+                    new DataPoint((now.getTime() - 5 * 24 * 60 * 60 * 1000), 2),
+                    new DataPoint((now.getTime() - 4 * 24 * 60 * 60 * 1000), 1),
+                    new DataPoint((now.getTime() - 3 * 24 * 60 * 60 * 1000), 2),
+                    new DataPoint((now.getTime() - 2 * 24 * 60 * 60 * 1000), 1),
+                    new DataPoint((now.getTime() - 1 * 24 * 60 * 60 * 1000), 2),
+                    new DataPoint(now.getTime(), 1)});
+
+            sleepDataSeries.setThickness(0);
+            sleepDataSeries.setColor(Color.WHITE);
+        } else {
+            sleepDataSeries.resetData(new DataPoint[]{
+                    new DataPoint((now.getTime() - 6 * 24 * 60 * 60 * 1000), day7),
+                    new DataPoint((now.getTime() - 5 * 24 * 60 * 60 * 1000), day6),
+                    new DataPoint((now.getTime() - 4 * 24 * 60 * 60 * 1000), day5),
+                    new DataPoint((now.getTime() - 3 * 24 * 60 * 60 * 1000), day4),
+                    new DataPoint((now.getTime() - 2 * 24 * 60 * 60 * 1000), day3),
+                    new DataPoint((now.getTime() - 1 * 24 * 60 * 60 * 1000), day2),
+                    new DataPoint(now.getTime(), day1)});
+
+            sleepDataSeries.setThickness(5);
+            sleepDataSeries.setColor(Color.argb(255, 0, 0, 255));
+        }
+
     }
 
     /**
