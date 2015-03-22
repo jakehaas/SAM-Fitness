@@ -196,7 +196,6 @@ public class SleepFragment extends Fragment {
             }
         });
 
-
         moreSessionInfo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
