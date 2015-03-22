@@ -47,7 +47,10 @@ import android.widget.VideoView;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class MainFragment extends Fragment {
@@ -230,6 +233,12 @@ public class MainFragment extends Fragment {
     }
 
     private void updateCircles() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+        int date = Integer.valueOf(dateFormat.format(new Date()));
+
+        DatabaseHandler db = new DatabaseHandler(getActivity());
+        Utils.todaysMoodScore = db.getTodaysMoodAvg(date);
+
         activityCircle.setText(Html.fromHtml("<b>" + Utils.getStepScore() + "</b><br />Steps"));
         moodCircle.setText(Html.fromHtml("<b>" + Utils.getMoodScore() + "</b><br />Happiness"));
         sleepCircle.setText(Html.fromHtml("<b>" + Utils.getSleepScore() + "</b><br />Hours"));

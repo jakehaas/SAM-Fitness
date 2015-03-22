@@ -42,6 +42,8 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class MoodFragment extends Fragment {
     private Button startStopMoodButton;
@@ -122,7 +124,7 @@ public class MoodFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Utils.displayDialog(getActivity(), "Save Mood Rating?", "Are you sure you want save " + ratingBar.getRating() + " as your current mood?",
-                        "Cancel", "OK", saveRatingRunnable(), Utils.emptyRunnable());
+                        "Cancel", "OK", saveMoodRunnable(), Utils.emptyRunnable());
             }
         });
 
@@ -149,24 +151,38 @@ public class MoodFragment extends Fragment {
         return view;
     }
 
-    public Runnable saveRatingRunnable() {
+    public Runnable saveMoodRunnable() {
         return new Runnable() {
             public void run() {
                 Toast.makeText(getActivity(), "Saved " + ratingBar.getRating(), Toast.LENGTH_LONG).show();
 
-                Calendar c = Calendar.getInstance();
-                int date = c.get(Calendar.DATE);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+                int date = Integer.valueOf(dateFormat.format(new Date()));
 
                 DatabaseHandler db = new DatabaseHandler(getActivity());
                 db.addMood(new MoodTic(String.valueOf(date), ratingBar.getRating()));
-                Utils.todaysMoodScore = db.getTodaysMoodAvg();
+                Utils.todaysMoodScore = db.getTodaysMoodAvg(date);
+                updateGraphData();
                 ratingBar.setRating(0.0F);
             }
         };
     }
 
     private void updateGraphData() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
 
+        Log.d("YOLO", dateFormat.format(new Date()));
+
+        moodDataSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
+                new DataPoint(0, 1),
+                new DataPoint(1, 5),
+                new DataPoint(2, 3),
+                new DataPoint(3, 2),
+                new DataPoint(4, 6)
+        });
+
+        graphView.removeAllSeries();
+        graphView.addSeries(moodDataSeries);
     }
 
     private void startMoodTracking() {
