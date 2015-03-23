@@ -5,16 +5,28 @@
 
     <string name="help_text"><![CDATA[
     <b>About</b><br />
-    SAM Fitness tracks your sleep, mood and exercise habits. By learning where you can improve...<br />
+    SAM Fitness tracks your mood, sleep, and activity habits to help visualize the correlations between a healthy lifestyle and a happy mood! Let SAM help you to improve your...<br />
     <br />
-    <font color="#ff0000"><b>Exercise Tracking</b></font><br />
+
+    <font color="#004fff"><b>Sleep Habits</b></font><br />
+    SAM Fitness uses your device\'s microphone and light sensor along with the time of day to track how much sleep you are getting. It is recommended to calibrate the sensors right before you fall asleep so the app can get an idea of the ambient sound and light levels.<br />
+    <b><u>To Use:</u></b> Place your device close to your bed, perhaps on a bedside table, before going to sleep.  Sleep tracking will begin automatically when it is between the hours of 8pm and 11am and the appropriate sound and light levels are met. For best results, tap the "Calibrate Sensors" button to activate a 10-second calibrator for the sound and light levels (&quot;Calibrating...&quot will display as a status). The efficiency score is dependent on the number of times you woke up within the time period you were asleep. Stop sleep tracking at any time by pressing the "Stop Sleep Tracking" button (&quot;Not Tracking...&quot will display as the status). Restart sleep tracking by tapping the same button, which will automatically activate the calibrator. <br />
+    <b><u>To View:</u></b> Tap on the Sleep tab or on the blue Hours bubble to view your sleep data.  &quot;Tracking...&quot will display as the status bar to signify that the app is checking light and sound levels. A graph displays the number of hours you slept for the past few days. <br />
+    <font color="#004fff"><b><u>Tip:</u></b></font> Make sure you\'re sleeping in a dark, quiet room. It is recommended to get an average of 8 hours of sleep per night with an average of only two wake ups per hour for the most restful night\'s sleep!"<br />
+    <br />
+
+    <font color="#ff0000"><b>Activity Habits</b></font><br />
     SAM Fitness uses Google\'s step counting algorithm to estimate how much you move around during the day.<br />
+    <b><u>To Use:</u></b> Simply place your phone somewhere on your person as you move throughout the day. It is recommended to keep it as close to your body as possible, such as in a pocket.<br />
+    <b><u>To View:</u></b> Tap on the Activity tab or the red Steps bubble to view your activity data.  The daily steps will be displayed as well as a graph of the past four days\' steps.<br />
+    <font color="#ff0000"><b><u>Tip:</u></b></font> It is recommended to take an average of 8,000 steps per day for a healthy lifestyle!<br />
     <br />
-    <font color="#004fff"><b>Sleep Tracking</b></font><br />
-    SAM Fitness uses your devices microphone and light sensor to track how much sleep you are getting. It is recommended to calibrate the sensors right before you fall asleep so the app can get an idea of the ambient sound and light.<br />
-    <br />
-    <font color="#00ff00"><b>Mood Tracking</b></font><br />
-    Every few hours, SAM Fitness will prompt you to enter your mood at the current time. SAM will then keep track of how your sleep and exercise habits effect your mood.
+
+    <font color="#00ff00"><b>Mood Level</b></font><br />
+    Every few hours, SAM Fitness will prompt you to enter your mood. SAM will keep track of your daily average mood to help you to see correlations between mood and sleep and activity levels.<br />
+    <b><u>To Use:</u></b> Mood tracking begins automatically.  Enter your mood in terms of stars (full or half stars) with 5 stars being a great mood and 0 stars being an awful mood.  Enter your mood directly from the Mood tab or enter it through periodic reminders.  Reminders will pop up every 4 hours by default, but you can change this frequency by going to the Mood tab, tapping "Stop Mood Tracking," and then selecting a new reminder frequency.  Remember to start mood tracking again after!<br />
+    <b><u>To View:</u></b> Tap on the Mood tab or on the green Happiness bubble to view your mood data.  The graph will display your average mood for the past few days. </b> <br />
+    <font color="#00ff00"><b><u>Tip:</u></b></font> Enter your mood often throughout the day for the most accurate tracking.  Note your mood when recommended sleep and activity levels are met! </b> <br />
     ]]></string>
 
     <string-array name="mood_alert_times">
