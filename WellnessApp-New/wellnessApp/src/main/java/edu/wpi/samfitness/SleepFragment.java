@@ -100,6 +100,8 @@ public class SleepFragment extends Fragment {
     private int numWakeups = 0;
     private int efficiency;
 
+    private DatabaseHandler db;
+
     private final BroadcastReceiver recieveFromSleepService = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -108,12 +110,18 @@ public class SleepFragment extends Fragment {
             if (action.equals("SensorData")) {
                 Bundle extras = intent.getExtras();
 
-                String maxAmplitudeIn = extras.getString("maxAmplitude");
-                String lightIntensityIn = extras.getString("lightIntensity");
+                try {
+                    String maxAmplitudeIn = extras.getString("maxAmplitude");
+                    String lightIntensityIn = extras.getString("lightIntensity");
+
+                    audioAmplitude = Integer.parseInt(maxAmplitudeIn);
+                    lightIntensity = Float.parseFloat(lightIntensityIn);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 //              String hourCheckIn = extras.getString("sleepHourCheck");
 
-                audioAmplitude = Integer.parseInt(maxAmplitudeIn);
-                lightIntensity = Float.parseFloat(lightIntensityIn);
+
 //                hourCheck = Boolean.parseBoolean(hourCheckIn);
 
                 //               if(hourCheck){
@@ -145,6 +153,8 @@ public class SleepFragment extends Fragment {
      */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_sleep, container, false);
+
+        db = new DatabaseHandler(getActivity());
 
         IntentFilter intentFilter = new IntentFilter("SensorData");
         getActivity().getApplicationContext().registerReceiver(recieveFromSleepService, intentFilter);
@@ -251,12 +261,13 @@ public class SleepFragment extends Fragment {
     private void updateGraphData() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
 
-        DatabaseHandler db = new DatabaseHandler(getActivity());
-
         Date now = new Date();
 
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(now);
+
+        Utils.todaysSleepHours = db.getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
+        todaysHours.setText("Hours Slept Today: " + Utils.todaysSleepHours);
 
         float day1 = db.getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
         calendar.add(Calendar.HOUR, -24);
@@ -458,8 +469,6 @@ public class SleepFragment extends Fragment {
 
                 isAsleep = false;
                 wakeUpTime = getTime('W');
-                todaysHours.setText("Hours Slept Today: " + getDuration());
-                todaysEfficiency.setText("Today's Efficiency: " + getEfficiency());
 
                 numWakeups++;
 
@@ -469,9 +478,11 @@ public class SleepFragment extends Fragment {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
                 int date = Integer.valueOf(dateFormat.format(calendar.getTime()));
 
-                DatabaseHandler db = new DatabaseHandler(getActivity());
                 db.addHoursSlept(new HoursSlept(String.valueOf(date), Float.valueOf(getDurationForGraph())));
                 Utils.todaysSleepHours = db.getTodaysSleepTotal(date);
+
+                todaysHours.setText("Hours Slept Today: " + db.getTodaysSleepTotal(date));
+                todaysEfficiency.setText("Today's Efficiency: " + getEfficiency());
             }
         }
     }
@@ -715,8 +726,6 @@ public class SleepFragment extends Fragment {
 
     private void checkSleepAchievements() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
-
-        DatabaseHandler db = new DatabaseHandler(getActivity());
 
         Date now = new Date();
 

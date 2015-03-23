@@ -183,7 +183,8 @@ public class Utils {
     public static String getSleepScore() {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
-        return decimalFormat.format(map(todaysSleepHours, 0.0F, 8.5F, 0.0F, 100.0F));
+        return decimalFormat.format(todaysSleepHours);
+       // return decimalFormat.format(map(todaysSleepHours, 0.0F, 8.5F, 0.0F, 100.0F));
     }
 
     /**

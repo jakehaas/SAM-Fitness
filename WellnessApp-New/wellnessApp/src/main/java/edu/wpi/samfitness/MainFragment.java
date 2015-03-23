@@ -240,6 +240,7 @@ public class MainFragment extends Fragment {
 
         DatabaseHandler db = new DatabaseHandler(getActivity());
         Utils.todaysMoodScore = db.getTodaysMoodAvg(date);
+        Utils.todaysSleepHours = db.getTodaysSleepTotal(date);
 
         activityCircle.setText(Html.fromHtml("<b>" + Utils.getStepScore() + "</b><br />Steps"));
         moodCircle.setText(Html.fromHtml("<b>" + Utils.getMoodScore() + "</b><br />Happiness"));
