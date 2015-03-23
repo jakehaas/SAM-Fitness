@@ -58,20 +58,14 @@
 
 
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/stopStartSleepButton"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
+
 
             <TextView
                 android:id="@+id/textViewTodaysHours"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/moreSleepSessionInfo"
+
+                android:layout_below="@+id/stopStartSleepButton"
                 android:layout_centerHorizontal="true"
                 android:text="Hours Slept Today: 0:00:00"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -96,10 +90,9 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-
+                android:layout_centerHorizontal="true"
                 android:text="Today's Sleep Stats" />
 
-        </LinearLayout>
     </RelativeLayout>
 
 </LinearLayout>
