@@ -82,15 +82,15 @@ public class SleepFragment extends Fragment {
     private int durationSec = 0;
 
     // Calibrated Sensor Data (defaults set if left uncalibrated)
-    private float calibratedLight = 14;
-    private int calibratedAmplitude = 200;
-    private int calibratedSleepHour = 7;
+    private float calibratedLight = 20;
+    private int calibratedAmplitude = 350;
+    private int calibratedSleepHour = 8;
     private int calibratedWakeHour = 11;
 
     // Calibration
     private final int CALIBRATE_TIME = 10;
-    private final int NOISE_MARGIN = 250;
-    private final int LIGHT_MARGIN = 10;
+    private final int NOISE_MARGIN = 275;
+    private final int LIGHT_MARGIN = 15;
     private boolean isCalibrated = false;
     private CountDownTimer calibrateTimer;
     private float avgBy = 0;
@@ -120,17 +120,8 @@ public class SleepFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //              String hourCheckIn = extras.getString("sleepHourCheck");
 
-
-//                hourCheck = Boolean.parseBoolean(hourCheckIn);
-
-                //               if(hourCheck){
                 checkSleepStatus();
-                //             }
-                //           else{
-                //             stopSleepTracking();
-                //        }
 
                 updateGraphData();
             }
@@ -723,16 +714,21 @@ public class SleepFragment extends Fragment {
      * @return efficiency on scale of 0-100
      */
     private int getEfficiency() {
-        //based on avg 11 wakeups per 8 hours, each wakeup resulting in a -0.625% efficiency (Source: FitBit)
-        double sleepFactor = ((durationHours * 60 * 60) + (durationMins * 60) + durationSec) / 28800;
-        double expectedWakeups = sleepFactor * 11;
+        //based on avg 2 wakeups per hour, each wakeup resulting in a -0.625% efficiency (Source: FitBit)
+        double expectedWakeups = durationHours * 2;
         double extraWakeups = numWakeups - expectedWakeups;
 
         if (extraWakeups <= 0) {
             extraWakeups = 1;
         }
 
-        efficiency = 100 - (int) Math.floor(extraWakeups * 0.625);
+        //if user has been sleeping less than an hour, it's much more inefficient to wake up so penalty is higher
+        if(expectedWakeups == 0){
+            efficiency = 100 - (int) Math.floor(extraWakeups * 6.25);
+        }
+        else {
+            efficiency = 100 - (int) Math.ceil(extraWakeups * 0.625);
+        }
 
         if (efficiency < 0) {
             efficiency = 0;
