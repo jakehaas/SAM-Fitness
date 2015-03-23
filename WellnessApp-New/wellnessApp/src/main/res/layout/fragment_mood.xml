@@ -14,7 +14,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:layout_weight="0.5"
+        android:layout_weight="0.6"
         android:background="#ffffff"
         android:gravity="center_horizontal"
         android:paddingLeft="10dp"
