@@ -121,14 +121,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             float todaysAvg = (moodTotal / rowCount);
 
             if (rowCount == 0) {
-                Log.d("DBHandler", "Getting " + date + "'s mood avg from DB... NO DATA FOUND");
+//                Log.d("DBHandler", "Getting " + date + "'s mood avg from DB... NO DATA FOUND");
                 return 0.00F;
             } else {
-                Log.d("DBHandler", "Getting " + date + "'s mood avg from DB... " + todaysAvg);
+//                Log.d("DBHandler", "Getting " + date + "'s mood avg from DB... " + todaysAvg);
                 return todaysAvg;
             }
         } else {
-            Log.d("DBHandler", "Getting " + date + "'s mood avg from DB... DATABASE ERROR");
+//            Log.d("DBHandler", "Getting " + date + "'s mood avg from DB... DATABASE ERROR");
             return 0.00F;
         }
     }
@@ -173,14 +173,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             cursor.close();
 
             if (rowCount == 0) {
-                Log.d("DBHandler", "Getting " + date + "'s sleep hours from DB... NO DATA FOUND");
+                //Log.d("DBHandler", "Getting " + date + "'s sleep hours from DB... NO DATA FOUND");
                 return 0.00F;
             } else {
-                Log.d("DBHandler", "Getting " + date + "'s sleep hours from DB... " + sleepTotal);
+              //  Log.d("DBHandler", "Getting " + date + "'s sleep hours from DB... " + sleepTotal);
                 return sleepTotal;
             }
         } else {
-            Log.d("DBHandler", "Getting " + date + "'s sleep hours from DB... DATABASE ERROR");
+            //Log.d("DBHandler", "Getting " + date + "'s sleep hours from DB... DATABASE ERROR");
             return 0.00F;
         }
     }
@@ -273,14 +273,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             cursor.close();
 
             if (rowCount == 0) {
-                Log.d("DBHandler", "Getting total sleep hours from DB... NO DATA FOUND");
+               // Log.d("DBHandler", "Getting total sleep hours from DB... NO DATA FOUND");
                 return 0.00F;
             } else {
-                Log.d("DBHandler", "Getting total sleep hours from DB... " + sleepTotal);
+             //   Log.d("DBHandler", "Getting total sleep hours from DB... " + sleepTotal);
                 return sleepTotal;
             }
         } else {
-            Log.d("DBHandler", "Getting total sleep hours from DB... DATABASE ERROR");
+//            Log.d("DBHandler", "Getting total sleep hours from DB... DATABASE ERROR");
             return 0.00F;
         }
     }

@@ -40,6 +40,7 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -212,11 +213,11 @@ public class SleepFragment extends Fragment {
                     Utils.displayDialog(getActivity(), "Last Sleep Session Information",
                             "You must have at least 1 sleep session to view stats.", null, "OK", Utils.emptyRunnable(), null);
                 } else {
-                    Utils.displayDialog(getActivity(), "Today's Sleep Stats",
+                    Utils.displayDialog(getActivity(), "Detailed Sleep Stats",
                             "Last Time Fell Asleep: " + fallAsleepTime
                                     + "\nLast Time Woke Up: " + wakeUpTime
-                                    + "\nTotal Time Asleep: " + Integer.toString(durationHours) + ":" + Integer.toString(durationMins) + ":" + Integer.toString(durationSec)
-                                    + "\nNumber of Wake Ups: " + Integer.toString(numWakeups)
+                                    + "\nTotal Time Asleep: " + getHoursTodayFormatted() + " Hours"
+                                    + "\nNumber of Wake Ups: " + Integer.toString(numWakeups) + "\n"
                                     + "\nCalibrated Audio Level: " + Integer.toString(calibratedAmplitude)
                                     + "\nCalibrated Light Level: " + Float.toString(calibratedLight),
                             null, "OK", Utils.emptyRunnable(), null);
@@ -255,6 +256,8 @@ public class SleepFragment extends Fragment {
 
         updateGraphData();
 
+        todaysHours.setText("Hours Slept Today: " + getHoursTodayFormatted());
+
         return view;
     }
 
@@ -267,7 +270,7 @@ public class SleepFragment extends Fragment {
         calendar.setTime(now);
 
         Utils.todaysSleepHours = db.getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
-        todaysHours.setText("Hours Slept Today: " + Utils.todaysSleepHours);
+        //todaysHours.setText("Hours Slept Today: " + Utils.todaysSleepHours);
 
         float day1 = db.getTodaysSleepTotal(Integer.valueOf(dateFormat.format(calendar.getTime())));
         calendar.add(Calendar.HOUR, -24);
@@ -478,10 +481,13 @@ public class SleepFragment extends Fragment {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
                 int date = Integer.valueOf(dateFormat.format(calendar.getTime()));
 
+                calcDuration();
+
                 db.addHoursSlept(new HoursSlept(String.valueOf(date), Float.valueOf(getDurationForGraph())));
+
                 Utils.todaysSleepHours = db.getTodaysSleepTotal(date);
 
-                todaysHours.setText("Hours Slept Today: " + db.getTodaysSleepTotal(date));
+                todaysHours.setText("Hours Slept Today: " + getHoursTodayFormatted());
                 todaysEfficiency.setText("Today's Efficiency: " + getEfficiency());
             }
         }
@@ -527,6 +533,20 @@ public class SleepFragment extends Fragment {
         }
 
         return Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(seconds) + getAmPm();
+    }
+
+
+    private String getHoursTodayFormatted() {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+        int date = Integer.valueOf(dateFormat.format(calendar.getTime()));
+
+        float todaysHours = db.getTodaysSleepTotal(date);
+
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        return String.valueOf(decimalFormat.format(todaysHours));
     }
 
     /**
@@ -614,7 +634,7 @@ public class SleepFragment extends Fragment {
      *
      * @return duration of sleep for a night
      */
-    private String getDuration() {
+    private void calcDuration() {
         int hourDuration;
         int minDuration;
         int secDuration;
@@ -654,7 +674,6 @@ public class SleepFragment extends Fragment {
         }
 
         getTotalDuration(hourDuration, minDuration, secDuration);
-        return Integer.toString(durationHours) + ":" + Integer.toString(durationMins) + ":" + Integer.toString(durationSec);
     }
 
     //add new sleep duration to existing sleep duration
@@ -688,11 +707,11 @@ public class SleepFragment extends Fragment {
 
 
     private float getDurationForGraph(){
-        double graphDuration;
+        float graphDuration;
 
-        graphDuration = durationHours + (durationMins / 60.0);
+        graphDuration = ((float) durationHours) + ((float) (durationMins / 60.0F));
 
-        return (float)graphDuration;
+        return graphDuration;
     }
     // Get the efficiency of the current sleep session
 
