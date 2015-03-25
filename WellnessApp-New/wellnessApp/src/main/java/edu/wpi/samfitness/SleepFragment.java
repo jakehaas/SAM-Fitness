@@ -71,27 +71,22 @@ public class SleepFragment extends Fragment {
     private String wakeUpTime = "";
     private int sleepHour;
     private int sleepMin;
-    private int sleepSec;
     private String sleepAmPm;
     private int wakeHour;
     private int wakeMin;
-    private int wakeSec;
     private String wakeAmPm;
-    private int durationHours = 0;
-    private int durationMins = 0;
-    private int durationSec = 0;
+    private float totalDuration = 0.0F;
 
     // Calibrated Sensor Data (defaults set if left uncalibrated)
-    private float calibratedLight = 20;
-    private int calibratedAmplitude = 350;
+    private float calibratedLight = 15;
+    private int calibratedAmplitude = 300;
     private int calibratedSleepHour = 8;
-    private int calibratedWakeHour = 11;
+    private int calibratedWakeHour = 12;
 
     // Calibration
     private final int CALIBRATE_TIME = 10;
-    private final int NOISE_MARGIN = 275;
-    private final int LIGHT_MARGIN = 15;
-    private boolean isCalibrated = false;
+    private final int NOISE_MARGIN = 300;
+    private final int LIGHT_MARGIN = 10;
     private CountDownTimer calibrateTimer;
     private float avgBy = 0;
 
@@ -228,10 +223,6 @@ public class SleepFragment extends Fragment {
         graphView.getViewport().setMinX(now.getTime() - 6 * 24 * 60 * 60 * 1000);
         graphView.getViewport().setMaxX(now.getTime());
 
-//        graphView.getViewport().setYAxisBoundsManual(true);
-//        graphView.getViewport().setMinY(0);
-//        graphView.getViewport().setMaxY(100);
-
         graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
@@ -356,14 +347,8 @@ public class SleepFragment extends Fragment {
                 null, "OK", Utils.emptyRunnable(), null);
 
         trackingStatus.setText("Tracking...");
-
-        durationHours = 0;
-        durationMins = 0;
-        durationSec = 0;
-
+        totalDuration = 0.0F;
         calibrateButton.setEnabled(true);
-
-        isCalibrated = false;
 
         if (isTracking) {
             calibrateSensors();
@@ -418,7 +403,7 @@ public class SleepFragment extends Fragment {
                 calibratedAmplitude += NOISE_MARGIN;
 
                 Log.d("SleepMonitor", "Calibrated sensors");
-                isCalibrated = true;
+
                 checkSleepStatus();
 
                 if (isTracking) {
@@ -472,9 +457,9 @@ public class SleepFragment extends Fragment {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
                 int date = Integer.valueOf(dateFormat.format(calendar.getTime()));
 
-                calcDuration();
-
-                db.addHoursSlept(new HoursSlept(String.valueOf(date), Float.valueOf(getDurationForGraph())));
+                totalDuration = getDuration();
+                Log.d("getDuration", "Adding " + Float.toString(getDuration()));
+                db.addHoursSlept(new HoursSlept(String.valueOf(date), Float.valueOf(totalDuration)));
 
                 Utils.todaysSleepHours = db.getTodaysSleepTotal(date);
 
@@ -496,34 +481,31 @@ public class SleepFragment extends Fragment {
         Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR);
         int minute = c.get(Calendar.MINUTE);
-        int seconds = c.get(Calendar.SECOND);
 
         //12:00 AM is treated as hour 0
         if (hour == 0) {
             hour = 12;
         }
 
-        Log.d("CurrentTime", Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(seconds) + getAmPm());
+        Log.d("CurrentTime", Integer.toString(hour) + ":" + Integer.toString(minute) + getAmPm());
 
         //if the new sleep time is gotten, set it globally
         if (set == 'S') {
             sleepHour = hour;
             sleepMin = minute;
-            sleepSec = seconds;
             sleepAmPm = getAmPm();
-            Log.d("SetSleepTime", Integer.toString(sleepHour) + ":" + Integer.toString(sleepMin) + ":" + Integer.toString(sleepSec) + sleepAmPm);
+            Log.d("SetSleepTime", Integer.toString(sleepHour) + ":" + Integer.toString(sleepMin) + sleepAmPm);
         }
 
         //if the new wake time is gotten, set it globally
         if (set == 'W') {
             wakeHour = hour;
             wakeMin = minute;
-            wakeSec = seconds;
             wakeAmPm = getAmPm();
-            Log.d("SetWakeTime", Integer.toString(wakeHour) + ":" + Integer.toString(wakeMin) + ":" + Integer.toString(wakeSec) + wakeAmPm);
+            Log.d("SetWakeTime", Integer.toString(wakeHour) + ":" + Integer.toString(wakeMin) + wakeAmPm);
         }
 
-        return Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(seconds) + getAmPm();
+        return Integer.toString(hour) + ":" + Integer.toString(minute) + getAmPm();
     }
 
 
@@ -625,86 +607,45 @@ public class SleepFragment extends Fragment {
      *
      * @return duration of sleep for a night
      */
-    private void calcDuration() {
-        int hourDuration;
-        int minDuration;
-        int secDuration;
+    private float getDuration() {
+        Log.d("getDuration", "Getting current duration...");
+        int newHours;
+        int newMins;
+        double duration;
 
         //both AM or both PM: simply subtract
         if ((sleepAmPm.equals("PM") && wakeAmPm.equals("PM")) || (sleepAmPm.equals("AM") && wakeAmPm.equals("AM"))) {
-            hourDuration = Math.abs(sleepHour - wakeHour);
-            minDuration = Math.abs(sleepMin - wakeMin);
-            secDuration = Math.abs(sleepSec - wakeSec);
+            newHours = Math.abs(sleepHour - wakeHour);
+            newMins = Math.abs(sleepMin - wakeMin);
         }
         //crossed over midnight: have to take day change into account
         else {
-            hourDuration = (12 - sleepHour) + wakeHour;
-            minDuration = (60 - sleepMin) + wakeMin;
-            secDuration = (60 - sleepSec) + wakeSec;
-
-            //add appropriate minute/second conversions
-            if (secDuration >= 60) {
-                secDuration -= 60;
-                minDuration += 1;
+            //take into account waking up in the midnight hour
+            if(wakeHour == 12 && wakeAmPm.equals("AM")){
+                wakeHour = 0;
             }
 
-            if (minDuration >= 60) {
-                minDuration -= 60;
-                hourDuration += 1;
-            }
+            newHours = (12 - sleepHour) + wakeHour - 1;
+            newMins = (60 - sleepMin) + wakeMin;
         }
 
-        //make sure a full hour/minute has changed
-        if ((sleepSec >= wakeSec) && minDuration == 1) {
-            minDuration--;
-            secDuration = (60 - sleepSec) + wakeSec;
-        }
-        if ((sleepMin >= wakeMin) && hourDuration == 1) {
-            hourDuration--;
-            minDuration = (60 - sleepMin) + wakeMin;
+        //check for full hour
+        if(newHours == 1 && sleepMin > wakeMin){
+            newHours--;
+            newMins = (60 - sleepMin) + wakeMin;
         }
 
-        getTotalDuration(hourDuration, minDuration, secDuration);
+        //add appropriate minutes
+        if (newMins >= 60) {
+            newMins -= 60;
+            newHours += 1;
+        }
+
+        //convert to hours and partial hours
+        duration = newHours + (newMins / 60.0);
+
+        return (float)duration;
     }
-
-    //add new sleep duration to existing sleep duration
-
-    /**
-     * getTotalDuration(int newHours, int newMins, int newSecs)
-     * Adds time to total duration for a night (accounts for wakeups during the night)
-     *
-     * @param newHours number of hours to add to duration
-     * @param newMins  number of minutes to add to duration
-     * @param newSecs  number of seconds to add to duration
-     */
-    private void getTotalDuration(int newHours, int newMins, int newSecs) {
-        Log.d("AddToDuration", "Added " + Integer.toString(newHours) + ":" + Integer.toString(newMins) + ":" + Integer.toString(newSecs) + "to"
-                + Integer.toString(durationHours) + ":" + Integer.toString(durationMins) + ":" + Integer.toString(durationSec));
-        durationHours += newHours;
-        durationMins += newMins;
-        durationSec += newSecs;
-
-        //add appropriate minute/second conversions
-        if (durationSec >= 60) {
-            durationSec -= 60;
-            durationMins += 1;
-        }
-
-        if (durationMins >= 60) {
-            durationMins -= 60;
-            durationHours += 1;
-        }
-    }
-
-
-    private float getDurationForGraph(){
-        float graphDuration;
-
-        graphDuration = ((float) durationHours) + ((float) (durationMins / 60.0F));
-
-        return graphDuration;
-    }
-    // Get the efficiency of the current sleep session
 
     /**
      * getEfficiency()
@@ -714,9 +655,16 @@ public class SleepFragment extends Fragment {
      * @return efficiency on scale of 0-100
      */
     private int getEfficiency() {
+//gets current sleep duration from db to calculate efficiency
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+        Date currentDate = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(currentDate);
+        int formattedCurrentDate = Integer.valueOf(dateFormat.format(calendar.getTime()));
+        float currentDuration = db.getTodaysMoodAvg(formattedCurrentDate);
+
         //based on avg 2 wakeups per hour, each wakeup resulting in a -0.625% efficiency (Source: FitBit)
-        double expectedWakeups = durationHours * 2;
-        double extraWakeups = numWakeups - expectedWakeups;
+        double expectedWakeups = (double)currentDuration * 2;        double extraWakeups = numWakeups - expectedWakeups;
 
         if (extraWakeups <= 0) {
             extraWakeups = 1;
