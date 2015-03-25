@@ -79,16 +79,18 @@ public class SleepFragment extends Fragment {
 
     // Calibrated Sensor Data (defaults set if left uncalibrated)
     private float calibratedLight = 15;
-    private int calibratedAmplitude = 300;
+    private int calibratedAmplitude = 200;
     private int calibratedSleepHour = 8;
     private int calibratedWakeHour = 12;
 
     // Calibration
     private final int CALIBRATE_TIME = 10;
-    private final int NOISE_MARGIN = 300;
-    private final int LIGHT_MARGIN = 10;
+    private final int NOISE_MARGIN = 200;
+    private final int LIGHT_MARGIN = 15;
     private CountDownTimer calibrateTimer;
     private float avgBy = 0;
+    private int threshold = 3;
+    private int wakeup = 0;
 
     // Tracking Statuses
     private boolean isTracking = true;
@@ -98,10 +100,21 @@ public class SleepFragment extends Fragment {
 
     private DatabaseHandler db;
 
+    SimpleDateFormat dateFormat;
+    private int date;
+    private Date now;
+
     private final BroadcastReceiver recieveFromSleepService = new BroadcastReceiver() {
         @Override
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(new Date());
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+            date = Integer.valueOf(dateFormat.format(calendar.getTime()));
 
             if (action.equals("SensorData")) {
                 Bundle extras = intent.getExtras();
@@ -126,6 +139,8 @@ public class SleepFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        now = new Date();
+        dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
         sleepDataSeries = new LineGraphSeries<DataPoint>();
     }
 
@@ -140,6 +155,8 @@ public class SleepFragment extends Fragment {
      */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_sleep, container, false);
+        now = new Date();
+        dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
 
         db = new DatabaseHandler(getActivity());
 
@@ -244,9 +261,9 @@ public class SleepFragment extends Fragment {
     }
 
     private void updateGraphData() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+        //SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
 
-        Date now = new Date();
+        //Date now = new Date();
 
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(now);
@@ -448,14 +465,18 @@ public class SleepFragment extends Fragment {
 
                 isAsleep = false;
                 wakeUpTime = getTime('W');
+                wakeup++;
 
-                numWakeups++;
+                if(wakeup >= threshold){
+                    numWakeups++;
+                    wakeup = 0;
+                }
 
-                Calendar calendar = new GregorianCalendar();
-                calendar.setTime(new Date());
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
-                int date = Integer.valueOf(dateFormat.format(calendar.getTime()));
+                if(numWakeups > 12){
+                    numWakeups = threshold - 2;
+                    wakeup = 0;
+                    threshold += 2;
+                }
 
                 totalDuration = getDuration();
                 Log.d("getDuration", "Adding " + Float.toString(getDuration()));
@@ -513,8 +534,8 @@ public class SleepFragment extends Fragment {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
-        int date = Integer.valueOf(dateFormat.format(calendar.getTime()));
+ //       SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+ //       int date = Integer.valueOf(dateFormat.format(calendar.getTime()));
 
         float todaysHours = db.getTodaysSleepTotal(date);
 
@@ -564,7 +585,7 @@ public class SleepFragment extends Fragment {
             return true;
         }
 
-        if ((hour >= calibratedSleepHour && amPm.equals("PM")) || (hour <= calibratedWakeHour && amPm.equals("AM"))) {
+        if ((hour >= calibratedSleepHour && amPm.equals("PM")) || (hour < calibratedWakeHour && amPm.equals("AM"))) {
             return true;
         }
         return false;
@@ -617,6 +638,8 @@ public class SleepFragment extends Fragment {
         if ((sleepAmPm.equals("PM") && wakeAmPm.equals("PM")) || (sleepAmPm.equals("AM") && wakeAmPm.equals("AM"))) {
             newHours = Math.abs(sleepHour - wakeHour);
             newMins = Math.abs(sleepMin - wakeMin);
+//            Log.d("getDuration1", "newHours: " + Integer.toString(newHours));
+//            Log.d("getDuration1", "newMins: " + Integer.toString(newMins));
         }
         //crossed over midnight: have to take day change into account
         else {
@@ -627,22 +650,33 @@ public class SleepFragment extends Fragment {
 
             newHours = (12 - sleepHour) + wakeHour - 1;
             newMins = (60 - sleepMin) + wakeMin;
+ //           Log.d("getDuration2", "newHours: " + Integer.toString(newHours));
+ //           Log.d("getDuration2", "newMins: " + Integer.toString(newMins));
         }
 
         //check for full hour
         if(newHours == 1 && sleepMin > wakeMin){
             newHours--;
             newMins = (60 - sleepMin) + wakeMin;
+//            Log.d("getDuration3", "newHours: " + Integer.toString(newHours));
+//            Log.d("getDuration3", "newMins: " + Integer.toString(newMins));
+
         }
 
         //add appropriate minutes
         if (newMins >= 60) {
             newMins -= 60;
             newHours += 1;
+//            Log.d("getDuration4", "newHours: " + Integer.toString(newHours));
+//            Log.d("getDuration4", "newMins: " + Integer.toString(newMins));
         }
 
+//        Log.d("getDuration", "newHours: " + Integer.toString(newHours));
+//        Log.d("getDuration", "newMins: " + Integer.toString(newMins));
         //convert to hours and partial hours
         duration = newHours + (newMins / 60.0);
+
+//      Log.d("getDuration", "duration: " + Float.toString((float)duration));
 
         return (float)duration;
     }
@@ -656,18 +690,19 @@ public class SleepFragment extends Fragment {
      */
     private int getEfficiency() {
 //gets current sleep duration from db to calculate efficiency
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
-        Date currentDate = new Date();
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+//        Date currentDate = new Date();
         Calendar calendar = new GregorianCalendar();
-        calendar.setTime(currentDate);
+        calendar.setTime(now);
         int formattedCurrentDate = Integer.valueOf(dateFormat.format(calendar.getTime()));
         float currentDuration = db.getTodaysMoodAvg(formattedCurrentDate);
 
         //based on avg 2 wakeups per hour, each wakeup resulting in a -0.625% efficiency (Source: FitBit)
-        double expectedWakeups = (double)currentDuration * 2;        double extraWakeups = numWakeups - expectedWakeups;
+        double expectedWakeups = (double)currentDuration * 2;
+        double extraWakeups = numWakeups - expectedWakeups;
 
         if (extraWakeups <= 0) {
-            extraWakeups = 1;
+            extraWakeups = 0;
         }
 
         //if user has been sleeping less than an hour, it's much more inefficient to wake up so penalty is higher
@@ -688,9 +723,9 @@ public class SleepFragment extends Fragment {
     }
 
     private void checkSleepAchievements() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
+  //      SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy", Locale.US);
 
-        Date now = new Date();
+  //      Date now = new Date();
 
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(now);
